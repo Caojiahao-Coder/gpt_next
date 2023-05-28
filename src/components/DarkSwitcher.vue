@@ -9,7 +9,7 @@ function onClick() {
 <template>
   <button
     icon-button
-    dark:i-carbon-moon i-carbon-sun
+    dark:i-carbon-haze-night i-carbon-haze
     color-base
     text-6
     p-0

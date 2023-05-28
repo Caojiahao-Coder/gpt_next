@@ -5,7 +5,7 @@ export default defineConfig({
   shortcuts: {
     'border-base': 'border-gray-200 dark:border-dark-200',
     'border-dark-only': 'border-transparent dark:border-dark-100',
-    'bg-base': 'bg-white dark:bg-#0a0a0a',
+    'bg-base': 'bg-white dark:bg-#050505',
     'bg-body': 'bg-#f1f1f1 dark:bg-#121212',
     'color-base': 'text-#333 dark:text-gray-300',
     'color-fade': 'text-gray-900:50 dark:text-gray-300:50',
