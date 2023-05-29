@@ -4,9 +4,9 @@ import { useWindowSize } from '@vueuse/core'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 
-const expand = ref<boolean>(true)
-
 const { width } = useWindowSize()
+
+const expand = ref<boolean>(width.value >= 1200)
 
 /**
  * 关闭Setting栏
@@ -22,18 +22,22 @@ function onOpenSettingBar() {
   expand.value = true
 }
 
-watch(width, (newValue, oldValue) => {
+watch(width, (newValue) => {
   expand.value = newValue >= 1200
 })
 </script>
 
 <template>
-  <div :class="expand === true ? 'w-320px' : 'w-0'" class="relative transition-all h-100vh flex flex-col color-base" b="0 l-1 solid gray-200 dark:dark-200">
+  <div
+    :class="expand === true ? 'w-320px' : 'w-0'"
+    class="relative transition-all h-100vh flex-shrink-0 flex flex-col color-base"
+    b="0 l-1 solid gray-200 dark:dark-200"
+  >
     <div class="h-79px" p="x-16px" b="0 solid b-1 gray-200 dark:dark-200">
       <div class="flex flex-row h-100%">
         <div class="flex-1 flex flex-col">
           <div class="flex-1" />
-          <div class="text-6">
+          <div class="text-6 font-bold">
             SETTING
           </div>
           <div class="flex-1" />
@@ -51,7 +55,7 @@ watch(width, (newValue, oldValue) => {
     <CommonSlideBar />
     <div
       v-if="expand === false"
-      class="transition-all inline-block h-48px absolute top-24px hover-shadow"
+      class="transition-all inline-block h-48px absolute top-98px hover-shadow bg-base"
       b="1 solid gray-200 dark:dark-200 rd-tl-3 rd-bl-3" left="-50px"
       @click="onOpenSettingBar"
     >

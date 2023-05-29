@@ -1,25 +1,48 @@
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
+import { watch } from 'vue'
+import { useLeftSideBarStore } from '@/store/leftsidebar'
+
+const { width } = useWindowSize()
+
+const expandStore = useLeftSideBarStore()
+
+watch(width, (newValue) => {
+  expandStore.expand = (newValue >= 800)
+})
+
+function openGithub() {
+  window.location.href = 'https://github.com/Caojiahao-Coder/gpt_next'
+}
+
+function onCloseLeftSideBar() {
+  expandStore.expand = false
+}
 </script>
 
 <template>
-  <div class="w-320px h-100vh bg-base flex flex-col color-base" b="0 r-1 solid gray-200 dark:dark-200">
-    <div class="h-48px p-16px" b="0 b-1 solid gray-200 dark:dark-200">
-      <div class="flex flex-rows" style="line-height: 48px;">
+  <div
+    :class="expandStore.expand === true ? 'w-320px' : 'w-0px'"
+    class="transition-all h-100vh bg-base flex-shrink-0 flex flex-col color-base overflow-hidden"
+    b="0 r-1 solid gray-200 dark:dark-200"
+  >
+    <div class="h-47px p-16px" b="0 b-1 solid gray-200 dark:dark-200">
+      <div class="flex flex-rows" style="line-height: 47px;">
         <div class="flex-1 text-6 font-bold">
           CONVERSATIONS
         </div>
         <div i-carbon-add-comment class="text-6 icon-button" m="y-12px" />
+        <div v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px " @click="onCloseLeftSideBar" />
       </div>
     </div>
 
     <!-- TODO:CONVERSATIONS HISTORY -->
     <div class="flex-1" />
 
-    <div class="grid grid-cols-4 gap-6 h-47px" p="16px" b="0 t-1 solid gray-200 dark:dark-200">
-      <div />
-      <div icon-button w-24px h-24px m-auto i-carbon-logo-github />
+    <div class="grid grid-cols-3 gap-6 h-47px" p="16px" b="0 t-1 solid gray-200 dark:dark-200">
+      <div icon-button w-24px h-24px m-auto i-carbon-logo-github @click="openGithub" />
       <div icon-button w-24px h-24px m-auto i-carbon-logo-vue />
-      <div />
+      <div icon-button w-24px h-24px m-auto i-devicon-plain-docker />
     </div>
   </div>
 </template>
