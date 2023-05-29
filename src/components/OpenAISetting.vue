@@ -10,7 +10,7 @@
       <div class="icon-button i-carbon-edit" />
     </div>
   </div>
-  <div class="p-16px" b="0 b-1 solid gray-200 dark:dark-200">
+  <div class="p-16px border-base" b="0 b-1 solid">
     <div class="text-3 color-gray" style="font-family: Light;">
       Api Key
     </div>

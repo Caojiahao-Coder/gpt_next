@@ -23,7 +23,7 @@ function onCloseEditor() {
 
 <template>
   <div
-    class="color-base transition-all" b="0 t-1 solid gray-200 dark:dark-200"
+    class="color-base transition-all border-base" b="0 t-1 solid"
     :class="expand === true ? 'h-240px' : 'h-79px'"
   >
     <div
