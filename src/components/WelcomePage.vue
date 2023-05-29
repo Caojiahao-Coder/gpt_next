@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useWindowSize } from '@vueuse/core'
 import { useConversationStore } from '@/store/conversation'
 
 const chatStore = useConversationStore()
+
+const { width } = useWindowSize()
 
 function createNewMessage() {
   chatStore.createConversation()
@@ -13,7 +16,11 @@ function createNewMessage() {
     <div class="flex-1" />
     <div class="flex flex-row">
       <div class="flex-1" />
-      <div class="flex flex-row bg-base p-6 border-base w-35%  color-base" b="1 solid rd-1" @click="createNewMessage">
+      <div
+        class="flex flex-row bg-base p-6 border-base color-base" b="1 solid rd-1" :class="[
+          width >= 1200 ? 'w-500px' : width >= 800 && width < 1200 ? 'w-400px' : 'w-300px',
+        ]" @click="createNewMessage"
+      >
         <div class="i-carbon-add text-6" />
         <div class="flex-1 m-l-2" style="line-height: 24px;">
           New
