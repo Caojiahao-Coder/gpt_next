@@ -3,9 +3,9 @@ import { useWindowSize } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
-  open?: boolean
+  open: boolean
   title: string
-}>(), { open: false })
+}>(), { })
 
 const emits = defineEmits([
   'onClose',
