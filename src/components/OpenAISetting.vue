@@ -117,8 +117,8 @@ function copyOpenAiKey() {
           v-model="gptModel_modal" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
           b="1 solid rd-1"
         >
-          <option value="gpt-3.5-turbo-0301">
-            gpt-3.5-turbo-0301
+          <option value="gpt-3.5-turbo">
+            gpt-3.5-turbo
           </option>
           <option value="gpt-4">
             gpt-4

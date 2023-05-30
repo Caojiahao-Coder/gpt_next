@@ -1,24 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import ConversationDetailItem from './ConversationDetailItem.vue'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
+import { useMessageStore } from '@/store/message'
 
-const messageList = ref<string[]>([])
+const messageRecordsStore = useMessageStore()
 </script>
 
 <template>
   <div class="relative h-100% records-list color-base" overflow="x-hidden y-scroll">
-    <ConversationDetailItem v-for="(item, index) in messageList" :key="index" :role="index % 2 !== 0 ? 'user' : 'gpt'" />
+    <ConversationDetailItem
+      v-for="(item, index) in messageRecordsStore.messageRecords"
+      :key="index"
+      :message-record-id="item.id!"
+    />
 
-    <EditSessionSettingsDialog v-if="messageList.length === 0" />
+    <EditSessionSettingsDialog v-if="messageRecordsStore.messageRecords.length === 0" />
   </div>
 </template>
 
 <style scoped>
 .records-list::-webkit-scrollbar {
-  width: 4px;
-  border: 0;
-  border-left: 1px solid #88888825;
+  display: none;
 }
 
 .records-list::-webkit-scrollbar-thumb {

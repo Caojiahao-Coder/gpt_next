@@ -27,7 +27,7 @@ export const useConversationStore = defineStore('conversation', () => {
 
     conversationInfo.value = await db.conversations.get(newConversationId)
 
-    getConversationList()
+    await getConversationList()
   }
 
   async function updateConversationInfo(id: number, info: Conversation) {

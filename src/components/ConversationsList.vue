@@ -22,6 +22,7 @@ onMounted(() => {
 
 <style scoped>
 .conversations-list::-webkit-scrollbar {
+  display: none;
   border: 0px;
   border-left: 1px solid #88888825 ;
   width: 4px;

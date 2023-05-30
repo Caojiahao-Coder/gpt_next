@@ -9,14 +9,9 @@ const openDialog = ref<boolean>(false)
 
 const conversationStore = useConversationStore()
 
-const title = ref<string>(conversationStore.conversationInfo!.name!)
+const title = ref<string>('')
 const description = ref<string>('')
-
-const color = ref<string>('bg-gray-5')
-
-function onCloseDialog() {
-  openDialog.value = false
-}
+const color = ref<string>('')
 
 async function onSaveSessionSettings() {
   if (title.value.trim().length === 0) {
@@ -33,8 +28,21 @@ async function onSaveSessionSettings() {
     model: info.model,
     createTime: info.createTime,
     color: color.value,
+    description: description.value.trim().length === 0 ? undefined : description.value.trim(),
   } as Conversation)
 
+  openDialog.value = false
+}
+
+function onOpenEditDialog() {
+  title.value = conversationStore.conversationInfo!.name
+  description.value = conversationStore.conversationInfo!.description ?? ''
+  color.value = conversationStore.conversationInfo!.color
+
+  openDialog.value = true
+}
+
+function onCloseDialog() {
   openDialog.value = false
 }
 </script>
@@ -42,7 +50,7 @@ async function onSaveSessionSettings() {
 <template>
   <div
     class="absolute top-24px border shadow-2xl bg-base w-180px h-48px flex flex-row color-base gap-2 cursor-pointer"
-    b="1 solid rd-1" p="x-4" style="left:calc(50% - 107px);" @click="() => openDialog = true"
+    b="1 solid rd-1" p="x-4" style="left:calc(50% - 107px);" @click="onOpenEditDialog"
   >
     <div class="flex flex-col">
       <div class="flex-1" />
@@ -63,7 +71,7 @@ async function onSaveSessionSettings() {
         Session theme color:
       </div>
       <div class="m-t-2">
-        <SelectColorDialog :color="color" large @on-selected-color="(colorValue:string) => color = colorValue" />
+        <SelectColorDialog :color="color" large @on-selected-color="(colorValue: string) => color = colorValue" />
       </div>
       <div class="m-t-4">
         Session title:

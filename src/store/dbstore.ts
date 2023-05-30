@@ -1,6 +1,7 @@
 import Dexie, { type Table } from 'dexie'
 import { defineStore } from 'pinia'
 
+// #region Global Setting
 export interface GlobalSetting {
   openAIKey?: string
   chatModel?: string
@@ -21,6 +22,7 @@ export const useGlobalSettingDBStore = defineStore('globalSettingDBStore', () =>
   const db = new GlobalSettingDatabase()
   return { db }
 })
+// #endregion
 
 // #region Conversation
 export interface Conversation {
@@ -46,6 +48,33 @@ class ConversationDatabase extends Dexie {
 
 export const useConversationDBStore = defineStore('conversationDBStore', () => {
   const db = new ConversationDatabase()
+  return { db }
+})
+// #endregion
+
+// #region Message
+export interface Message {
+  id?: number
+  content?: string
+  role: 'user' | 'gpt'
+  conversationId: number
+  converstaionToken: string
+  createTime: string
+}
+
+class MessageDatabase extends Dexie {
+  public messages!: Table<Message, number>
+
+  public constructor() {
+    super('MessageDB')
+    this.version(1).stores({
+      messages: '++id,content,role,conversationId,converstaionToken,createTime,linkMessageId',
+    })
+  }
+}
+
+export const useMessageDBStore = defineStore('messageDBStore', () => {
+  const db = new MessageDatabase()
   return { db }
 })
 // #endregion
