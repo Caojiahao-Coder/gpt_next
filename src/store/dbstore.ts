@@ -25,10 +25,12 @@ export const useGlobalSettingDBStore = defineStore('globalSettingDBStore', () =>
 // #region Conversation
 export interface Conversation {
   id?: number
-  name?: string
-  token?: string
-  model?: string
-  createTime?: string
+  name: string
+  token: string
+  model: string
+  createTime: string
+  description?: string
+  color: string
 }
 
 class ConversationDatabase extends Dexie {
@@ -37,7 +39,7 @@ class ConversationDatabase extends Dexie {
   public constructor() {
     super('ConversationDB')
     this.version(1).stores({
-      conversations: '++id,name,token,model,createTime',
+      conversations: '++id,name,token,model,createTime,description,color',
     })
   }
 }
