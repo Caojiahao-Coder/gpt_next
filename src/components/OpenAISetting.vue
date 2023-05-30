@@ -13,6 +13,9 @@ const gptModel_modal = ref<string>('gpt-3.5-turbo-0301')
 const apiKey = ref<string>('')
 const gptModel = ref<string>('')
 
+const copyApiKeySuccess = ref<boolean>(false)
+const copyApiKeyFailed = ref<boolean>(false)
+
 onMounted(() => {
   loadOpenAISetting()
 })
@@ -45,6 +48,21 @@ async function onSaveOpenAIConfig() {
   open.value = false
   loadOpenAISetting()
 }
+
+/**
+ * 复制OpenAI Api Key
+ */
+function copyOpenAiKey() {
+  navigator.clipboard.writeText(apiKey.value).then(() => {
+    copyApiKeySuccess.value = true
+    setTimeout(() => {
+      copyApiKeySuccess.value = false
+    }, 1200)
+  }).catch(() => {
+    copyApiKeyFailed.value = true
+    setTimeout(() => copyApiKeyFailed.value = false, 1200)
+  })
+}
 </script>
 
 <template>
@@ -60,8 +78,16 @@ async function onSaveOpenAIConfig() {
     <div class="text-3 color-gray" style="font-family: Light;">
       Api Key
     </div>
-    <div class="text-4 m-t-2">
-      {{ apiKey.substring(0, 2) }}*****{{ apiKey.substring(apiKey.length - 2, apiKey.length) }}
+    <div class="flex flex-row gap-2  m-t-2">
+      <div class="text-4">
+        {{ apiKey.substring(0, 4) }}*****{{ apiKey.substring(apiKey.length - 2, apiKey.length) }}
+      </div>
+      <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
+      <div
+        v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
+        style="line-height:20px"
+      />
+      <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" />
     </div>
 
     <div class="text-3 color-gray m-t-4" style="font-family: Light;">

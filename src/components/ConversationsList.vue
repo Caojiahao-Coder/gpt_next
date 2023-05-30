@@ -31,9 +31,7 @@ onMounted(() => {
     <ConversationItem
       v-for="(item, index) in conversationList"
       :key="index"
-      :token="item.token!"
-      :name="item.name!"
-      :item-id="item.id!"
+      :conversation-info="item"
       :reload-conversation-list="getConversationsList"
     />
   </div>

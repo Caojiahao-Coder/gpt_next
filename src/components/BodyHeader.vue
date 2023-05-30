@@ -21,7 +21,7 @@ function onOpenLeftSideBar() {
     <div class="flex-1 flex flex-col">
       <div class="flex-1" />
       <div>
-        {{ conversationStore.conversationName }}<div class="flex-1" />
+        {{ conversationStore.conversationInfo?.name }}<div class="flex-1" />
       </div>
       <div class="flex-1" />
     </div>

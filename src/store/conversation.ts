@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { uid } from 'uid'
 import dayjs from 'dayjs'
+import type { Conversation } from './dbstore'
 import { useConversationDBStore } from './dbstore'
 
 export const useConversationStore = defineStore('conversation', () => {
@@ -9,22 +10,19 @@ export const useConversationStore = defineStore('conversation', () => {
 
   const db = conversationDBStore.db
 
-  const conversationToken = ref<string>()
-
-  const conversationName = ref<string>()
+  const conversationInfo = ref<Conversation>()
 
   async function createConversation() {
     const token = uid(32)
 
-    await db.conversations.add({
+    const newConversationId = await db.conversations.add({
       token,
       name: 'New Message',
       createTime: dayjs().format('yyyy-MM-dd HH:mm:ss'),
     })
 
-    conversationToken.value = token
-    conversationName.value = 'New Message'
+    conversationInfo.value = await db.conversations.get(newConversationId)
   }
 
-  return { conversationToken, createConversation, conversationName }
+  return { conversationInfo, createConversation }
 })
