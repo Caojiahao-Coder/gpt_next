@@ -1,17 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import Dialog from '@/ui/Dialog.vue'
+import { useGlobalSettingStore } from '@/store/globalsetting'
 import { useGlobalSettingDBStore } from '@/store/dbstore'
 
 const open = ref<boolean>(false)
 
-const globalSettingDB = useGlobalSettingDBStore()
-
 const apiKey_modal = ref<string>()
 const gptModel_modal = ref<string>('gpt-3.5-turbo-0301')
 
-const apiKey = ref<string>('')
-const gptModel = ref<string>('')
+const apiKey = ref<string | undefined>()
+const gptModel = ref<string | undefined>()
 
 const copyApiKeySuccess = ref<boolean>(false)
 const copyApiKeyFailed = ref<boolean>(false)
@@ -20,17 +19,22 @@ onMounted(() => {
   loadOpenAISetting()
 })
 
-function loadOpenAISetting() {
-  globalSettingDB.db.globalSetting.toArray().then((res) => {
-    if (res.length === 0)
-      return
+async function loadOpenAISetting() {
+  const globalSettingStore = useGlobalSettingStore()
+  const data = await globalSettingStore.getGlobalSetting()
 
-    apiKey_modal.value = res[0].openAIKey ?? ''
-    gptModel_modal.value = res[0].chatModel ?? ''
-
-    apiKey.value = res[0].openAIKey ?? ''
-    gptModel.value = res[0].chatModel ?? ''
-  })
+  if (data) {
+    apiKey.value = data.apiKey
+    gptModel.value = data.gptModel
+    apiKey_modal.value = data.apiKey
+    gptModel.value = data.gptModel
+  }
+  else {
+    apiKey.value = undefined
+    gptModel.value = undefined
+    apiKey_modal.value = ''
+    gptModel_modal.value = ''
+  }
 }
 
 function openEditModal() {
@@ -38,6 +42,7 @@ function openEditModal() {
 }
 
 async function onSaveOpenAIConfig() {
+  const globalSettingDB = useGlobalSettingDBStore()
   if (await globalSettingDB.db.globalSetting.count() > 0)
     await globalSettingDB.db.globalSetting.clear()
 
@@ -53,7 +58,12 @@ async function onSaveOpenAIConfig() {
  * 复制OpenAI Api Key
  */
 function copyOpenAiKey() {
-  navigator.clipboard.writeText(apiKey.value).then(() => {
+  if (!apiKey.value) {
+    copyApiKeyFailed.value = true
+    setTimeout(() => copyApiKeyFailed.value = false, 1200)
+    return
+  }
+  navigator.clipboard.writeText(apiKey.value ?? '').then(() => {
     copyApiKeySuccess.value = true
     setTimeout(() => {
       copyApiKeySuccess.value = false
@@ -80,8 +90,10 @@ function copyOpenAiKey() {
         Api Key
       </div>
       <div class="flex flex-row gap-2  m-t-2">
-        <div class="text-4">
-          {{ apiKey.substring(0, 4) }}*****{{ apiKey.substring(apiKey.length - 2, apiKey.length) }}
+        <div class="text-4" :class="apiKey ? 'color-base' : 'color-fade'">
+          {{
+            apiKey ? `${apiKey.substring(0, 6)}****${apiKey.substring(apiKey.length - 6, apiKey.length)}` : 'undefined'
+          }}
         </div>
         <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
         <div
@@ -94,8 +106,10 @@ function copyOpenAiKey() {
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
         Chat Model
       </div>
-      <div class="text-4 m-t-2">
-        {{ gptModel }}
+      <div class="text-4 m-t-2" :class="apiKey ? 'color-base' : 'color-fade'">
+        {{
+          gptModel ? gptModel : 'undefined'
+        }}
       </div>
     </div>
   </div>

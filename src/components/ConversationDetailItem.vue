@@ -11,13 +11,14 @@ import rehypePrism from '@mapbox/rehype-prism'
 import rehypeHighlight from 'rehype-highlight'
 import { fetchChatCompletion } from '@/openai/api'
 import { useMessageStore } from '@/store/message'
-import { type Message, useGlobalSettingDBStore, useMessageDBStore } from '@/store/dbstore'
+import { type Message, useMessageDBStore } from '@/store/dbstore'
 import 'katex/dist/katex.min.css'
 import { parserStreamText } from '@/openai/parser'
 import { useEditorStore } from '@/store/editor'
 import type { MessageResultType } from '@/openai/message-type'
 import { useConversationStore } from '@/store/conversation'
 import { handleChatCompletions } from '@/openai/handler'
+import { useGlobalSettingStore } from '@/store/globalsetting'
 
 const props = defineProps<{
   messageRecordId: number
@@ -50,13 +51,13 @@ const messageDB = useMessageDBStore().db
 
 const messageStore = useMessageStore()
 
-const globalSettingDB = useGlobalSettingDBStore().db
-
 const messageInfo = ref<Message>()
 
 const content = ref<string>('')
 
 const fullTextContent = ref<boolean>(false)
+
+const globalSettingStore = useGlobalSettingStore()
 
 onMounted(() => {
   getMessageeItemInfo()
@@ -90,6 +91,11 @@ async function getMessageeItemInfo() {
  * @param messageInfo
  */
 async function getAnswer(messageInfo: Message) {
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  if (!globalSettingInfo)
+    return
+
   const editorStore = useEditorStore()
   editorStore.thinking = true
   const existMessages = await messageDB.messages.where('converstaionToken').equalsIgnoreCase(messageInfo.converstaionToken).toArray()
@@ -100,12 +106,10 @@ async function getAnswer(messageInfo: Message) {
     content: item.content!,
   }))
 
-  const globalSetting = (await globalSettingDB.globalSetting.toArray())[0]
-
   const response = await fetchChatCompletion({
-    apikey: globalSetting.openAIKey!,
+    apikey: globalSettingInfo.apiKey,
     body: {
-      model: globalSetting.chatModel!,
+      model: globalSettingInfo.gptModel,
       messages: handleChatCompletions(messages),
       stream: true,
     },
@@ -133,6 +137,11 @@ async function getAnswer(messageInfo: Message) {
 }
 
 async function getConversationName() {
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  if (!globalSettingInfo)
+    return
+
   const messages: { role: string; content: string }[] = []
   messageStore.messageRecords.map(a => messages.push({
     role: a.role === 'gpt' ? 'assistant' : 'user',
@@ -144,12 +153,10 @@ async function getConversationName() {
     content: 'Please give this message a title of no more than 8 characters based on the current conversation. (in Chinese)',
   })
 
-  const globalSetting = (await globalSettingDB.globalSetting.toArray())[0]
-
   fetchChatCompletion({
-    apikey: globalSetting.openAIKey!,
+    apikey: globalSettingInfo.apiKey,
     body: {
-      model: globalSetting.chatModel!,
+      model: globalSettingInfo.gptModel,
       messages: handleChatCompletions(messages),
     },
   }).then((response) => {

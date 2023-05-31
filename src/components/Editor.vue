@@ -2,9 +2,12 @@
 import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
+import ErrorDialog from './ErrorDialog.vue'
 import { useMessageStore } from '@/store/message'
 import { useConversationStore } from '@/store/conversation'
 import { useEditorStore } from '@/store/editor'
+import { useGlobalSettingStore } from '@/store/globalsetting'
+import { useErrorDialogStore } from '@/store/errorDialog'
 
 const expand = ref<boolean>(false)
 
@@ -17,6 +20,8 @@ const messageRecordsStore = useMessageStore()
 const conversationStore = useConversationStore()
 
 const inputMessage = ref<string>('')
+
+const errorDialogStore = useErrorDialogStore()
 
 /**
  * 展开编辑器
@@ -36,8 +41,33 @@ function onCloseEditor() {
  * 发送一条新的消息
  * @param event
  */
-function onSendMessage(event: KeyboardEvent) {
+async function onSendMessage(event: KeyboardEvent) {
   event.preventDefault()
+
+  const globalSettingStore = useGlobalSettingStore()
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  if (!globalSettingInfo) {
+    errorDialogStore.message = 'Sorry please set OpenAI Api key first.'
+    errorDialogStore.showErrorDialog = true
+    return
+  }
+
+  sendNewMessage()
+}
+
+async function onClickSendMessage() {
+  const globalSettingStore = useGlobalSettingStore()
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  const errorDialogStore = useErrorDialogStore()
+
+  if (!globalSettingInfo) {
+    errorDialogStore.message = 'Sorry please set OpenAI Api key first.'
+    errorDialogStore.showErrorDialog = true
+    return
+  }
+
   sendNewMessage()
 }
 
@@ -96,11 +126,13 @@ async function sendNewMessage() {
       </div>
       <div class="flex flex-col">
         <div class="flex-1" />
-        <div class="h-31px w-31px icon-button i-carbon-send-alt" @click="sendNewMessage" />
+        <div class="h-31px w-31px icon-button i-carbon-send-alt" @click="onClickSendMessage" />
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
       </div>
       <div v-if="width >= 1000" class="w-15%" />
     </div>
+
+    <ErrorDialog />
   </div>
 </template>
 
