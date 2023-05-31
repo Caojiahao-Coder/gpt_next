@@ -17,9 +17,11 @@ import { parserStreamText } from '@/openai/parser'
 import { useEditorStore } from '@/store/editor'
 import type { MessageResultType } from '@/openai/message-type'
 import { useConversationStore } from '@/store/conversation'
+import { handleChatCompletions } from '@/openai/handler'
 
 const props = defineProps<{
   messageRecordId: number
+  scrollBody: () => void
 }>()
 
 /**
@@ -62,6 +64,7 @@ onMounted(() => {
   if (answerContentRef.value) {
     const observer = new MutationObserver(() => {
       fullTextContent.value = (answerContentRef.value?.firstChild?.nodeName)?.toString() === '#text'
+      props.scrollBody()
     })
     observer.observe(answerContentRef.value, {
       childList: true,
@@ -103,7 +106,7 @@ async function getAnswer(messageInfo: Message) {
     apikey: globalSetting.openAIKey!,
     body: {
       model: globalSetting.chatModel!,
-      messages,
+      messages: handleChatCompletions(messages),
       stream: true,
     },
   })
@@ -147,7 +150,7 @@ async function getConversationName() {
     apikey: globalSetting.openAIKey!,
     body: {
       model: globalSetting.chatModel!,
-      messages,
+      messages: handleChatCompletions(messages),
     },
   }).then((response) => {
     response.json().then((result: MessageResultType) => {
