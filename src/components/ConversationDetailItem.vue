@@ -33,7 +33,7 @@ function parseMarkdown(raw: string) {
     .use(rehypePrism, {
       ignoreMissing: true,
     })
-    .use(rehypeHighlight)
+    .use(rehypeHighlight, { detect: true })
     .use(rehypeKatex)
     .use(rehypeStringify)
     .processSync(raw)
