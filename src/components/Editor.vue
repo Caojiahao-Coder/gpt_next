@@ -4,10 +4,13 @@ import { ref } from 'vue'
 import dayjs from 'dayjs'
 import { useMessageStore } from '@/store/message'
 import { useConversationStore } from '@/store/conversation'
+import { useEditorStore } from '@/store/editor'
 
 const expand = ref<boolean>(false)
 
 const { width } = useWindowSize()
+
+const editorStore = useEditorStore()
 
 const messageRecordsStore = useMessageStore()
 
@@ -36,6 +39,9 @@ function onCloseEditor() {
 async function onSendMessage(event: KeyboardEvent) {
   event.preventDefault()
 
+  const message = inputMessage.value.trim()
+  inputMessage.value = ''
+
   // 如果没有选中Message 就需要先创建一个Message
   if (!conversationStore.conversationInfo)
     await conversationStore.createConversation()
@@ -43,7 +49,7 @@ async function onSendMessage(event: KeyboardEvent) {
   // 追加消息内容
   await messageRecordsStore.addNewMessage({
     role: 'user',
-    content: inputMessage.value,
+    content: message,
     converstaionToken: conversationStore.conversationInfo!.token!,
     conversationId: conversationStore.conversationInfo!.id!,
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
@@ -71,7 +77,8 @@ async function onSendMessage(event: KeyboardEvent) {
       <div class="flex-1 flex flex-col">
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
         <textarea
-          v-model="inputMessage" overflow="x-hidden y-scroll" placeholder="Enter Something..."
+          v-model="inputMessage"
+          :disabled="editorStore.thinking" overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? 'thinking...' : 'Enter Something...'"
           class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
           :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
           @keydown.enter="onSendMessage"

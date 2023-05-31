@@ -14,6 +14,7 @@ import { useMessageStore } from '@/store/message'
 import { type Message, useGlobalSettingDBStore, useMessageDBStore } from '@/store/dbstore'
 import 'katex/dist/katex.min.css'
 import { parserStreamText } from '@/openai/parser'
+import { useEditorStore } from '@/store/editor'
 
 const props = defineProps<{
   messageRecordId: number
@@ -84,6 +85,8 @@ async function getMessageeItemInfo() {
  * @param messageInfo
  */
 async function getAnswer(messageInfo: Message) {
+  const editorStore = useEditorStore()
+  editorStore.thinking = true
   const existMessages = await messageDB.messages.where('converstaionToken').equalsIgnoreCase(messageInfo.converstaionToken).toArray()
   const messages: { role: string; content: string }[] = []
 
@@ -118,6 +121,7 @@ async function getAnswer(messageInfo: Message) {
     converstaionToken: messageInfo.converstaionToken,
     createTime: messageInfo.createTime,
   } as Message, messageInfo.id!)
+  editorStore.thinking = false
 }
 </script>
 
