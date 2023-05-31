@@ -15,6 +15,7 @@ export const useMessageStore = defineStore('messageStore', () => {
   })
 
   async function getMessageRecoreds() {
+    messageRecords.value = []
     const data = await messageDB.messages.where({
       conversationId: conversationStore.conversationInfo?.id ?? -1,
     }).toArray()
@@ -32,5 +33,12 @@ export const useMessageStore = defineStore('messageStore', () => {
     await messageDB.messages.put(info, id)
   }
 
-  return { messageRecords, addNewMessage, updateMessageContent }
+  async function clearMessageRecords(conversationId: number) {
+    await messageDB.messages.bulkDelete(
+      (await messageDB.messages.where({ conversationId }).toArray()).map(a => a.id!),
+    )
+    messageRecords.value = []
+  }
+
+  return { messageRecords, addNewMessage, updateMessageContent, clearMessageRecords }
 })

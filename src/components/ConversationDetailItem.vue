@@ -9,17 +9,20 @@ import rehypeKatex from 'rehype-katex'
 import rehypeStringify from 'rehype-stringify'
 import rehypePrism from '@mapbox/rehype-prism'
 import rehypeHighlight from 'rehype-highlight'
-import hljs from 'highlight.js'
-import { type MessageResultByStreamType } from '@/openai/message-type'
 import { fetchChatCompletion } from '@/openai/api'
 import { useMessageStore } from '@/store/message'
 import { type Message, useGlobalSettingDBStore, useMessageDBStore } from '@/store/dbstore'
 import 'katex/dist/katex.min.css'
+import { parserStreamText } from '@/openai/parser'
 
 const props = defineProps<{
   messageRecordId: number
 }>()
 
+/**
+ * markdown text to html element
+ * @param raw
+ */
 function parseMarkdown(raw: string) {
   const file = unified()
     .use(remarkParse)
@@ -29,12 +32,14 @@ function parseMarkdown(raw: string) {
     .use(rehypePrism, {
       ignoreMissing: true,
     })
-    .use(rehypeHighlight, { highlighter: hljs.highlight })
+    .use(rehypeHighlight)
     .use(rehypeKatex)
     .use(rehypeStringify)
     .processSync(raw)
+
   return String(file)
 }
+const answerContentRef = ref<HTMLDivElement>()
 
 const messageDB = useMessageDBStore().db
 
@@ -46,19 +51,38 @@ const messageInfo = ref<Message>()
 
 const content = ref<string>('')
 
+const fullTextContent = ref<boolean>(false)
+
 onMounted(() => {
   getMessageeItemInfo()
+
+  if (answerContentRef.value) {
+    const observer = new MutationObserver(() => {
+      fullTextContent.value = (answerContentRef.value?.firstChild?.nodeName)?.toString() === '#text'
+    })
+    observer.observe(answerContentRef.value, {
+      childList: true,
+    })
+  }
 })
 
+/**
+ * 获取消息信息
+ */
 async function getMessageeItemInfo() {
   messageInfo.value = await messageDB.messages.get(props.messageRecordId)!
 
+  // 如果回答属于机器人回答 并且Content为空 那就需要去请求答案
   if (messageInfo.value?.role === 'gpt' && messageInfo.value.content?.trim().length === 0)
     await getAnswer(messageInfo.value)
   else
     content.value = messageInfo.value!.content!
 }
 
+/**
+ * 获取答案
+ * @param messageInfo
+ */
 async function getAnswer(messageInfo: Message) {
   const existMessages = await messageDB.messages.where('converstaionToken').equalsIgnoreCase(messageInfo.converstaionToken).toArray()
   const messages: { role: string; content: string }[] = []
@@ -79,33 +103,12 @@ async function getAnswer(messageInfo: Message) {
     },
   })
 
-  const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
-  if (!reader)
-    return
-
-  while (true) {
-    const { value, done } = await reader.read()
-    if (done)
-      break
-    let dataDone = false
-    const arr = value.split('\n')
-    arr.forEach((data) => {
-      if (data.length === 0)
-        return
-      if (data.startsWith(':'))
-        return
-      if (data === 'data: [DONE]') {
-        dataDone = true
-        return
-      }
-      const json = JSON.parse(data.substring(6)) as MessageResultByStreamType
-      const messageItem = json.choices[0].delta.content
-      if (messageItem)
-        content.value = content.value + messageItem
-    })
-    if (dataDone)
-      break
-  }
+  /**
+   * 转译stream流得到的结果
+   */
+  await parserStreamText(response, (contentResult: string) => {
+    content.value = content.value + contentResult
+  })
 
   await messageStore.updateMessageContent({
     id: messageInfo.id!,
@@ -126,11 +129,16 @@ async function getAnswer(messageInfo: Message) {
     ]"
   >
     <div class="avatar w-8 h-8 b-rd-1">
-      <div class="w-22px h-22px m-5px color-#f1f1f1" :class="messageInfo?.role === 'user' ? 'i-carbon-user' : 'i-carbon-chat-bot'" />
+      <div
+        class="w-22px h-22px m-5px color-#f1f1f1"
+        :class="messageInfo?.role === 'user' ? 'i-carbon-user' : 'i-carbon-chat-bot'"
+      />
     </div>
     <div
-      class="flex-1 m-l-16px conversation-content" style="margin-top: -1rem;margin-bottom: -1rem;"
-      v-html="parseMarkdown(content)"
+      ref="answerContentRef" class="flex-1 m-l-16px conversation-content" :style="{
+        marginTop: `${fullTextContent === true ? '' : '-1rem'}`,
+        marginBottom: `${fullTextContent === true ? '' : '-1rem'}`,
+      }" v-html="parseMarkdown(content)"
     />
   </div>
 </template>
@@ -145,7 +153,6 @@ async function getAnswer(messageInfo: Message) {
 }
 
 .conversation-content {
-  position: relative;
   line-height: 32px;
   overflow: hidden;
   word-wrap: break-word;
