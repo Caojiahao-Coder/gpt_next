@@ -14,7 +14,25 @@ const messageRecordsStore = useMessageStore()
       :message-record-id="item.id!"
     />
 
-    <EditSessionSettingsDialog v-if="messageRecordsStore.messageRecords.length === 0" />
+    <EditSessionSettingsDialog v-if="messageRecordsStore.messageRecords.length === 0">
+      <div
+        class="absolute top-24px border shadow-2xl bg-base w-180px h-48px flex flex-row color-base gap-2 cursor-pointer"
+        b="1 solid rd-1" p="x-4" style="left:calc(50% - 107px);"
+      >
+        <div class="flex flex-col">
+          <div class="flex-1" />
+          <div class="i-carbon-audio-console" />
+          <div class="flex-1" />
+        </div>
+        <div class="flex-1 flex flex-col">
+          <div class="flex-1" />
+          <div>
+            Edit session settings.
+          </div>
+          <div class="flex-1" />
+        </div>
+      </div>
+    </EditSessionSettingsDialog>
   </div>
 </template>
 
