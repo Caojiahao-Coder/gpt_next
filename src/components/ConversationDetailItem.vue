@@ -15,6 +15,8 @@ import { type Message, useGlobalSettingDBStore, useMessageDBStore } from '@/stor
 import 'katex/dist/katex.min.css'
 import { parserStreamText } from '@/openai/parser'
 import { useEditorStore } from '@/store/editor'
+import type { MessageResultType } from '@/openai/message-type'
+import { useConversationStore } from '@/store/conversation'
 
 const props = defineProps<{
   messageRecordId: number
@@ -122,6 +124,46 @@ async function getAnswer(messageInfo: Message) {
     createTime: messageInfo.createTime,
   } as Message, messageInfo.id!)
   editorStore.thinking = false
+
+  if (messageStore.messageRecords.length === 2)
+    getConversationName()
+}
+
+async function getConversationName() {
+  const messages: { role: string; content: string }[] = []
+  messageStore.messageRecords.map(a => messages.push({
+    role: a.role === 'gpt' ? 'assistant' : 'user',
+    content: a.content!,
+  }))
+
+  messages.push({
+    role: 'user',
+    content: 'Please give this message a title of no more than 8 characters based on the current conversation. (in Chinese)',
+  })
+
+  const globalSetting = (await globalSettingDB.globalSetting.toArray())[0]
+
+  fetchChatCompletion({
+    apikey: globalSetting.openAIKey!,
+    body: {
+      model: globalSetting.chatModel!,
+      messages,
+    },
+  }).then((response) => {
+    response.json().then((result: MessageResultType) => {
+      const conversationStore = useConversationStore()
+      const info = conversationStore.conversationInfo
+      conversationStore.updateConversationInfo(conversationStore.conversationInfo!.id!, {
+        id: info!.id,
+        name: result.choices[0].message.content,
+        token: info!.token,
+        model: info!.model,
+        createTime: info!.createTime,
+        color: info!.color,
+        description: info!.description,
+      })
+    })
+  })
 }
 </script>
 
