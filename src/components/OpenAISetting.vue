@@ -66,35 +66,37 @@ function copyOpenAiKey() {
 </script>
 
 <template>
-  <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
-    <div class="flex flex-row">
-      <div class="h-24px flex-1" style="line-height: 24px;">
-        Open AI
+  <div class="border-base" b="0 b-1 solid">
+    <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
+      <div class="flex flex-row">
+        <div class="h-24px flex-1" style="line-height: 24px;">
+          Open AI
+        </div>
+        <div class="icon-button i-carbon-edit" @click="openEditModal" />
       </div>
-      <div class="icon-button i-carbon-edit" @click="openEditModal" />
     </div>
-  </div>
-  <div class="p-16px border-base" b="0 b-1 solid">
-    <div class="text-3 color-gray" style="font-family: Light;">
-      Api Key
-    </div>
-    <div class="flex flex-row gap-2  m-t-2">
-      <div class="text-4">
-        {{ apiKey.substring(0, 4) }}*****{{ apiKey.substring(apiKey.length - 2, apiKey.length) }}
+    <div class="p-16px">
+      <div class="text-3 color-gray" style="font-family: Light;">
+        Api Key
       </div>
-      <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
-      <div
-        v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
-        style="line-height:20px"
-      />
-      <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" />
-    </div>
+      <div class="flex flex-row gap-2  m-t-2">
+        <div class="text-4">
+          {{ apiKey.substring(0, 4) }}*****{{ apiKey.substring(apiKey.length - 2, apiKey.length) }}
+        </div>
+        <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
+        <div
+          v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
+          style="line-height:20px"
+        />
+        <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" />
+      </div>
 
-    <div class="text-3 color-gray m-t-4" style="font-family: Light;">
-      Chat Model
-    </div>
-    <div class="text-4 m-t-2">
-      {{ gptModel }}
+      <div class="text-3 color-gray m-t-4" style="font-family: Light;">
+        Chat Model
+      </div>
+      <div class="text-4 m-t-2">
+        {{ gptModel }}
+      </div>
     </div>
   </div>
 

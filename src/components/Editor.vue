@@ -36,8 +36,14 @@ function onCloseEditor() {
  * 发送一条新的消息
  * @param event
  */
-async function onSendMessage(event: KeyboardEvent) {
+function onSendMessage(event: KeyboardEvent) {
   event.preventDefault()
+  sendNewMessage()
+}
+
+async function sendNewMessage() {
+  if (editorStore.thinking === true)
+    return
 
   const message = inputMessage.value.trim()
   inputMessage.value = ''
@@ -66,7 +72,10 @@ async function onSendMessage(event: KeyboardEvent) {
 </script>
 
 <template>
-  <div class="color-base transition-all border-base" b="0 t-1 solid" :class="expand === true ? 'h-240px' : 'h-79px'">
+  <div
+    class="relative color-base transition-all border-base" b="0 t-1 solid"
+    :class="expand === true ? 'h-240px' : 'h-79px'"
+  >
     <div
       class="flex flex-row p-24px" :class="[
         expand === true ? 'h-191px' : 'h-31px',
@@ -77,8 +86,8 @@ async function onSendMessage(event: KeyboardEvent) {
       <div class="flex-1 flex flex-col">
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
         <textarea
-          v-model="inputMessage"
-          :disabled="editorStore.thinking" overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? 'thinking...' : 'Enter Something...'"
+          v-model="inputMessage" :disabled="editorStore.thinking" overflow="x-hidden y-scroll"
+          :placeholder="editorStore.thinking === true ? 'thinking...' : 'Enter Something...'"
           class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
           :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
           @keydown.enter="onSendMessage"
@@ -87,7 +96,7 @@ async function onSendMessage(event: KeyboardEvent) {
       </div>
       <div class="flex flex-col">
         <div class="flex-1" />
-        <div class="h-31px w-31px icon-button i-carbon-send-alt" />
+        <div class="h-31px w-31px icon-button i-carbon-send-alt" @click="sendNewMessage" />
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
       </div>
       <div v-if="width >= 1000" class="w-15%" />

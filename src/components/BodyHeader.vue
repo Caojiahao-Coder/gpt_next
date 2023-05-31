@@ -71,12 +71,13 @@ function clearMessageRecords() {
       <br>
       <span class="color-red">(Operation cannot be restored)</span>
     </div>
-    <div class="text-center m-t-2">
-      <button class="outline-none border-base min-w-120px bg-red color-white" b="1 solid rd-1" p="x-4 y-2" @click="clearMessageRecords">
+    <div class="flex flex-1 m-t-2">
+      <div class="flex-1" />
+      <button class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2" @click="clearMessageRecords">
         Clear
       </button>
 
-      <button class="outline-none border-base min-w-120px bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2" @click="closeDialog">
+      <button class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2" @click="closeDialog">
         Cancel
       </button>
     </div>

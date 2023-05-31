@@ -3,6 +3,7 @@ import { ref, watch } from 'vue'
 import { useWindowSize } from '@vueuse/core'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
+import ChatSetting from './ChatSetting.vue'
 
 const { width } = useWindowSize()
 
@@ -50,6 +51,7 @@ watch(width, (newValue) => {
         </div>
       </div>
     </div>
+    <ChatSetting />
     <OpenAISetting />
     <div class="flex-1" />
     <CommonSlideBar />

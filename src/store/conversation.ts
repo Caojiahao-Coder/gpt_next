@@ -4,6 +4,7 @@ import { uid } from 'uid'
 import dayjs from 'dayjs'
 import type { Conversation } from './dbstore'
 import { useConversationDBStore } from './dbstore'
+import { useMessageStore } from './message'
 
 export const useConversationStore = defineStore('conversation', () => {
   const conversationDBStore = useConversationDBStore()
@@ -26,6 +27,9 @@ export const useConversationStore = defineStore('conversation', () => {
     })
 
     conversationInfo.value = await db.conversations.get(newConversationId)
+
+    const messageStore = useMessageStore()
+    messageStore.messageRecords = []
 
     await getConversationList()
   }
