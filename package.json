@@ -4,14 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "vite",
-    "build": "run-p type-check build-only",
     "preview": "vite preview",
-    "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.app.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "build": "vite build",
+    "type-check": "vue-tsc --noEmit",
+    "lint": "eslint ."
   },
   "dependencies": {
-    "@types/axios": "^0.14.0",
     "@types/marked": "^5.0.0",
     "dayjs": "^1.11.7",
     "dexie": "^3.2.3",
@@ -23,6 +21,7 @@
     "remark-math": "^5.1.1",
     "remark-parse": "^10.0.2",
     "remark-rehype": "^10.1.0",
+    "type-check": "^0.4.0",
     "uid": "^2.0.2",
     "unified": "^10.1.2",
     "vue": "^3.3.2",
@@ -48,7 +47,6 @@
     "eslint-plugin-vue": "^9.14.1",
     "highlight.js": "^11.8.0",
     "katex": "^0.16.7",
-    "npm-run-all": "^4.1.5",
     "rehype-highlight": "^6.0.0",
     "typescript": "~5.0.4",
     "unocss": "^0.52.4",

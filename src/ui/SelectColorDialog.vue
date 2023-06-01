@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, ref, withDefaults } from 'vue'
+import { ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   large?: boolean
