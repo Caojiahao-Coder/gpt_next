@@ -6,8 +6,11 @@ import ConversationBody from '@/components/ConversationBody.vue'
 import SettingSlideBar from '@/components/SettingSlideBar.vue'
 import WelcomePage from '@/components/WelcomePage.vue'
 import { useConversationStore } from '@/store/conversation.js'
+import ErrorDialog from '@/components/ErrorDialog.vue'
+import { useErrorDialogStore } from '@/store/errorDialog'
 
 const chatContentStore = useConversationStore()
+const errorDialogStore = useErrorDialogStore()
 </script>
 
 <template>
@@ -19,7 +22,8 @@ const chatContentStore = useConversationStore()
         <WelcomePage v-if="!chatContentStore.conversationInfo" />
         <ConversationBody v-else />
       </div>
-      <Editor />
+      <Editor v-if="!errorDialogStore.showErrorDialog" />
+      <ErrorDialog />
     </div>
     <SettingSlideBar />
   </main>

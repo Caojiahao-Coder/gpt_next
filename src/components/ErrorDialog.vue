@@ -10,39 +10,57 @@ function onCancel() {
 </script>
 
 <template>
-  <div
-    v-if="errorDialogStore.showErrorDialog"
-    class="error-dialog transition-all border-red absolute bg-red-2 left-0 bottom-0 color-red z-99999" p="6" b="1px solid"
-    style="width:calc(100% - 50px);"
-  >
-    <div class="font-bold">
-      Error.
-    </div>
-    <div class="flex flex-row m-t-2">
-      <div class="flex-1 min-h-34px" style="line-height: 34px;">
-        {{ errorDialogStore.message }}
+  <Transition name="expand">
+    <div
+      v-if="errorDialogStore.showErrorDialog" class="transition-all border-red bg-red-1 color-red z-99999 overflow-hidden" p="6"
+      b="0 t-1 solid"
+    >
+      <div class="font-bold">
+        Error.
       </div>
-      <div>
-        <button class="bg-red border-red-5 color-white outline-none " p="x-4 y-2" b="1 solid rd-1" @click="onCancel">
-          Cancel
-        </button>
+      <div class="flex flex-row m-t-2">
+        <div class="flex-1 flex flex-row gap-2">
+          <div class="flex flex-col">
+            <div class="flex-1" />
+            <div i-carbon-information />
+            <div class="flex-1" />
+          </div>
+          <div class="flex flex-col">
+            <div class="flex-1" />
+            <div> {{ errorDialogStore.message }}</div>
+            <div class="flex-1" />
+          </div>
+        </div>
+        <div>
+          <button class="bg-red border-red-5 color-white outline-none " p="x-4 y-2" b="1 solid rd-1" @click="onCancel">
+            Cancel
+          </button>
+        </div>
       </div>
     </div>
-  </div>
+  </Transition>
 </template>
 
 <style scoped>
-.error-dialog {
-  animation: identifier ease .36s;
+.expand-enter-from {
+  max-height: 0px;
 }
 
-@keyframes identifier {
-  0% {
-    max-height: 0px;
-  }
+.expand-enter-active {
+  transition: all .36s;
+}
 
-  100% {
-    max-height: 400px;
-  }
+.expand-leave-active
+{
+  transition: opacity .12s;
+}
+
+.expand-enter-to{
+  max-height: 280px;
+}
+
+.expand-leave-to
+{
+  opacity: 0;
 }
 </style>

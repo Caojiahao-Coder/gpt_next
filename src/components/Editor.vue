@@ -2,12 +2,12 @@
 import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
-import ErrorDialog from './ErrorDialog.vue'
 import { useMessageStore } from '@/store/message'
 import { useConversationStore } from '@/store/conversation'
 import { useEditorStore } from '@/store/editor'
 import { useGlobalSettingStore } from '@/store/globalsetting'
 import { useErrorDialogStore } from '@/store/errorDialog'
+import Message from '@/ui/message'
 
 const expand = ref<boolean>(false)
 
@@ -41,8 +41,13 @@ function onCloseEditor() {
  * 发送一条新的消息
  * @param event
  */
-async function onSendMessage(event: KeyboardEvent) {
+async function onKeyDownEnter(event: KeyboardEvent) {
   event.preventDefault()
+
+  if (inputMessage.value.trim().length === 0) {
+    Message.error('Sorry，the question can\'t be empty.')
+    return
+  }
 
   const globalSettingStore = useGlobalSettingStore()
   const globalSettingInfo = await globalSettingStore.getGlobalSetting()
@@ -57,6 +62,11 @@ async function onSendMessage(event: KeyboardEvent) {
 }
 
 async function onClickSendMessage() {
+  if (inputMessage.value.trim().length === 0) {
+    Message.error('Sorry，the question can\'t be empty.')
+    return
+  }
+
   const globalSettingStore = useGlobalSettingStore()
   const globalSettingInfo = await globalSettingStore.getGlobalSetting()
 
@@ -89,6 +99,7 @@ async function sendNewMessage() {
     converstaionToken: conversationStore.conversationInfo!.token!,
     conversationId: conversationStore.conversationInfo!.id!,
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    error: false,
   })
 
   await messageRecordsStore.addNewMessage({
@@ -97,6 +108,7 @@ async function sendNewMessage() {
     converstaionToken: conversationStore.conversationInfo!.token!,
     conversationId: conversationStore.conversationInfo!.id!,
     createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
+    error: false,
   })
 }
 </script>
@@ -120,7 +132,7 @@ async function sendNewMessage() {
           :placeholder="editorStore.thinking === true ? 'thinking...' : 'Enter Something...'"
           class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
           :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
-          @keydown.enter="onSendMessage"
+          @keydown.enter="onKeyDownEnter"
         />
         <div class="flex-1" />
       </div>
@@ -131,8 +143,6 @@ async function sendNewMessage() {
       </div>
       <div v-if="width >= 1000" class="w-15%" />
     </div>
-
-    <ErrorDialog />
   </div>
 </template>
 

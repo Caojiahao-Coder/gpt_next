@@ -59,6 +59,8 @@ const fullTextContent = ref<boolean>(false)
 
 const globalSettingStore = useGlobalSettingStore()
 
+const error = ref<boolean>(false)
+
 onMounted(() => {
   getMessageeItemInfo()
 
@@ -80,10 +82,13 @@ async function getMessageeItemInfo() {
   messageInfo.value = await messageDB.messages.get(props.messageRecordId)!
 
   // 如果回答属于机器人回答 并且Content为空 那就需要去请求答案
-  if (messageInfo.value?.role === 'gpt' && messageInfo.value.content?.trim().length === 0)
+  if (messageInfo.value?.role === 'gpt' && messageInfo.value.content?.trim().length === 0) {
     await getAnswer(messageInfo.value)
-  else
+  }
+  else {
     content.value = messageInfo.value!.content!
+    error.value = messageInfo.value!.error
+  }
 }
 
 /**
@@ -120,6 +125,16 @@ async function getAnswer(messageInfo: Message) {
    */
   await parserStreamText(response, (contentResult: string) => {
     content.value = content.value + contentResult
+  }, (data: {
+    error: {
+      message: string
+      type: string
+      param: string
+      code: string
+    }
+  }) => {
+    content.value = data.error.message.length === 0 ? data.error.code : data.error.message
+    error.value = true
   })
 
   await messageStore.updateMessageContent({
@@ -129,6 +144,7 @@ async function getAnswer(messageInfo: Message) {
     conversationId: messageInfo.conversationId,
     converstaionToken: messageInfo.converstaionToken,
     createTime: messageInfo.createTime,
+    error: error.value,
   } as Message, messageInfo.id!)
   editorStore.thinking = false
 
@@ -191,7 +207,9 @@ async function getConversationName() {
       />
     </div>
     <div
-      ref="answerContentRef" class="flex-1 m-l-16px conversation-content" :style="{
+      ref="answerContentRef" class="flex-1 m-l-16px conversation-content"
+      :class="error === true ? 'color-red' : ''"
+      :style="{
         marginTop: `${fullTextContent === true ? '' : '-1rem'}`,
         marginBottom: `${fullTextContent === true ? '' : '-1rem'}`,
       }" v-html="parseMarkdown(content)"

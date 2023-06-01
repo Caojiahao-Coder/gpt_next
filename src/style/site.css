@@ -12,3 +12,15 @@ body{
 *{
   font-family: 'PrimaryFont';
 }
+
+.message-container{
+  width: 600px;
+  display: inline-block;
+  position: fixed;
+  top: 0;
+  left: calc(50% - 300px);
+}
+
+.message-container>div>div{
+  margin: 12px auto;
+}

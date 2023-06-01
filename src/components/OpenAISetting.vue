@@ -33,7 +33,7 @@ async function loadOpenAISetting() {
     apiKey.value = undefined
     gptModel.value = undefined
     apiKey_modal.value = ''
-    gptModel_modal.value = ''
+    gptModel_modal.value = 'gpt-3.5-turbo'
   }
 }
 

@@ -1,6 +1,26 @@
 import type { MessageResultByStreamType } from './message-type'
+import { useErrorDialogStore } from '@/store/errorDialog'
 
-export async function parserStreamText(response: Response, callback: (content: string) => void) {
+export async function parserStreamText(response: Response, callback: (content: string) => void, errorCallback: (data: { error: {
+  message: string
+  type: string
+  param: string
+  code: string
+} }) => void) {
+  if (response.status !== 200 && response.status !== 204) {
+    const result: { error: {
+      message: string
+      type: string
+      param: string
+      code: string
+    } } = await response.json()
+    const errorDialog = useErrorDialogStore()
+    errorDialog.showErrorDialog = true
+    errorDialog.message = result.error.message.length === 0 ? result.error.code : result.error.code
+    errorCallback(result)
+    return
+  }
+
   const reader = response.body?.pipeThrough(new TextDecoderStream()).getReader()
   if (!reader)
     return

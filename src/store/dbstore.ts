@@ -60,6 +60,7 @@ export interface Message {
   conversationId: number
   converstaionToken: string
   createTime: string
+  error: boolean
 }
 
 class MessageDatabase extends Dexie {
@@ -68,7 +69,7 @@ class MessageDatabase extends Dexie {
   public constructor() {
     super('MessageDB')
     this.version(1).stores({
-      messages: '++id,content,role,conversationId,converstaionToken,createTime,linkMessageId',
+      messages: '++id,content,role,conversationId,converstaionToken,createTime,error',
     })
   }
 }
