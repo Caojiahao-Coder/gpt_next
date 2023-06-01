@@ -4,7 +4,7 @@
 
 `GPT_NEXT` is an AI chat tool.
 
-[Online Test](http://localhost.com:1202)
+[🧭Live preview](https://gpt-next-shvd.vercel.app/)
 
 ## Features 🚀
 - ⚔**Session Records Saving** → Using `IndexedDB` as the database can guarantee the privacy and security of the Session.
@@ -33,3 +33,9 @@
 - [ ] Support for editing conversations
 
 ## 🐞 Bug List
+
+## Thanks
+- [anse-app/anse](https://github.com/anse-app/anse)
+
+## LICENSE
+MIT © [Leo Cao](https://github.com/Caojiahao-Coder)
