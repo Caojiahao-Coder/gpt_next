@@ -5,7 +5,7 @@ import { onMounted, ref, watch } from 'vue'
 const props = withDefaults(defineProps<{
   open: boolean
   title: string
-}>(), { })
+}>(), {})
 
 const emits = defineEmits([
   'onClose',
@@ -27,31 +27,42 @@ watch(() => props.open, (newValue) => {
     closeModal()
 })
 
+function listenerViewClick(event: MouseEvent) {
+  const clickView = event.target as HTMLElement
+
+  if (clickView.classList.contains('hide-view')) {
+    emits('onClose')
+    closeModal()
+  }
+}
+
 function openModal() {
   const appElement = document.getElementById('app')
-  if (appElement) {
-    appElement.style.backgroundSize = '150%'
-    appElement.style.filter = 'blur(.15rem)'
-  }
+  if (appElement)
+    appElement.style.filter = 'blur(.25rem)'
+
+  setTimeout(() => {
+    document.addEventListener('click', listenerViewClick)
+  }, 200)
 }
 
 function closeModal() {
   const appElement = document.getElementById('app')
-  if (appElement) {
+  if (appElement)
     appElement.style.filter = ''
-    appElement.style.backgroundSize = '100%'
-  }
+
+  document.removeEventListener('click', listenerViewClick)
 }
 </script>
 
 <template>
   <div
-    ref="dialogRoot" class="transition-all flex flex-row h-100vh w-screen left-0 top-0 color-base"
-    :class="open === true ? 'fixed' : 'hidden'"
+    ref="dialogRoot" class="flex flex-row h-100vh w-screen left-0 top-0 color-base"
+    :class="open === true ? 'fixed' : 'none'"
   >
-    <div class="flex-1" />
+    <div class="flex-1 hide-view" />
     <div class="flex flex-col">
-      <div class="flex-1" />
+      <div class="flex-1 hide-view" />
       <div
         class="bg-base border-base shadow-2xl" b="1 rd-1 solid"
         :class="width >= 1200 ? 'w-600px' : width >= 800 && width < 1200 ? 'w-500px' : 'w-300px'"
@@ -66,8 +77,8 @@ function closeModal() {
           <slot />
         </div>
       </div>
-      <div class="flex-1" />
+      <div class="flex-1 hide-view" />
     </div>
-    <div class="flex-1" />
+    <div class="flex-1 hide-view" />
   </div>
 </template>
