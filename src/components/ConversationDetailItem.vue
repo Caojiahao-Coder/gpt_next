@@ -223,7 +223,8 @@ async function getConversationName() {
 }
 
 .gpt>.avatar {
-  background: linear-gradient(135deg, #2A6CCE 0%, rgba(247, 0, 208, 0.890484) 100%);
+  background: linear-gradient(24deg, #2A6CCE 0%, rgba(247, 0, 208, 0.890484) 100%);
+  box-shadow: 1px -2px 8px #c70fbea1,-1px 2px 8px #267dffa1;
 }
 
 .conversation-content {
