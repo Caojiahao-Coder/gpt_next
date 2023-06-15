@@ -34,7 +34,7 @@
 
 ## 🐞 Bug List
 
-## Thanks
+## THANKS
 - [anse-app/anse](https://github.com/anse-app/anse)
 
 ## LICENSE
