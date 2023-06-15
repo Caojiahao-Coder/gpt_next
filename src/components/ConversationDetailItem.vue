@@ -115,6 +115,9 @@ async function getAnswer(messageInfo: Message) {
     apikey: globalSettingInfo.apiKey,
     body: {
       model: globalSettingInfo.gptModel,
+      top_p: 1,
+      temperature: 0.7,
+      max_tokens: 2048,
       messages: handleChatCompletions(messages),
       stream: true,
     },
@@ -173,6 +176,9 @@ async function getConversationName() {
     apikey: globalSettingInfo.apiKey,
     body: {
       model: globalSettingInfo.gptModel,
+      top_p: 1,
+      temperature: 0.7,
+      max_tokens: 2048,
       messages: handleChatCompletions(messages),
     },
   }).then((response) => {
@@ -207,8 +213,7 @@ async function getConversationName() {
       />
     </div>
     <div
-      ref="answerContentRef" class="flex-1 m-l-16px conversation-content"
-      :class="error === true ? 'color-red' : ''"
+      ref="answerContentRef" class="flex-1 m-l-16px conversation-content" :class="error === true ? 'color-red' : ''"
       :style="{
         marginTop: `${fullTextContent === true ? '' : '-1rem'}`,
         marginBottom: `${fullTextContent === true ? '' : '-1rem'}`,
@@ -224,7 +229,7 @@ async function getConversationName() {
 
 .gpt>.avatar {
   background: linear-gradient(24deg, #2A6CCE 0%, rgba(247, 0, 208, 0.890484) 100%);
-  box-shadow: 1px -2px 8px #c70fbea1,-1px 2px 8px #267dffa1;
+  /* box-shadow: 1px -2px 8px #c70fbea1, -1px 2px 8px #267dffa1; */
 }
 
 .conversation-content {
