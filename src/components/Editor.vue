@@ -115,13 +115,13 @@ async function sendNewMessage() {
 
 <template>
   <div
-    class="relative color-base transition-all border-base" b="0 t-1 solid"
-    :class="expand === true ? 'h-240px' : 'h-79px'"
+    class="relative color-base transition-all border-base" b="0 t-1 solid" :class="[
+      expand === true ? 'h-240px' : 'h-79px',
+    ]"
   >
     <div
       class="flex flex-row p-24px" :class="[
         expand === true ? 'h-191px' : 'h-31px',
-        expand === true ? 'bg-#f1f1f50 dark:bg-dark' : 'bg-base',
       ]"
     >
       <div v-if="width >= 1000" class="w-15%" />

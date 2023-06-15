@@ -35,7 +35,7 @@ function onCreateNewConversation() {
   >
     <div class="h-47px p-16px border-base" b="0 b-1 solid">
       <div class="flex flex-rows" style="line-height: 47px;">
-        <div class="flex-1 text-6 font-bold">
+        <div class="flex-1 text-6 font-bold select-none">
           CONVERSATIONS
         </div>
         <div i-carbon-add-comment class="text-6 icon-button" m="y-12px" @click="onCreateNewConversation" />
