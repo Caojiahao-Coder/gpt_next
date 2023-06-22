@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@types/marked": "^5.0.0",
+    "@vercel/analytics": "^1.0.1",
     "dayjs": "^1.11.7",
     "dexie": "^3.2.3",
     "marked": "^5.0.3",
