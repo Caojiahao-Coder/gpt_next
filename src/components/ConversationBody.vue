@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ConversationDetailItem from './ConversationDetailItem.vue'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import { useMessageStore } from '@/store/message'
+
+const { t } = useI18n()
 
 const messageRecordsStore = useMessageStore()
 
@@ -17,29 +20,31 @@ function updateScroll() {
 <template>
   <div ref="bodyRef" class="relative h-100% records-list color-base" overflow="x-hidden y-scroll">
     <ConversationDetailItem
-      v-for="(item, index) in messageRecordsStore.messageRecords"
-      :key="index"
-      :message-record-id="item.id!"
-      :scroll-body="updateScroll"
+      v-for="(item, index) in messageRecordsStore.messageRecords" :key="index"
+      :message-record-id="item.id!" :scroll-body="updateScroll"
     />
 
     <EditSessionSettingsDialog v-if="messageRecordsStore.messageRecords.length === 0">
-      <div
-        class="absolute top-24px border shadow-2xl bg-base w-180px h-48px flex flex-row color-base gap-2 cursor-pointer"
-        b="1 solid rd-1" p="x-4" style="left:calc(50% - 107px);"
-      >
-        <div class="flex flex-col">
-          <div class="flex-1" />
-          <div class="i-carbon-audio-console" />
-          <div class="flex-1" />
-        </div>
-        <div class="flex-1 flex flex-col">
-          <div class="flex-1" />
-          <div>
-            Edit session settings.
+      <div class="flex flex-row m-t-24px">
+        <div class="flex-1" />
+        <div
+          class="border shadow-2xl bg-base  h-48px flex flex-row color-base gap-2 cursor-pointer" b="1 solid rd-1"
+          p="x-4"
+        >
+          <div class="flex flex-col">
+            <div class="flex-1" />
+            <div class="i-carbon-audio-console" />
+            <div class="flex-1" />
           </div>
-          <div class="flex-1" />
+          <div class="flex-1 flex flex-col">
+            <div class="flex-1" />
+            <div>
+              {{ t('edit_session_title') }}
+            </div>
+            <div class="flex-1" />
+          </div>
         </div>
+        <div class="flex-1" />
       </div>
     </EditSessionSettingsDialog>
   </div>

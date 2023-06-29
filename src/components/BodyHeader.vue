@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import { useConversationStore } from '@/store/conversation'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
 import { useMessageStore } from '@/store/message'
 import Dialog from '@/ui/Dialog.vue'
+
+const { t } = useI18n()
 
 const leftSideBarStore = useLeftSideBarStore()
 
@@ -65,20 +68,26 @@ function clearMessageRecords() {
     </div>
   </div>
 
-  <Dialog :open="openConfirmDialog" title="Are you sure clear the message records?" @on-close="closeDialog">
+  <Dialog :open="openConfirmDialog" :title="t('session_clear_title')" @on-close="closeDialog">
     <div style="line-height: 32px;">
-      Are you sure you want to delete the chat from this conversation?
+      {{ t('session_clear_desc') }}
       <br>
-      <span class="color-red">(Operation cannot be restored)</span>
+      <span class="color-red">{{ t('session_clear_warning') }}</span>
     </div>
     <div class="flex flex-1 m-t-2">
       <div class="flex-1" />
-      <button class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2" @click="clearMessageRecords">
-        Clear
+      <button
+        class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
+        @click="clearMessageRecords"
+      >
+        {{ t('clear') }}
       </button>
 
-      <button class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2" @click="closeDialog">
-        Cancel
+      <button
+        class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
+        @click="closeDialog"
+      >
+        {{ t('cancel') }}
       </button>
     </div>
   </Dialog>

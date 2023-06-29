@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+
+const { t } = useI18n()
 
 const role = ref<string>(window.localStorage.getItem('role') ?? 'auto')
 const language = ref<string>(window.localStorage.getItem('language') ?? 'auto')
@@ -16,11 +19,11 @@ watch(language, (newValue, oldValue) => {
 <template>
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
-      Chat Setting
+      {{ t('chat_setting') }}
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        Role
+        {{ t('role') }}
       </div>
       <div class="text-4 m-t-2 flex flex-1">
         <select
@@ -51,7 +54,7 @@ watch(language, (newValue, oldValue) => {
         </select>
       </div>
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
-        Language
+        {{ t('language') }}
       </div>
       <div class="text-4 m-t-2 flex flex-row">
         <select

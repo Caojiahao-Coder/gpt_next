@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import DarkSwitcher from '@/components/DarkSwitcher.vue'
+import LocaleSwitcher from '@/components/LocaleSwitcher.vue'
 </script>
 
 <template>
-  <div class="h-47px p-16px flex flex-row border-base" b="0 t-1 solid">
+  <div class="h-47px p-16px flex flex-row border-base gap-4" b="0 t-1 solid">
     <DarkSwitcher />
+    <LocaleSwitcher />
     <div class="flex-1 flex flex-col">
       <div class="flex-1" />
       <div class="flex-1 text-right text-3 color-gray">
@@ -23,7 +25,8 @@ import DarkSwitcher from '@/components/DarkSwitcher.vue'
   font-family: Light;
   src: url(../fonts/Light.ttf);
 }
-a{
+
+a {
   font-family: 'Light';
 }
 </style>

@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
+import { useI18n } from 'vue-i18n'
 import { useConversationStore } from '@/store/conversation'
+
+const { t } = useI18n()
 
 const chatStore = useConversationStore()
 
@@ -23,7 +26,7 @@ function createNewMessage() {
       >
         <div class="i-carbon-add text-6" />
         <div class="flex-1 m-l-2" style="line-height: 24px;">
-          New
+          {{ t('new') }}
         </div>
       </div>
       <div class="flex-1" />

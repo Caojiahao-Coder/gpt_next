@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import { useConversationStore } from '@/store/conversation'
 import { type Conversation } from '@/store/dbstore'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
+
+const { t } = useI18n()
 
 const openDialog = ref<boolean>(false)
 
@@ -51,22 +54,22 @@ function onCloseDialog() {
   <div @click="onOpenEditDialog">
     <slot />
   </div>
-  <Dialog title="Edit session settings" :open="openDialog" @on-close="onCloseDialog">
+  <Dialog :title="t('edit_session_title')" :open="openDialog" @on-close="onCloseDialog">
     <div>
       <div>
-        Session theme color:
+        {{ t('session_theme_color') }}
       </div>
       <div class="m-t-2">
         <SelectColorDialog :color="color" large @on-selected-color="(colorValue: string) => color = colorValue" />
       </div>
       <div class="m-t-4">
-        Session title:
+        {{ t('session_title') }}
       </div>
       <div class="m-t-2 flex flex-row">
         <input v-model="title" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1" p="x-4 y-2">
       </div>
       <div class="m-t-4">
-        Session description:
+        {{ t('session_desc') }}
       </div>
       <div class="m-t-2 flex flex-row">
         <textarea
@@ -82,13 +85,13 @@ function onCloseDialog() {
             class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="onSaveSessionSettings"
           >
-            Save
+            {{ t('save') }}
           </button>
           <button
             class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="onCloseDialog"
           >
-            Cancel
+            {{ t('cancel') }}
           </button>
         </div>
       </div>
