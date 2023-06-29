@@ -2,12 +2,15 @@
 import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
 import dayjs from 'dayjs'
+import { useI18n } from 'vue-i18n'
 import { useMessageStore } from '@/store/message'
 import { useConversationStore } from '@/store/conversation'
 import { useEditorStore } from '@/store/editor'
 import { useGlobalSettingStore } from '@/store/globalsetting'
 import { useErrorDialogStore } from '@/store/errorDialog'
 import Message from '@/ui/message'
+
+const { t } = useI18n()
 
 const expand = ref<boolean>(false)
 
@@ -45,7 +48,7 @@ async function onKeyDownEnter(event: KeyboardEvent) {
   event.preventDefault()
 
   if (inputMessage.value.trim().length === 0) {
-    Message.error('Sorry，the question can\'t be empty.')
+    Message.error(t('message_cannot_empty'))
     return
   }
 
@@ -53,7 +56,7 @@ async function onKeyDownEnter(event: KeyboardEvent) {
   const globalSettingInfo = await globalSettingStore.getGlobalSetting()
 
   if (!globalSettingInfo) {
-    errorDialogStore.message = 'Sorry please set OpenAI Api key first.'
+    errorDialogStore.message = t('message_apikey_empty')
     errorDialogStore.showErrorDialog = true
     return
   }
@@ -63,7 +66,7 @@ async function onKeyDownEnter(event: KeyboardEvent) {
 
 async function onClickSendMessage() {
   if (inputMessage.value.trim().length === 0) {
-    Message.error('Sorry，the question can\'t be empty.')
+    Message.error(t('message_cannot_empty'))
     return
   }
 
@@ -73,7 +76,7 @@ async function onClickSendMessage() {
   const errorDialogStore = useErrorDialogStore()
 
   if (!globalSettingInfo) {
-    errorDialogStore.message = 'Sorry please set OpenAI Api key first.'
+    errorDialogStore.message = t('message_apikey_empty')
     errorDialogStore.showErrorDialog = true
     return
   }
@@ -129,7 +132,7 @@ async function sendNewMessage() {
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
         <textarea
           v-model="inputMessage" :disabled="editorStore.thinking" overflow="x-hidden y-scroll"
-          :placeholder="editorStore.thinking === true ? 'thinking...' : 'Enter Something...'"
+          :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
           class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
           :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
           @keydown.enter="onKeyDownEnter"

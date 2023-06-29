@@ -1,4 +1,4 @@
-body{
+body {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -9,11 +9,11 @@ body{
   src: url(../fonts/Main.ttf);
 }
 
-*{
+* {
   font-family: 'PrimaryFont';
 }
 
-.message-container{
+.message-container {
   width: 600px;
   display: inline-block;
   position: fixed;
@@ -21,6 +21,11 @@ body{
   left: calc(50% - 300px);
 }
 
-.message-container>div>div{
+.message-container>div>div {
   margin: 12px auto;
+}
+
+code {
+  border-radius: 4px !important;
+  border: solid 1px #50505050;
 }

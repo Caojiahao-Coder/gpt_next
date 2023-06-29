@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import ConversationsList from './ConversationsList.vue'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
 import { useConversationStore } from '@/store/conversation'
 
+const { t } = useI18n()
 const { width } = useWindowSize()
 
 const expandStore = useLeftSideBarStore()
@@ -36,10 +38,13 @@ function onCreateNewConversation() {
     <div class="h-47px p-16px border-base" b="0 b-1 solid">
       <div class="flex flex-rows" style="line-height: 47px;">
         <div class="flex-1 text-6 font-bold select-none">
-          CONVERSATIONS
+          {{ t('conversation') }}
         </div>
         <div i-carbon-add-comment class="text-6 icon-button" m="y-12px" @click="onCreateNewConversation" />
-        <div v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px " @click="onCloseLeftSideBar" />
+        <div
+          v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px "
+          @click="onCloseLeftSideBar"
+        />
       </div>
     </div>
 

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import { useGlobalSettingStore } from '@/store/globalsetting'
 import { useGlobalSettingDBStore } from '@/store/dbstore'
 
 const open = ref<boolean>(false)
+
+const { t } = useI18n()
 
 const apiKey_modal = ref<string>()
 const gptModel_modal = ref<string>('gpt-3.5-turbo-0301')
@@ -87,7 +90,7 @@ function copyOpenAiKey() {
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        Api Key
+        {{ t('api_key') }}
       </div>
       <div class="flex flex-row gap-2  m-t-2">
         <div class="text-4" :class="apiKey ? 'color-base' : 'color-fade'">
@@ -104,7 +107,7 @@ function copyOpenAiKey() {
       </div>
 
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
-        Chat Model
+        {{ t('chat_model') }}
       </div>
       <div class="text-4 m-t-2" :class="apiKey ? 'color-base' : 'color-fade'">
         {{
