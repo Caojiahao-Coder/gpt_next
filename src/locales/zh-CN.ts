@@ -21,4 +21,6 @@ export default {
   enter: '输入一些问题...',
   message_cannot_empty: '抱歉，消息内容不可以为空.',
   message_apikey_empty: '抱歉，ApiKey不可以为空',
+  new_conversation_title: '新对话',
+  apikey_empty_error:`抱歉Api Key不可以为空`
 }

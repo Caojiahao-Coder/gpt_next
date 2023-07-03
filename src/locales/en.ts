@@ -21,4 +21,6 @@ export default {
   enter: 'Enter Something...',
   message_cannot_empty: 'Sorry, the question can\'t be empty.',
   message_apikey_empty: 'Sorry, the Api key can\'t be empty.',
+  new_conversation_title:'New Message',
+  apikey_empty_error:`Sorry the api key can't be empty`
 }

@@ -2,8 +2,8 @@
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
-import { useGlobalSettingStore } from '@/store/globalsetting'
-import { useGlobalSettingDBStore } from '@/store/dbstore'
+import useGlobalStore from '@/store/global-store'
+import Message from '@/ui/message';
 
 const open = ref<boolean>(false)
 
@@ -18,19 +18,20 @@ const gptModel = ref<string | undefined>()
 const copyApiKeySuccess = ref<boolean>(false)
 const copyApiKeyFailed = ref<boolean>(false)
 
+const globalStore = useGlobalStore()
+
 onMounted(() => {
   loadOpenAISetting()
 })
 
 async function loadOpenAISetting() {
-  const globalSettingStore = useGlobalSettingStore()
-  const data = await globalSettingStore.getGlobalSetting()
+  const data = await globalStore.getGlobalSetting()
 
   if (data) {
-    apiKey.value = data.apiKey
-    gptModel.value = data.gptModel
-    apiKey_modal.value = data.apiKey
-    gptModel.value = data.gptModel
+    apiKey.value = data.api_key
+    gptModel.value = data.chat_model
+    apiKey_modal.value = data.api_key
+    gptModel.value = data.chat_model
   }
   else {
     apiKey.value = undefined
@@ -45,13 +46,13 @@ function openEditModal() {
 }
 
 async function onSaveOpenAIConfig() {
-  const globalSettingDB = useGlobalSettingDBStore()
-  if (await globalSettingDB.db.globalSetting.count() > 0)
-    await globalSettingDB.db.globalSetting.clear()
-
-  await globalSettingDB.db.globalSetting.add({
-    openAIKey: apiKey_modal.value,
-    chatModel: gptModel_modal.value,
+  if (!apiKey_modal.value || (apiKey_modal.value?.trim() ?? "").length === 0) {
+    Message.error(t('apikey_empty_error'))
+    return
+  }
+  globalStore.addApiKey({
+    api_key: apiKey_modal.value!,
+    chat_model: gptModel_modal.value!
   })
   open.value = false
   loadOpenAISetting()
@@ -99,10 +100,8 @@ function copyOpenAiKey() {
           }}
         </div>
         <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
-        <div
-          v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
-          style="line-height:20px"
-        />
+        <div v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
+          style="line-height:20px" />
         <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" />
       </div>
 
@@ -123,19 +122,15 @@ function copyOpenAiKey() {
         Api Key:
       </div>
       <div class="flex flex-row m-t-2">
-        <input
-          v-model="apiKey_modal" class="flex-1 border-base outline-none bg-body color-base" type="password"
-          placeholder="Please input your OpenAI Key" p="x-4 y-2" b="1 solid rd-1"
-        >
+        <input v-model="apiKey_modal" class="flex-1 border-base outline-none bg-body color-base" type="password"
+          placeholder="Please input your OpenAI Key" p="x-4 y-2" b="1 solid rd-1">
       </div>
       <div class="m-t-4">
         GPT Model:
       </div>
       <div class="flex flex-row m-t-2">
-        <select
-          v-model="gptModel_modal" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
-          b="1 solid rd-1"
-        >
+        <select v-model="gptModel_modal" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
+          b="1 solid rd-1">
           <option value="gpt-3.5-turbo">
             gpt-3.5-turbo
           </option>
@@ -160,16 +155,12 @@ function copyOpenAiKey() {
       <div class="flex flex-row m-t-4">
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
-          <button
-            class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="onSaveOpenAIConfig"
-          >
+          <button class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+            @click="onSaveOpenAIConfig">
             Save
           </button>
-          <button
-            class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="() => open = false"
-          >
+          <button class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+            @click="() => open = false">
             Cancel
           </button>
         </div>
