@@ -10,10 +10,6 @@ import rehypeStringify from 'rehype-stringify'
 import rehypePrism from '@mapbox/rehype-prism'
 import rehypeHighlight from 'rehype-highlight'
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-expect-error
-import remarkVue from 'remark-vue'
-
 const props = defineProps<{ content: string }>()
 
 const contentRef = ref<HTMLDivElement>()
@@ -33,12 +29,11 @@ function parseMarkdown(raw: string) {
     .use(remarkParse)
     .use(remarkGfm)
     .use(remarkMath)
-    .use(remarkVue)
     .use(remarkRehype, { allowDangerousHtml: true })
     .use(rehypePrism, {
       ignoreMissing: true,
     })
-    .use(rehypeHighlight, { detect: true })
+    .use(rehypeHighlight, { detect: true, ignoreMissing: true })
     .use(rehypeKatex)
     .use(rehypeStringify)
     .processSync(raw)
