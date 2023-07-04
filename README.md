@@ -30,7 +30,7 @@
 - [x] Persistent session mode
 - [x] Multiple roles
 - [ ] Support image generation
-- [ ] Support for editing conversations
+- [x] Support for editing conversations
 
 ## 🐞 Bug List
 

@@ -5,9 +5,9 @@ import LeftSideBar from '@/components/LeftSideBar.vue'
 import ConversationBody from '@/components/ConversationBody.vue'
 import SettingSlideBar from '@/components/SettingSlideBar.vue'
 import WelcomePage from '@/components/WelcomePage.vue'
-import { useConversationStore } from '@/store/conversation.js'
 import ErrorDialog from '@/components/ErrorDialog.vue'
-import { useErrorDialogStore } from '@/store/errorDialog'
+import { useErrorDialogStore } from '@/store/error-dialog'
+import useConversationStore from '@/store/conversation-store'
 
 const chatContentStore = useConversationStore()
 const errorDialogStore = useErrorDialogStore()

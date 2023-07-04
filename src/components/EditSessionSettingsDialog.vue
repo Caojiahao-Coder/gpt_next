@@ -2,8 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
-import { useConversationStore } from '@/store/conversation'
-import { type Conversation } from '@/store/dbstore'
+import useConversationStore from '@/store/conversation-store'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
 
 const { t } = useI18n()
@@ -24,21 +23,20 @@ async function onSaveSessionSettings() {
 
   const info = conversationStore.conversationInfo!
 
-  conversationStore.updateConversationInfo(info.id!, {
+  conversationStore.updateConversationInfoById({
     id: info.id,
-    name: title.value,
-    token: info.token,
-    model: info.model,
-    createTime: info.createTime,
+    title: title.value,
+    create_time: info.create_time,
+    description: description.value,
+    conversation_token: info.conversation_token,
     color: color.value,
-    description: description.value.trim().length === 0 ? undefined : description.value.trim(),
-  } as Conversation)
+  })
 
   openDialog.value = false
 }
 
 function onOpenEditDialog() {
-  title.value = conversationStore.conversationInfo!.name
+  title.value = conversationStore.conversationInfo!.title
   description.value = conversationStore.conversationInfo!.description ?? ''
   color.value = conversationStore.conversationInfo!.color
 

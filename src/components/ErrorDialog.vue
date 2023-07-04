@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useErrorDialogStore } from '@/store/errorDialog'
+import { useErrorDialogStore } from '@/store/error-dialog'
 
 const errorDialogStore = useErrorDialogStore()
 

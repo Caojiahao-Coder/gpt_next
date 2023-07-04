@@ -1,19 +1,30 @@
-import type { MessageResultByStreamType } from './message-type'
-import { useErrorDialogStore } from '@/store/errorDialog'
+import type { MessageResultByStreamType } from './openai-type'
+import { useErrorDialogStore } from '@/store/error-dialog'
 
-export async function parserStreamText(response: Response, callback: (content: string) => void, errorCallback: (data: { error: {
-  message: string
-  type: string
-  param: string
-  code: string
-} }) => void) {
+/**
+ * 将Stream转换成text
+ * @param response
+ * @param callback
+ * @param errorCallback
+ * @returns
+ */
+export async function parserStreamText(response: Response, callback: (content: string) => void, errorCallback: (data: {
+  error: {
+    message: string
+    type: string
+    param: string
+    code: string
+  }
+}) => void) {
   if (response.status !== 200 && response.status !== 204) {
-    const result: { error: {
-      message: string
-      type: string
-      param: string
-      code: string
-    } } = await response.json()
+    const result: {
+      error: {
+        message: string
+        type: string
+        param: string
+        code: string
+      }
+    } = await response.json()
     const errorDialog = useErrorDialogStore()
     errorDialog.showErrorDialog = true
     errorDialog.message = result.error.message.length === 0 ? result.error.code : result.error.code

@@ -3,6 +3,11 @@ export interface OpenAIFetchInfo {
   body: Record<string, any>
 }
 
+/**
+ * 创建OpenAI请求对象
+ * @param payload 
+ * @returns 
+ */
 export async function fetchChatCompletion(payload: OpenAIFetchInfo) {
   const initOptions = {
     headers: {

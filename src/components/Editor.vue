@@ -1,24 +1,23 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
 import { ref } from 'vue'
-import dayjs from 'dayjs'
 import { useI18n } from 'vue-i18n'
-import { useMessageStore } from '@/store/message'
-import { useConversationStore } from '@/store/conversation'
-import { useEditorStore } from '@/store/editor'
-import { useGlobalSettingStore } from '@/store/globalsetting'
-import { useErrorDialogStore } from '@/store/errorDialog'
+import { uid } from 'uid'
+import useEditorStore from '@/store/editor-store.js'
+import { useErrorDialogStore } from '@/store/error-dialog'
 import Message from '@/ui/message'
+import useMessageStore from '@/store/message-store'
+import useConversationStore from '@/store/conversation-store'
+import useGlobalStore from '@/store/global-store'
+import type { NewMessageInfo } from '@/database/table-type'
+
+const editorStore = useEditorStore()
 
 const { t } = useI18n()
 
 const expand = ref<boolean>(false)
 
 const { width } = useWindowSize()
-
-const editorStore = useEditorStore()
-
-const messageRecordsStore = useMessageStore()
 
 const conversationStore = useConversationStore()
 
@@ -44,75 +43,66 @@ function onCloseEditor() {
  * 发送一条新的消息
  * @param event
  */
-async function onKeyDownEnter(event: KeyboardEvent) {
+function onKeyDownEnter(event: KeyboardEvent) {
   event.preventDefault()
-
-  if (inputMessage.value.trim().length === 0) {
-    Message.error(t('message_cannot_empty'))
-    return
-  }
-
-  const globalSettingStore = useGlobalSettingStore()
-  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
-
-  if (!globalSettingInfo) {
-    errorDialogStore.message = t('message_apikey_empty')
-    errorDialogStore.showErrorDialog = true
-    return
-  }
-
   sendNewMessage()
 }
 
-async function onClickSendMessage() {
-  if (inputMessage.value.trim().length === 0) {
-    Message.error(t('message_cannot_empty'))
-    return
-  }
-
-  const globalSettingStore = useGlobalSettingStore()
-  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
-
-  const errorDialogStore = useErrorDialogStore()
-
-  if (!globalSettingInfo) {
-    errorDialogStore.message = t('message_apikey_empty')
-    errorDialogStore.showErrorDialog = true
-    return
-  }
-
+function onClickSendMessage() {
   sendNewMessage()
 }
 
 async function sendNewMessage() {
+  const messageStore = useMessageStore()
+
   if (editorStore.thinking === true)
     return
 
   const message = inputMessage.value.trim()
+
+  if (message.length === 0) {
+    Message.error(t('message_cannot_empty'))
+    return
+  }
+
+  const globalSettingStore = useGlobalStore()
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  if (!globalSettingInfo) {
+    errorDialogStore.message = t('message_apikey_empty')
+    errorDialogStore.showErrorDialog = true
+    return
+  }
+
+  let conversationId = -1
+
+  if (!conversationStore.conversationInfo) {
+    conversationId = await conversationStore.createNewConversation({
+      title: t('new_conversation_title'),
+      color: 'bg-gray',
+      create_time: Date.now(),
+      description: '',
+      conversation_token: uid(32),
+    })
+  }
+  else {
+    conversationId = conversationStore.conversationInfo.id
+  }
+
+  const messageInfo: NewMessageInfo = {
+    conversation_id: conversationId,
+    user_content: message,
+    gpt_content: '',
+    create_time: Date.now(),
+    token_id: uid(32),
+    status: 'waiting',
+  }
+
+  messageStore.addNewMessage(messageInfo)
+
+  editorStore.thinking = true
+
   inputMessage.value = ''
-
-  // 如果没有选中Message 就需要先创建一个Message
-  if (!conversationStore.conversationInfo)
-    await conversationStore.createConversation()
-
-  // 追加消息内容
-  await messageRecordsStore.addNewMessage({
-    role: 'user',
-    content: message,
-    converstaionToken: conversationStore.conversationInfo!.token!,
-    conversationId: conversationStore.conversationInfo!.id!,
-    createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    error: false,
-  })
-
-  await messageRecordsStore.addNewMessage({
-    role: 'gpt',
-    content: '',
-    converstaionToken: conversationStore.conversationInfo!.token!,
-    conversationId: conversationStore.conversationInfo!.id!,
-    createTime: dayjs().format('YYYY-MM-DD HH:mm:ss'),
-    error: false,
-  })
 }
 </script>
 
