@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { unified } from 'unified'
 import remarkParse from 'remark-parse'
 import remarkGfm from 'remark-gfm'
@@ -10,11 +10,11 @@ import rehypeStringify from 'rehype-stringify'
 import rehypePrism from '@mapbox/rehype-prism'
 import rehypeHighlight from 'rehype-highlight'
 
+const props = defineProps<{ content: string }>()
+
 const contentRef = ref<HTMLDivElement>()
 
 const needHidePadding = ref<boolean>(true)
-
-const props = defineProps<{ content: string }>()
 
 onMounted(() => {
   needHidePadding.value = (contentRef.value?.firstChild?.nodeName)?.toString() === '#text'
@@ -33,22 +33,22 @@ function parseMarkdown(raw: string) {
     .use(rehypePrism, {
       ignoreMissing: true,
     })
-    .use(rehypeHighlight, { detect: true })
+    .use(rehypeHighlight, { detect: true, ignoreMissing: true })
     .use(rehypeKatex)
     .use(rehypeStringify)
     .processSync(raw)
 
   return String(file)
 }
-
 </script>
 
 <template>
-  <div class="markdown-content" ref="contentRef" v-html="parseMarkdown(props.content)" :style="{
-    margin: `${needHidePadding === false ? '-1rem 0' : '0'}`
-  }" />
+  <div
+    ref="contentRef" class="markdown-content" :style="{
+      margin: `${needHidePadding === false ? '-1rem 0' : '0'}`,
+    }" v-html="parseMarkdown(props.content)"
+  />
 </template>
-
 
 <style scoped>
 .markdown-content {
