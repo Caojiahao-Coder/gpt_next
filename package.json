@@ -53,6 +53,7 @@
     "highlight.js": "^11.8.0",
     "katex": "^0.16.8",
     "rehype-highlight": "^6.0.0",
+    "remark-vue": "^0.9.4",
     "typescript": "~5.0.4",
     "unocss": "^0.52.7",
     "vite": "^4.3.9",
