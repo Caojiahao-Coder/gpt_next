@@ -29,7 +29,7 @@ async function onSaveSessionSettings() {
     create_time: info.create_time,
     description: description.value,
     conversation_token: info.conversation_token,
-    color: color.value
+    color: color.value,
   })
 
   openDialog.value = false
@@ -70,19 +70,25 @@ function onCloseDialog() {
         {{ t('session_desc') }}
       </div>
       <div class="m-t-2 flex flex-row">
-        <textarea v-model="description" class="flex-1 border-base outline-none bg-body color-base min-h-240px"
-          b="1 solid rd-1" p="x-4 y-2" />
+        <textarea
+          v-model="description" class="flex-1 border-base outline-none bg-body color-base min-h-240px"
+          b="1 solid rd-1" p="x-4 y-2"
+        />
       </div>
 
       <div class="m-t-4 flex flex-row">
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
-          <button class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="onSaveSessionSettings">
+          <button
+            class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+            @click="onSaveSessionSettings"
+          >
             {{ t('save') }}
           </button>
-          <button class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="onCloseDialog">
+          <button
+            class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+            @click="onCloseDialog"
+          >
             {{ t('cancel') }}
           </button>
         </div>

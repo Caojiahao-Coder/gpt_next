@@ -21,6 +21,12 @@ export default {
   enter: 'Enter Something...',
   message_cannot_empty: 'Sorry, the question can\'t be empty.',
   message_apikey_empty: 'Sorry, the Api key can\'t be empty.',
-  new_conversation_title:'New Message',
-  apikey_empty_error:`Sorry the api key can't be empty`
+  new_conversation_title: 'New Message',
+  apikey_empty_error: 'Sorry the api key can\'t be empty',
+  reload: 'Reload',
+  edit: 'Edit',
+  delete: 'Delete',
+  submit: 'Submit',
+  dialog_delete_confirm_title: 'Are you sure delete this item?',
+  dialog_edit_title: 'Update your message content',
 }

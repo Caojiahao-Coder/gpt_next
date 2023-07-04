@@ -22,5 +22,11 @@ export default {
   message_cannot_empty: '抱歉，消息内容不可以为空.',
   message_apikey_empty: '抱歉，ApiKey不可以为空',
   new_conversation_title: '新对话',
-  apikey_empty_error:`抱歉Api Key不可以为空`
+  apikey_empty_error: '抱歉Api Key不可以为空',
+  reload: '重新回答',
+  edit: '编辑对话',
+  delete: '删除对话',
+  submit: '提交',
+  dialog_delete_confirm_title: '你确定要删除这条记录吗?',
+  dialog_edit_title: '修改你的聊天内容',
 }

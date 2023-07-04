@@ -3,10 +3,10 @@ import { useErrorDialogStore } from '@/store/error-dialog'
 
 /**
  * 将Stream转换成text
- * @param response 
- * @param callback 
- * @param errorCallback 
- * @returns 
+ * @param response
+ * @param callback
+ * @param errorCallback
+ * @returns
  */
 export async function parserStreamText(response: Response, callback: (content: string) => void, errorCallback: (data: {
   error: {

@@ -1,16 +1,16 @@
-import db from "@/database/db";
 import { ref } from 'vue'
-import type { NewMessageInfo, TBMessageInfo } from "@/database/table-type";
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
+import db from '@/database/db'
+import type { NewMessageInfo, TBMessageInfo } from '@/database/table-type'
 
 const useMessageStore = defineStore('messageStore', () => {
-
   const messageList = ref<TBMessageInfo[]>([])
 
   function getMessageRecordsByConversationId(conversationId: number): Promise<TBMessageInfo[]> {
+    // eslint-disable-next-line promise/param-names
     return new Promise((reslove, reject) => {
       db.init().then(() => {
-        db.select('tb_message', 'conversation_id', conversationId).then(res => {
+        db.select('tb_message', 'conversation_id', conversationId).then((res) => {
           reslove(res as TBMessageInfo[])
         })
       })
@@ -20,32 +20,44 @@ const useMessageStore = defineStore('messageStore', () => {
   function addNewMessage(data: NewMessageInfo) {
     db.init().then(() => {
       db.add('tb_message', data).then((res) => {
-        getMessageRecordsByConversationId(data.conversation_id).then(msessageListData => {
-          messageList.value = msessageListData
+        getMessageRecordsByConversationId(data.conversation_id).then((res) => {
+          messageList.value = res
         })
       })
     })
   }
 
-  function updateMessageInfo(data: TBMessageInfo) {
-    db.init().then(() => {
-      db.update('tb_message', data)
+  function updateMessageInfo(data: TBMessageInfo): Promise<boolean> {
+    // eslint-disable-next-line promise/param-names
+    return new Promise((reslove, reject) => {
+      db.init().then(async () => {
+        await db.update('tb_message', data)
+        reslove(true)
+      })
     })
   }
 
-  function clearRecords(conversationId: number) {
+  async function clearRecords() {
     db.init().then(() => {
-      getMessageRecordsByConversationId(conversationId).then(res => {
-        res.map(item => {
-          db.deleteById('tb_message', item.id)
-        })
-        clearMessageRecords()
+      messageList.value.forEach((item) => {
+        db.deleteById('tb_message', item.id)
       })
+      clearMessageRecords()
     })
   }
 
   function clearMessageRecords() {
     messageList.value = []
+  }
+
+  function deleteMessageItem(id: number): Promise<boolean> {
+    // eslint-disable-next-line promise/param-names
+    return new Promise((reslove, reject) => {
+      db.init().then(async () => {
+        await db.deleteById('tb_message', id)
+        reslove(true)
+      })
+    })
   }
 
   return {
@@ -54,7 +66,8 @@ const useMessageStore = defineStore('messageStore', () => {
     addNewMessage,
     updateMessageInfo,
     clearMessageRecords,
-    clearRecords
+    clearRecords,
+    deleteMessageItem,
   }
 })
 

@@ -1,31 +1,33 @@
-import db from '@/database/db';
 import { ref, watch } from 'vue'
-import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type';
-import { defineStore } from 'pinia';
-import useMessageStore from './message-store';
+import { defineStore } from 'pinia'
+import useMessageStore from './message-store'
+import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type'
+import db from '@/database/db'
 
 const useConversationStore = defineStore('conversationStore', () => {
-
-  const conversationInfo = ref<TBConverstationInfo>()
+  const conversationInfo = ref<TBConverstationInfo | null>(null)
   const conversationsList = ref<TBConverstationInfo[]>([])
 
-  watch(conversationInfo, async (newValue, oldValue) => {
+  watch(conversationInfo, (newValue, oldValue) => {
     const messageStore = useMessageStore()
 
-    if (!newValue) {
+    if (!newValue)
       messageStore.clearMessageRecords()
-    }
-    var data = await messageStore.getMessageRecordsByConversationId(newValue!.id)
-    messageStore.messageList = data
+
+    messageStore.messageList = []
+    messageStore.getMessageRecordsByConversationId(newValue!.id).then((res) => {
+      messageStore.messageList = res
+    })
   })
 
   function createNewConversation(data: NewConverstationInfo): Promise<number> {
-    return new Promise<number>((reslove, reject) => {
+    // eslint-disable-next-line promise/param-names
+    return new Promise<number>((_reslove, _reject) => {
       db.init().then(() => {
         db.add('tb_conversation', data).then((res) => {
           updateConversationsList()
           getConversationInfoById(res as number)
-          reslove(res as number)
+          _reslove(res as number)
         })
       })
     })
@@ -35,7 +37,7 @@ const useConversationStore = defineStore('conversationStore', () => {
     db.init().then(() => {
       db.deleteById('tb_conversation', key).then(() => {
         updateConversationsList()
-        conversationInfo.value = undefined
+        conversationInfo.value = null
       })
     })
   }
@@ -51,7 +53,7 @@ const useConversationStore = defineStore('conversationStore', () => {
 
   function updateConversationsList() {
     db.init().then(() => {
-      db.selectAll('tb_conversation').then(res => {
+      db.selectAll('tb_conversation').then((res) => {
         conversationsList.value = (res as TBConverstationInfo[])
           .sort((a, b) => {
             return b.create_time - a.create_time
@@ -62,7 +64,7 @@ const useConversationStore = defineStore('conversationStore', () => {
 
   function getConversationInfoById(conversationId: number) {
     db.init().then(() => {
-      db.selectById('tb_conversation', conversationId).then(res => {
+      db.selectById('tb_conversation', conversationId).then((res) => {
         conversationInfo.value = res as TBConverstationInfo
       })
     })
@@ -76,7 +78,7 @@ const useConversationStore = defineStore('conversationStore', () => {
 
     createNewConversation,
     deleteConversationById,
-    updateConversationInfoById
+    updateConversationInfoById,
   }
 })
 
