@@ -1,16 +1,15 @@
-import type { NewConverstationInfo, NewGlobalSettingInfo, NewMessageInfo, TBConverstationInfo, TBGlobalSettingInfo, TBMessageInfo } from "./table-type";
+import type { NewConverstationInfo, NewGlobalSettingInfo, NewMessageInfo, TBConverstationInfo, TBGlobalSettingInfo, TBMessageInfo } from './table-type'
 
 /**
  * 数据库文件
  */
 class DB {
+  db: IDBDatabase | null
+  version: number
 
-  db: IDBDatabase | null;
-  version: number;
-
-  tb_global: string = 'tb_global'
+  tb_global = 'tb_global'
   tb_conversation = 'tb_conversation'
-  tb_message: string = 'tb_message'
+  tb_message = 'tb_message'
 
   constructor() {
     this.db = null
@@ -22,10 +21,7 @@ class DB {
    */
   init() {
     return new Promise((resolve, reject) => {
-
-      var that = this
-
-      var request = window.indexedDB.open('chat_next_db', this.version)
+      const request = window.indexedDB.open('chat_next_db', this.version)
 
       request.onsuccess = () => {
         this.db = (request as IDBOpenDBRequest).result
@@ -35,13 +31,11 @@ class DB {
       request.onupgradeneeded = (event) => {
         this.db = (event.target as IDBOpenDBRequest).result
 
-        if (!this.db.objectStoreNames.contains(that.tb_global)) {
+        if (!this.db.objectStoreNames.contains(this.tb_global))
           this.initGlobalTable()
-        }
 
-        if (!this.db.objectStoreNames.contains(this.tb_message)) {
+        if (!this.db.objectStoreNames.contains(this.tb_message))
           this.initMessageTable()
-        }
 
         if (!this.db.objectStoreNames.contains(this.tb_conversation))
           this.initConversationTable()
@@ -55,15 +49,16 @@ class DB {
 
   /**
    * 数据添加操作
-   * @param tb 
-   * @param data 
-   * @returns 
+   * @param tb
+   * @param data
+   * @returns
    */
   add(tb: 'tb_global' | 'tb_conversation' | 'tb_message', data: NewGlobalSettingInfo | NewConverstationInfo | NewMessageInfo) {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb], 'readwrite').objectStore(tb).add(data)
+      const request = this.db?.transaction([tb], 'readwrite').objectStore(tb).add(data)
 
-      if (!request) { return }
+      if (!request)
+        return
 
       request!.onsuccess = (event) => {
         resolve((event.target as IDBOpenDBRequest).result)
@@ -77,13 +72,13 @@ class DB {
 
   /**
    * get item by id
-   * @param tb 
-   * @param key 
-   * @returns 
+   * @param tb
+   * @param key
+   * @returns
    */
   selectById(tb: 'tb_global' | 'tb_conversation' | 'tb_message', key: number) {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb])
+      const request = this.db?.transaction([tb])
         .objectStore(tb)
         .get(key)
 
@@ -102,12 +97,12 @@ class DB {
 
   /**
    * 获取所有数据
-   * @param tb 
-   * @returns 
+   * @param tb
+   * @returns
    */
   selectAll(tb: 'tb_global' | 'tb_conversation' | 'tb_message') {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb])
+      const request = this.db?.transaction([tb])
         .objectStore(tb)
         .getAll()
 
@@ -126,14 +121,14 @@ class DB {
 
   /**
    * 通过索引获取数据
-   * @param tb 
-   * @param index 
-   * @param content 
-   * @returns 
+   * @param tb
+   * @param index
+   * @param content
+   * @returns
    */
   select(tb: 'tb_global' | 'tb_conversation' | 'tb_message', index: string, content: any) {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb])
+      const request = this.db?.transaction([tb])
         .objectStore(tb)
         .index(index)
         .getAll(content)
@@ -153,22 +148,22 @@ class DB {
 
   /**
    * 通过Id删除数据
-   * @param tb 
-   * @param key 
-   * @returns 
+   * @param tb
+   * @param key
+   * @returns
    */
   deleteById(tb: 'tb_global' | 'tb_conversation' | 'tb_message', key: number) {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb], 'readwrite')
+      const request = this.db?.transaction([tb], 'readwrite')
         .objectStore(tb)
         .delete(key)
 
       request!.onsuccess = (event) => {
-        if (request?.result) {
+        if (request?.result)
           resolve(request.result)
-        } else {
+
+        else
           resolve(-1)
-        }
       }
 
       request!.onerror = (error) => {
@@ -179,13 +174,13 @@ class DB {
 
   /**
    * 更新数据
-   * @param tb 
-   * @param data 
-   * @returns 
+   * @param tb
+   * @param data
+   * @returns
    */
   update(tb: 'tb_global' | 'tb_conversation' | 'tb_message', data: TBGlobalSettingInfo | TBConverstationInfo | TBMessageInfo) {
     return new Promise((resolve, reject) => {
-      var request = this.db?.transaction([tb], 'readwrite')
+      const request = this.db?.transaction([tb], 'readwrite')
         .objectStore(tb)
         .put(data)
 
@@ -194,21 +189,20 @@ class DB {
       }
 
       request!.onerror = (error) => {
-        reject(error);
+        reject(error)
       }
     })
   }
 
   /**
    * init global setting table.
-   * @returns 
+   * @returns
    */
   private initGlobalTable() {
-    if (!this.db) {
+    if (!this.db)
       return
-    }
 
-    let objectStore = this.db.createObjectStore(this.tb_global, { keyPath: 'id', autoIncrement: true })
+    const objectStore = this.db.createObjectStore(this.tb_global, { keyPath: 'id', autoIncrement: true })
     objectStore.createIndex('id', 'id', { unique: true })
     objectStore.createIndex('api_key', 'api_key')
     objectStore.createIndex('chat_model', 'chat_model')
@@ -222,7 +216,7 @@ class DB {
     if (!this.db)
       return
 
-    let objectStore = this.db.createObjectStore(this.tb_message, { keyPath: 'id', autoIncrement: true })
+    const objectStore = this.db.createObjectStore(this.tb_message, { keyPath: 'id', autoIncrement: true })
     objectStore.createIndex('id', 'id', { unique: true })
     objectStore.createIndex('conversation_id', 'conversation_id')
     objectStore.createIndex('user_content', 'user_content')
@@ -239,7 +233,7 @@ class DB {
     if (!this.db)
       return
 
-    let objectStore = this.db.createObjectStore(this.tb_conversation, { keyPath: 'id', autoIncrement: true })
+    const objectStore = this.db.createObjectStore(this.tb_conversation, { keyPath: 'id', autoIncrement: true })
     objectStore.createIndex('id', 'id', { unique: true })
     objectStore.createIndex('title', 'title')
     objectStore.createIndex('description', 'description')
@@ -249,6 +243,6 @@ class DB {
   }
 }
 
-let db = new DB();
+const db = new DB()
 
 export default db
