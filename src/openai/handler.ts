@@ -2,7 +2,7 @@
  * 对聊天信息进行引导 使其答案更加准确
  * 处理 聊天对话内容
  */
-export function handleChatCompletions(messages: { role: string; content: string }[]): { role: string; content: string }[] {
+function handleChatCompletions(messages: { role: string; content: string }[]): { role: string; content: string }[] {
   const language = window.localStorage.getItem('language') ?? 'auto'
 
   if (language !== 'auto') {
@@ -55,4 +55,18 @@ export function handleChatCompletions(messages: { role: string; content: string 
       break
   }
   return messages
+}
+
+function handleCreateSessionNameByGPT(messages: { role: string; content: string }[]) {
+  messages.push({
+    role: 'user',
+    content: 'Please give this Session a name based on the above conversation.',
+  })
+
+  return messages
+}
+
+export {
+  handleChatCompletions,
+  handleCreateSessionNameByGPT,
 }

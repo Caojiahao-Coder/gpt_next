@@ -111,6 +111,13 @@ async function getChatAnswer() {
   await messageStore.updateMessageInfo(info)
   messageInfo.value = info
   editorStore.thinking = false
+  messageStore.messageList = await messageStore.getMessageRecordsByConversationId(props.messageInfo.conversation_id)
+
+  if (messageStore.messageList.length === 1) {
+    setTimeout(() => {
+      messageStore.createSessionTitle()
+    }, 120)
+  }
 }
 
 function onMouseEnter() {

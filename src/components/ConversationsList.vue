@@ -1,20 +1,21 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import ConversationItem from '@/components/ConversationItem.vue'
 import useConversationStore from '@/store/conversation-store'
-import { onMounted } from 'vue';
 
 const conversationStore = useConversationStore()
 
 onMounted(() => {
   conversationStore.updateConversationsList()
 })
-
 </script>
 
 <template>
   <div class="w-320px flex-1 conversations-list overflow-x-hidden overflow-y-scroll color-base">
-    <ConversationItem v-for="(item, index) in conversationStore.conversationsList" :key="index"
-      :conversation-info="item" />
+    <ConversationItem
+      v-for="(item, index) in conversationStore.conversationsList" :key="index"
+      :conversation-info="item"
+    />
   </div>
 </template>
 

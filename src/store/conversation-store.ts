@@ -8,7 +8,7 @@ const useConversationStore = defineStore('conversationStore', () => {
   const conversationInfo = ref<TBConverstationInfo | null>(null)
   const conversationsList = ref<TBConverstationInfo[]>([])
 
-  watch(conversationInfo, (newValue, oldValue) => {
+  watch(conversationInfo, (newValue) => {
     const messageStore = useMessageStore()
 
     if (!newValue)

@@ -5,8 +5,8 @@ export interface OpenAIFetchInfo {
 
 /**
  * 创建OpenAI请求对象
- * @param payload 
- * @returns 
+ * @param payload
+ * @returns
  */
 export async function fetchChatCompletion(payload: OpenAIFetchInfo) {
   const initOptions = {

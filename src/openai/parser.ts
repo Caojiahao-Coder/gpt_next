@@ -52,9 +52,11 @@ export async function parserStreamText(response: Response, callback: (content: s
         return
       }
       const json = JSON.parse(data.substring(6)) as MessageResultByStreamType
-      const messageItem = json.choices[0].delta.content
-      if (messageItem)
-        callback(messageItem)
+      if (json.choices) {
+        const messageItem = json.choices[0].delta.content
+        if (messageItem)
+          callback(messageItem)
+      }
     })
     if (dataDone)
       break

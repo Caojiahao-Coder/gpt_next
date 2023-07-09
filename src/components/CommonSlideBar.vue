@@ -1,8 +1,7 @@
 <script setup lang="ts">
+import config from '../../package.json'
 import DarkSwitcher from '@/components/DarkSwitcher.vue'
 import LocaleSwitcher from '@/components/LocaleSwitcher.vue'
-//@ts-ignore
-import config from '../../package.json'
 </script>
 
 <template>
@@ -12,8 +11,10 @@ import config from '../../package.json'
     <div class="flex-1 flex flex-col">
       <div class="flex-1" />
       <div class="flex-1 text-right text-3 color-gray">
-        Designed By <a class="decoration-dashed color-base hover-color-primary"
-          href="https://github.com/Caojiahao-Coder">Leo Cao</a>.
+        Designed By <a
+          class="decoration-dashed color-base hover-color-primary"
+          href="https://github.com/Caojiahao-Coder"
+        >Leo Cao</a>.
       </div>
       <div class="flex-1" />
     </div>

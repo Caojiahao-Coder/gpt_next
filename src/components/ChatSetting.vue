@@ -7,11 +7,11 @@ const { t } = useI18n()
 const role = ref<string>(window.localStorage.getItem('role') ?? 'auto')
 const language = ref<string>(window.localStorage.getItem('language') ?? 'auto')
 
-watch(role, (newValue, oldValue) => {
+watch(role, (newValue) => {
   window.localStorage.setItem('role', newValue)
 })
 
-watch(language, (newValue, oldValue) => {
+watch(language, (newValue) => {
   window.localStorage.setItem('language', newValue)
 })
 </script>

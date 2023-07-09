@@ -2,8 +2,8 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
-import useMessageStore from '@/store/message-store'
 import MessageRecordItem from './MessageRecordItem.vue'
+import useMessageStore from '@/store/message-store'
 
 const { t } = useI18n()
 
@@ -19,14 +19,18 @@ function updateScroll() {
 
 <template>
   <div ref="bodyRef" class="relative h-100% records-list color-base" overflow="x-hidden y-scroll">
-    <MessageRecordItem v-for="(item, index) in messageRecordsStore.messageList" :message-info="item" :key="index"
-      :scroll-body="updateScroll" />
+    <MessageRecordItem
+      v-for="(item, index) in messageRecordsStore.messageList" :key="index" :message-info="item"
+      :scroll-body="updateScroll"
+    />
 
     <EditSessionSettingsDialog v-if="!messageRecordsStore.messageList || messageRecordsStore.messageList.length === 0">
       <div class="flex flex-row m-t-24px">
         <div class="flex-1" />
-        <div class="border shadow-2xl bg-base  h-48px flex flex-row color-base gap-2 cursor-pointer" b="1 solid rd-1"
-          p="x-4">
+        <div
+          class="border shadow-2xl bg-base  h-48px flex flex-row color-base gap-2 cursor-pointer" b="1 solid rd-1"
+          p="x-4"
+        >
           <div class="flex flex-col">
             <div class="flex-1" />
             <div class="i-carbon-audio-console" />

@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import useConversationStore from '@/store/conversation-store'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
+import Message from '@/ui/message'
 
 const { t } = useI18n()
 
@@ -17,7 +18,7 @@ const color = ref<string>('')
 
 async function onSaveSessionSettings() {
   if (title.value.trim().length === 0) {
-    window.alert('Sorry session can\'t be empty.')
+    Message.error(t('message_session_title_empty'))
     return
   }
 

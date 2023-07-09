@@ -1,13 +1,14 @@
 {
   "name": "gpt_next",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "private": true,
   "scripts": {
     "dev": "vite",
     "preview": "vite preview",
     "build": "vite build",
     "type-check": "vue-tsc --noEmit",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@types/marked": "^5.0.0",
