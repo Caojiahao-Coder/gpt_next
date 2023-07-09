@@ -15,7 +15,6 @@ const conversationStore = useConversationStore()
 
 const openConfirmDialog = ref<boolean>(false)
 
-
 function onOpenLeftSideBar() {
   leftSideBarStore.expand = !leftSideBarStore.expand
 }
@@ -50,7 +49,8 @@ function clearMessageRecords() {
       </div>
       <div
         v-if="conversationStore.conversationInfo?.description && conversationStore.conversationInfo?.description!.trim().length > 0"
-        class="text-3 color-fade m-t1 overflow-hidden" style="text-overflow: ellipsis;white-space: nowrap;">
+        class="text-3 color-fade m-t1 overflow-hidden" style="text-overflow: ellipsis;white-space: nowrap;"
+      >
         {{ conversationStore.conversationInfo?.description! }}
       </div>
       <div class="flex-1" />
@@ -75,13 +75,17 @@ function clearMessageRecords() {
     </div>
     <div class="flex flex-1 m-t-2">
       <div class="flex-1" />
-      <button class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
-        @click="clearMessageRecords">
+      <button
+        class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
+        @click="clearMessageRecords"
+      >
         {{ t('clear') }}
       </button>
 
-      <button class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
-        @click="closeDialog">
+      <button
+        class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
+        @click="closeDialog"
+      >
         {{ t('cancel') }}
       </button>
     </div>

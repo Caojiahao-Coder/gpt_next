@@ -1,25 +1,26 @@
-import db from "@/database/db";
-import type { NewGlobalSettingInfo, TBGlobalSettingInfo } from "@/database/table-type";
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
+import db from '@/database/db'
+import type { NewGlobalSettingInfo, TBGlobalSettingInfo } from '@/database/table-type'
 
 const useGlobalStore = defineStore('globalStore', () => {
-
   function getApiKey(): Promise<string> {
-    return new Promise((reslove, reject) => {
+    // eslint-disable-next-line promise/param-names
+    return new Promise((reslove) => {
       db.init().then(
         () => {
-          db.selectAll('tb_global').then(res => {
+          db.selectAll('tb_global').then((res) => {
             reslove(((res as TBGlobalSettingInfo[]).reverse()[0] as TBGlobalSettingInfo).api_key)
           })
-        }
+        },
       )
     })
   }
 
   function getGlobalSetting(): Promise<TBGlobalSettingInfo> {
-    return new Promise((reslove, reject) => {
+    // eslint-disable-next-line promise/param-names
+    return new Promise((reslove) => {
       db.init().then(() => {
-        db.selectAll('tb_global').then(res => {
+        db.selectAll('tb_global').then((res) => {
           reslove(((res as TBGlobalSettingInfo[]).reverse()[0] as TBGlobalSettingInfo))
         })
       })
@@ -32,11 +33,10 @@ const useGlobalStore = defineStore('globalStore', () => {
     })
   }
 
-
   return {
     addApiKey,
     getApiKey,
-    getGlobalSetting
+    getGlobalSetting,
   }
 })
 

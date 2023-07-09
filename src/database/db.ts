@@ -82,7 +82,7 @@ class DB {
         .objectStore(tb)
         .get(key)
 
-      request!.onsuccess = (event) => {
+      request!.onsuccess = () => {
         if (request?.result)
           resolve(request.result)
         else
@@ -106,7 +106,7 @@ class DB {
         .objectStore(tb)
         .getAll()
 
-      request!.onsuccess = (event) => {
+      request!.onsuccess = () => {
         if (request?.result)
           resolve(request.result)
         else
@@ -133,7 +133,7 @@ class DB {
         .index(index)
         .getAll(content)
 
-      request!.onsuccess = (event) => {
+      request!.onsuccess = () => {
         if (request?.result)
           resolve(request.result)
         else
@@ -158,7 +158,7 @@ class DB {
         .objectStore(tb)
         .delete(key)
 
-      request!.onsuccess = (event) => {
+      request!.onsuccess = () => {
         if (request?.result)
           resolve(request.result)
 
