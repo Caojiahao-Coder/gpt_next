@@ -28,6 +28,10 @@ export default {
   edit: 'Edit',
   delete: 'Delete',
   submit: 'Submit',
+  export: 'Export this conversation',
+  conversation_clear: 'Clear this conversation messages',
+  conversation_edit: 'Edit session information',
   dialog_delete_confirm_title: 'Are you sure delete this item?',
   dialog_edit_title: 'Update your message content',
+  export_failed: 'Sorry export message failed! Please try again!',
 }

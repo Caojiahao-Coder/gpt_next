@@ -18,11 +18,13 @@ function updateScroll() {
 </script>
 
 <template>
-  <div ref="bodyRef" class="relative h-100% records-list color-base" overflow="x-hidden y-scroll">
-    <MessageRecordItem
-      v-for="(item, index) in messageRecordsStore.messageList" :key="index" :message-info="item"
-      :scroll-body="updateScroll"
-    />
+  <div ref="bodyRef" class="relative h-100% records-list color-base bg-body" overflow="x-hidden y-scroll">
+    <div id="conversation-body">
+      <MessageRecordItem
+        v-for="(item, index) in messageRecordsStore.messageList" :key="index" :message-info="item"
+        :scroll-body="updateScroll"
+      />
+    </div>
 
     <EditSessionSettingsDialog v-if="!messageRecordsStore.messageList || messageRecordsStore.messageList.length === 0">
       <div class="flex flex-row m-t-24px">
