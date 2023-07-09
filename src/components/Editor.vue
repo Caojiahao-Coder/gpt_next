@@ -10,6 +10,7 @@ import useMessageStore from '@/store/message-store'
 import useConversationStore from '@/store/conversation-store'
 import useGlobalStore from '@/store/global-store'
 import type { NewMessageInfo } from '@/database/table-type'
+import LoadingBar from '@/ui/LoadingBar.vue'
 
 const editorStore = useEditorStore()
 
@@ -108,10 +109,11 @@ async function sendNewMessage() {
 
 <template>
   <div
-    class="relative color-base transition-all border-base" b="0 t-1 solid" :class="[
-      expand === true ? 'h-240px' : 'h-79px',
+    class="relative color-base transition-all b-0 b-t-1" :class="[
+      expand === true ? 'h-240px' : 'h-80px',
     ]"
   >
+    <LoadingBar />
     <div
       class="flex flex-row p-24px" :class="[
         expand === true ? 'h-191px' : 'h-31px',
