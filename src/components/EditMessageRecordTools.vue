@@ -6,7 +6,7 @@ const props = defineProps<{
 }>()
 
 const emits = defineEmits([
-  'onReload', 'onEdit', 'onDelete',
+  'onReload', 'onEdit', 'onDelete', 'onExport',
 ])
 
 const { t } = useI18n()
@@ -26,6 +26,12 @@ const { t } = useI18n()
     <div
       i-carbon-edit icon-button class="w-4 h-4 color-base" :title="t('edit')" @click="() => {
         emits('onEdit')
+      }"
+    />
+    <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />
+    <div
+      i-carbon-save-series class="w-4 h-4 color-base icon-button" :title="t('export')" @click="() => {
+        emits('onExport')
       }"
     />
     <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />

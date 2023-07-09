@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import html2canvas from 'html2canvas'
+import { uid } from 'uid'
 import EditMessageRecordTools from './EditMessageRecordTools.vue'
 import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
@@ -27,6 +29,8 @@ const openDeleteConfirmDialog = ref<boolean>(false)
 const openEditMessageDialog = ref<boolean>(false)
 
 const messageContent = ref<string>(props.messageInfo.user_content)
+
+const messageRef = ref<HTMLDivElement>()
 
 const { t } = useI18n()
 
@@ -175,28 +179,46 @@ async function onSubmitEditMessage() {
 
   getChatAnswer()
 }
+
+function onExportConversation() {
+  if (!messageRef.value) {
+    Message.error(t('export-failed'))
+    return
+  }
+
+  html2canvas(messageRef.value!, {
+    allowTaint: true,
+  }).then((canvas: HTMLCanvasElement) => {
+    const downloadLink = document.createElement('a')
+    downloadLink.href = canvas.toDataURL()
+    downloadLink.download = uid(32)
+    downloadLink.click()
+  })
+}
 </script>
 
 <template>
-  <div
-    class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
-    @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
-  >
-    <div class="avatar w-8 h-8 b-rd-1 bg-body">
-      <div class="w-6 h-6 m-1" i-carbon-user />
-    </div>
-    <Markdown :content="messageInfo.user_content" />
+  <div ref="messageRef">
+    <div
+      class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
+      @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
+    >
+      <div class="avatar w-8 h-8 b-rd-1 bg-body">
+        <div class="w-6 h-6 m-1 b-rd-1" i-carbon-user />
+      </div>
+      <Markdown :content="messageInfo.user_content" />
 
-    <EditMessageRecordTools
-      :show="showTools" class="top-2 right-2 absolute" @on-reload="onReload()"
-      @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()"
-    />
-  </div>
-  <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px" b="0 b-1 solid">
-    <div class="avatar w-8 h-8 b-rd-1">
-      <div class="w-6 h-6 m-1" i-carbon-bot />
+      <EditMessageRecordTools
+        :show="showTools" class="top-2 right-2 absolute" @on-reload="onReload()"
+        @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()" @on-export="onExportConversation()"
+      />
     </div>
-    <Markdown :content="gptContent" />
+    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px" b="0 b-1 solid">
+      <div class="avatar w-8 h-8 b-rd-1">
+        <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
+      </div>
+      <Markdown :content="gptContent" />
+    </div>
   </div>
 
   <Dialog

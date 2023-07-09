@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
+import html2canvas from 'html2canvas'
+import { uid } from 'uid'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import useConversationStore from '@/store/conversation-store'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
@@ -28,9 +30,22 @@ function closeDialog() {
 }
 
 function clearMessageRecords() {
+  if (!conversationStore.conversationInfo)
+    return
   const messageStore = useMessageStore()
-  messageStore.clearRecords(conversationStore.conversationInfo?.id ?? -1)
+  messageStore.clearRecords()
   openConfirmDialog.value = false
+}
+
+function exportConversation() {
+  html2canvas(document.getElementById('conversation-body')!, {
+    allowTaint: true,
+  }).then((canvas: HTMLCanvasElement) => {
+    const downloadLink = document.createElement('a')
+    downloadLink.href = canvas.toDataURL()
+    downloadLink.download = String(uid(32))
+    downloadLink.click()
+  })
 }
 </script>
 
@@ -59,9 +74,10 @@ function clearMessageRecords() {
       <div class="flex-1" />
       <div class="flex flex-row gap-2">
         <EditSessionSettingsDialog v-if="conversationStore.conversationInfo">
-          <div class="icon-button i-carbon-audio-console" />
+          <div class="icon-button i-carbon-audio-console" :title="t('conversation_edit')" />
         </EditSessionSettingsDialog>
-        <div v-if="conversationStore.conversationInfo" class="icon-button i-carbon-clean" @click="openDialog" />
+        <div v-if="conversationStore.conversationInfo" class="icon-button i-carbon-save-series" :title="t('export')" @click="exportConversation()" />
+        <div v-if="conversationStore.conversationInfo" class="icon-button i-carbon-clean" :title="t('conversation_clear')" @click="openDialog" />
       </div>
       <div class="flex-1" />
     </div>

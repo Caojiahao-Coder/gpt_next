@@ -28,6 +28,10 @@ export default {
   edit: '编辑对话',
   delete: '删除对话',
   submit: '提交',
+  export: '导出这个对话',
+  conversation_clear: '删除对话内容',
+  conversation_edit: '编辑对话信息',
   dialog_delete_confirm_title: '你确定要删除这条记录吗?',
   dialog_edit_title: '修改你的聊天内容',
+  export_failed: '抱歉，导出消息失败。请稍后重新尝试。',
 }
