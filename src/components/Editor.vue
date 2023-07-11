@@ -46,6 +46,9 @@ function onCloseEditor() {
  */
 function onKeyDownEnter(event: KeyboardEvent) {
   event.preventDefault()
+  if (event.isComposing)
+    return
+
   sendNewMessage()
 }
 
