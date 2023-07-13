@@ -62,6 +62,9 @@ async function onSaveOpenAIConfig() {
  * 复制OpenAI Api Key
  */
 function copyOpenAiKey() {
+  if (copyApiKeySuccess.value === true || copyApiKeyFailed.value === true)
+    return
+
   if (!apiKey.value) {
     copyApiKeyFailed.value = true
     setTimeout(() => copyApiKeyFailed.value = false, 1200)
@@ -99,12 +102,11 @@ function copyOpenAiKey() {
             apiKey ? `${apiKey.substring(0, 6)}****${apiKey.substring(apiKey.length - 6, apiKey.length)}` : 'undefined'
           }}
         </div>
-        <div class="icon-button i-carbon-copy text-4 h-20px " style="line-height: 20px;" @click="copyOpenAiKey" />
         <div
-          v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
-          style="line-height:20px"
+          class="icon-button text-4 h-20px" :class="[
+            copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
+          ]" style="line-height: 20px;" @click="copyOpenAiKey"
         />
-        <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" />
       </div>
 
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
