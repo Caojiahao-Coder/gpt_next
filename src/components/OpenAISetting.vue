@@ -107,11 +107,6 @@ function copyOpenAiKey() {
             copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
           ]" style="line-height: 20px;" @click="copyOpenAiKey"
         />
-        <!-- <div
-          v-if="copyApiKeySuccess === true" class="i-carbon-checkmark color-green h-20px text-4"
-          style="line-height:20px"
-        />
-        <div v-if="copyApiKeyFailed === true" class="i-carbon-close color-red h-20px text-4" style="line-height: 20px;" /> -->
       </div>
 
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">

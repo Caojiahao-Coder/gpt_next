@@ -37,27 +37,19 @@ function listenerViewClick(event: MouseEvent) {
 }
 
 function openModal() {
-  const appElement = document.getElementById('app')
-  if (appElement)
-    appElement.style.filter = 'blur(.25rem)'
-
   setTimeout(() => {
     document.addEventListener('click', listenerViewClick)
   }, 200)
 }
 
 function closeModal() {
-  const appElement = document.getElementById('app')
-  if (appElement)
-    appElement.style.filter = ''
-
   document.removeEventListener('click', listenerViewClick)
 }
 </script>
 
 <template>
   <div
-    ref="dialogRoot" class="flex flex-row h-100vh w-screen left-0 top-0 color-base"
+    ref="dialogRoot" class="flex flex-row h-100vh w-screen left-0 top-0 color-base backdrop-blur-3"
     :class="open === true ? 'fixed' : 'none'"
   >
     <div class="flex-1 hide-view" />
