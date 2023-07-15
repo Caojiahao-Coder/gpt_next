@@ -65,14 +65,15 @@ function onCloseDialog() {
         {{ t('session_title') }}
       </div>
       <div class="m-t-2 flex flex-row">
-        <input v-model="title" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1" p="x-4 y-2">
+        <input v-model="title" data-cursor="text" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1" p="x-4 y-2">
       </div>
       <div class="m-t-4">
         {{ t('session_desc') }}
       </div>
       <div class="m-t-2 flex flex-row">
         <textarea
-          v-model="description" class="flex-1 border-base outline-none bg-body color-base min-h-240px"
+          v-model="description"
+          data-cursor="text" class="flex-1 border-base outline-none bg-body color-base min-h-240px"
           b="1 solid rd-1" p="x-4 y-2"
         />
       </div>
@@ -81,12 +82,14 @@ function onCloseDialog() {
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
           <button
+            data-cursor="block"
             class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="onSaveSessionSettings"
           >
             {{ t('save') }}
           </button>
           <button
+            data-cursor="block"
             class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="onCloseDialog"
           >

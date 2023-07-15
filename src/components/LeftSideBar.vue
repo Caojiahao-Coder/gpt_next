@@ -3,6 +3,7 @@ import { useWindowSize } from '@vueuse/core'
 import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
+import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
 import useConversationStore from '@/store/conversation-store'
@@ -15,10 +16,6 @@ const expandStore = useLeftSideBarStore()
 watch(width, (newValue) => {
   expandStore.expand = (newValue >= 800)
 })
-
-function openGithub() {
-  window.location.href = 'https://github.com/Caojiahao-Coder/gpt_next'
-}
 
 function onCloseLeftSideBar() {
   expandStore.expand = false
@@ -47,7 +44,10 @@ function onCreateNewConversation() {
         <div class="flex-1 text-6 font-bold select-none">
           {{ t('conversation') }}
         </div>
-        <div i-carbon-add-comment class="text-6 icon-button" m="y-12px" @click="onCreateNewConversation" />
+        <div
+          data-cursor="block" i-carbon-add-comment class="text-6 icon-button" m="y-12px"
+          @click="onCreateNewConversation"
+        />
         <div
           v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px "
           @click="onCloseLeftSideBar"
@@ -57,10 +57,25 @@ function onCreateNewConversation() {
 
     <ConversationsList />
 
-    <div class="grid grid-cols-3 gap-6 h-47px border-base" p="16px" b="0 t-1 solid">
-      <div icon-button w-24px h-24px m-auto i-carbon-logo-github @click="openGithub" />
-      <div icon-button w-24px h-24px m-auto i-carbon-logo-vue />
-      <div icon-button w-24px h-24px m-auto i-devicon-plain-docker />
+    <div class="flex flex-row h-47px text-3 border-base" p="16px" b="0 t-1 solid">
+      <div line-height-47px>
+        <span>
+          Designed By
+        </span>
+        <a class="decoration-dashed color-base hover-color-primary" href="https://github.com/Caojiahao-Coder">Leo Cao</a>.
+      </div>
+
+      <div flex-1 />
+
+      <a
+        href="https://leocao-me.vercel.app/gpt_next-updatelogs"
+        class="text-right color-base flex flex-row gap-1 icon-button cursor-pointer"
+      >
+        <div i-carbon-campsite />
+        <div>
+          {{ config.version }}
+        </div>
+      </a>
     </div>
   </div>
 </template>

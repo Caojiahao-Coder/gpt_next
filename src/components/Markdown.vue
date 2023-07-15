@@ -44,7 +44,9 @@ function parseMarkdown(raw: string) {
 
 <template>
   <div
-    ref="contentRef" class="markdown-content" :style="{
+    ref="contentRef"
+    data-cursor="text"
+    class="markdown-content" :style="{
       margin: `${needHidePadding === false ? '-1rem 0' : '0'}`,
     }" v-html="parseMarkdown(props.content)"
   />

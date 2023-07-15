@@ -89,7 +89,7 @@ function copyOpenAiKey() {
         <div class="h-24px flex-1" style="line-height: 24px;">
           Open AI
         </div>
-        <div class="icon-button i-carbon-edit" @click="openEditModal" />
+        <div data-cursor="block" class="icon-button i-carbon-edit" @click="openEditModal" />
       </div>
     </div>
     <div class="p-16px">
@@ -103,6 +103,7 @@ function copyOpenAiKey() {
           }}
         </div>
         <div
+          data-cursor="block"
           class="icon-button text-4 h-20px" :class="[
             copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
           ]" style="line-height: 20px;" @click="copyOpenAiKey"
@@ -127,7 +128,8 @@ function copyOpenAiKey() {
       </div>
       <div class="flex flex-row m-t-2">
         <input
-          v-model="apiKey_modal" class="flex-1 border-base outline-none bg-body color-base" type="password"
+          v-model="apiKey_modal"
+          data-cursor="text" class="flex-1 border-base outline-none bg-body color-base" type="password"
           placeholder="Please input your OpenAI Key" p="x-4 y-2" b="1 solid rd-1"
         >
       </div>
@@ -164,12 +166,14 @@ function copyOpenAiKey() {
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
           <button
+            data-cursor="block"
             class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="onSaveOpenAIConfig"
           >
             Save
           </button>
           <button
+            data-cursor="block"
             class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
             @click="() => open = false"
           >

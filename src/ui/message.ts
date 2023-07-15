@@ -8,7 +8,19 @@ document.body.appendChild(div)
 export default class Message {
   static error(message: string) {
     const messageContainer = document.createElement('div')
-    const node = createVNode(MessageVue, { message })
+    const node = createVNode(MessageVue, { message, type: 'error' })
+    render(node, messageContainer)
+
+    div.appendChild(messageContainer)
+
+    setTimeout(() => {
+      div.removeChild(messageContainer)
+    }, 2000)
+  }
+
+  static info(message: string) {
+    const messageContainer = document.createElement('div')
+    const node = createVNode(MessageVue, { message, type: 'info' })
     render(node, messageContainer)
 
     div.appendChild(messageContainer)

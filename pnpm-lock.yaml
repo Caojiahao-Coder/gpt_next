@@ -130,6 +130,9 @@ devDependencies:
   html2canvas:
     specifier: ^1.4.1
     version: registry.npmmirror.com/html2canvas@1.4.1
+  ipad-cursor:
+    specifier: ^0.4.4
+    version: registry.npmmirror.com/ipad-cursor@0.4.4
   katex:
     specifier: ^0.16.8
     version: 0.16.8
@@ -6415,6 +6418,12 @@ packages:
     dependencies:
       css-line-break: registry.npmmirror.com/css-line-break@2.1.0
       text-segmentation: registry.npmmirror.com/text-segmentation@1.0.3
+    dev: true
+
+  registry.npmmirror.com/ipad-cursor@0.4.4:
+    resolution: {integrity: sha512-JfftapDmfJE+Bksji6TztFeB3rJ9s6zUB5Z1ZuNnU0QFNezXMdNAC0ivQXQr/AQd+mc9XQxS4Zfptx/PP7h9ig==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/ipad-cursor/-/ipad-cursor-0.4.4.tgz}
+    name: ipad-cursor
+    version: 0.4.4
     dev: true
 
   registry.npmmirror.com/nanoid@3.3.6:
