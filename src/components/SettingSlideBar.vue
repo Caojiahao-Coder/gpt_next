@@ -48,7 +48,7 @@ watch(width, (newValue) => {
 
         <div class="flex flex-col">
           <div class="flex-1" />
-          <div class="icon-button i-carbon-close  text-6" @click="onCloseSettingBar" />
+          <div data-cursor="block" class="icon-button i-carbon-close  text-6" @click="onCloseSettingBar" />
           <div class="flex-1" />
         </div>
       </div>
@@ -62,7 +62,7 @@ watch(width, (newValue) => {
       class="transition-all inline-block h-48px absolute top-160px hover-shadow bg-base border-base"
       b="1 solid rd-tl-3 rd-bl-3" left="-50px" @click="onOpenSettingBar"
     >
-      <div class="i-carbon-settings icon-button m-12px" text-6 />
+      <div data-cursor="block" class="i-carbon-settings icon-button m-12px" text-6 />
     </div>
   </div>
 </template>

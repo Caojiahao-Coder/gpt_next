@@ -8,6 +8,7 @@ function onClick() {
 
 <template>
   <button
+    data-cursor="block"
     icon-button
     dark:i-carbon-haze-night i-carbon-haze
     color-base

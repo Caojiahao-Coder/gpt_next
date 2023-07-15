@@ -126,7 +126,8 @@ async function sendNewMessage() {
       <div class="flex-1 flex flex-col">
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
         <textarea
-          v-model="inputMessage" :disabled="editorStore.thinking" overflow="x-hidden y-scroll"
+          v-model="inputMessage"
+          data-cursor="text" :disabled="editorStore.thinking" overflow="x-hidden y-scroll"
           :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
           class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
           :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
@@ -136,7 +137,7 @@ async function sendNewMessage() {
       </div>
       <div class="flex flex-col">
         <div class="flex-1" />
-        <div class="h-31px w-31px icon-button i-carbon-send-alt" @click="onClickSendMessage" />
+        <div data-cursor="block" class="h-31px w-31px icon-button i-carbon-send-alt" @click="onClickSendMessage" />
         <div :class="expand === true ? 'h-0' : 'flex-1'" />
       </div>
       <div v-if="width >= 1000" class="w-15%" />

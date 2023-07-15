@@ -63,7 +63,7 @@ function closeModal() {
           <div class="flex-1 text-5 font-bold">
             {{ props.title }}
           </div>
-          <div icon-button class="i-carbon-close text-5 h-24px" style="line-height: 24px;" @click="emits('onClose')" />
+          <div data-cursor="block" icon-button class="i-carbon-close text-5 h-24px" style="line-height: 24px;" @click="emits('onClose')" />
         </div>
         <div class="p-4">
           <slot />

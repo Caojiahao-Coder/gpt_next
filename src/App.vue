@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
 import { RouterView } from 'vue-router'
+import { initCursor } from 'ipad-cursor'
 import { themeColor } from './store/localstorage'
 import { isDark } from './store/dark'
 
@@ -9,6 +10,7 @@ const style = computed<any>(() => ({
 }))
 
 onMounted(() => {
+  initCursor()
   changeBodyBgColor()
 })
 

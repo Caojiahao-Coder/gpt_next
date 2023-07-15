@@ -36,6 +36,6 @@ const deleteConfirm = ref<boolean>(false)
     >
       {{ props.conversationInfo.title }}
     </div>
-    <div v-if="deleteConfirm === false" id="item-close" class="i-carbon-close  h-24px w-24px" @click="onRemove" />
+    <div v-if="deleteConfirm === false" id="item-close" class="i-carbon-close h-24px w-24px" data-cursor="block" @click="onRemove" />
   </div>
 </template>

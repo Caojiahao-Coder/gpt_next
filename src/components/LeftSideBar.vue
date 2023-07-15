@@ -47,7 +47,7 @@ function onCreateNewConversation() {
         <div class="flex-1 text-6 font-bold select-none">
           {{ t('conversation') }}
         </div>
-        <div i-carbon-add-comment class="text-6 icon-button" m="y-12px" @click="onCreateNewConversation" />
+        <div data-cursor="block" i-carbon-add-comment class="text-6 icon-button" m="y-12px" @click="onCreateNewConversation" />
         <div
           v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px "
           @click="onCloseLeftSideBar"
@@ -58,9 +58,9 @@ function onCreateNewConversation() {
     <ConversationsList />
 
     <div class="grid grid-cols-3 gap-6 h-47px border-base" p="16px" b="0 t-1 solid">
-      <div icon-button w-24px h-24px m-auto i-carbon-logo-github @click="openGithub" />
-      <div icon-button w-24px h-24px m-auto i-carbon-logo-vue />
-      <div icon-button w-24px h-24px m-auto i-devicon-plain-docker />
+      <div data-cursor="block" icon-button w-24px h-24px m-auto i-carbon-logo-github @click="openGithub" />
+      <div data-cursor="block" icon-button w-24px h-24px m-auto i-carbon-logo-vue />
+      <div data-cursor="block" icon-button w-24px h-24px m-auto i-devicon-plain-docker />
     </div>
   </div>
 </template>

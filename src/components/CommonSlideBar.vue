@@ -12,7 +12,7 @@ import LocaleSwitcher from '@/components/LocaleSwitcher.vue'
       <div class="flex-1" />
       <div class="flex-1 text-right text-3 color-gray">
         Designed By <a
-          class="decoration-dashed color-base hover-color-primary"
+          data-cursor="block" class="decoration-dashed color-base hover-color-primary"
           href="https://github.com/Caojiahao-Coder"
         >Leo Cao</a>.
       </div>
@@ -20,7 +20,10 @@ import LocaleSwitcher from '@/components/LocaleSwitcher.vue'
     </div>
     <div class="flex flex-col">
       <div class="flex-1" />
-      <a href="https://leocao-me.vercel.app/gpt_next-updatelogs" class="text-right text-3 color-base flex flex-row gap-1 icon-button cursor-pointer">
+      <a
+        data-cursor="block" href="https://leocao-me.vercel.app/gpt_next-updatelogs"
+        class="text-right text-3 color-base flex flex-row gap-1 icon-button cursor-pointer"
+      >
         <div i-carbon-campsite />
         <div>
           {{ config.version }}

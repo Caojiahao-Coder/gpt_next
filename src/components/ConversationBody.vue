@@ -30,6 +30,7 @@ function updateScroll() {
       <div class="flex flex-row m-t-24px">
         <div class="flex-1" />
         <div
+          data-cursor="block"
           class="border shadow-2xl bg-base  h-48px flex flex-row color-base gap-2 cursor-pointer" b="1 solid rd-1"
           p="x-4"
         >
