@@ -26,11 +26,11 @@ function changeToCN() {
 
 <template>
   <button
-    data-cursor="block" icon-button i-carbon-translate color-base text-6 p-0 b-0
-    style="line-height:38px;height: 38px;" @click="toggleShow"
+    m-auto data-cursor="block" icon-button i-carbon-translate color-base text-6 p-0 b-0 h-38px line-height-38px
+    @click="toggleShow"
   />
 
-  <PopDialog :show="show" @on-cancel="cancelPopDialog">
+  <PopDialog :show="show" class="bottom-60px left-180px" @on-cancel="cancelPopDialog">
     <ul class="color-base">
       <li data-cursor="block" class="hover-bg-base b-rd-2 flex flex-row" @click="changeToEN()">
         English

@@ -8,6 +8,7 @@ function onClick() {
 
 <template>
   <button
+    m-auto
     data-cursor="block"
     icon-button
     dark:i-carbon-haze-night i-carbon-haze
@@ -15,7 +16,8 @@ function onClick() {
     text-6
     p-0
     b-0
-    style="line-height:38px;height: 38px;"
+    h-38px
+    line-height-38px
     @click="onClick"
   />
 </template>

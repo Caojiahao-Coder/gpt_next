@@ -15,9 +15,11 @@ const useConversationStore = defineStore('conversationStore', () => {
       messageStore.clearMessageRecords()
 
     messageStore.messageList = []
-    messageStore.getMessageRecordsByConversationId(newValue!.id).then((res) => {
-      messageStore.messageList = res
-    })
+    if (newValue) {
+      messageStore.getMessageRecordsByConversationId(newValue!.id).then((res) => {
+        messageStore.messageList = res
+      })
+    }
   })
 
   function createNewConversation(data: NewConverstationInfo): Promise<number> {

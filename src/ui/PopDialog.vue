@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 
-defineProps<{
+const props = defineProps<{
   show: boolean
 }>()
 
@@ -11,18 +11,31 @@ const emits = defineEmits([
 
 const rootRef = ref<HTMLDivElement>()
 
+const isEnterPropsDialog = ref<boolean>(false)
+
 function regOnMouseEnter() {
   if (rootRef.value) {
+    isEnterPropsDialog.value = true
     rootRef.value!.onmouseleave = function () {
       emits('onCancel')
     }
   }
 }
+
+watch(() => props.show, (newValue) => {
+  if (newValue) {
+    isEnterPropsDialog.value = false
+    setTimeout(() => {
+      if (!isEnterPropsDialog.value)
+        emits('onCancel')
+    }, 800)
+  }
+})
 </script>
 
 <template>
   <div
-    v-if="show" ref="rootRef" class="dialog-root bg-body absolute p-1 b-rd-1 border-base b-1 b-solid m-y-2 absolute bottom-60px"
+    v-if="show" ref="rootRef" class=" bg-body absolute p-1 b-rd-1 border-base b-1 b-solid m-y-2 absolute"
     @mouseenter="regOnMouseEnter"
   >
     <slot />
@@ -32,9 +45,5 @@ function regOnMouseEnter() {
 <style scoped>
 * {
   user-select: none;
-}
-
-.dialog-root {
-  box-shadow: 0 0 16px #33333380;
 }
 </style>

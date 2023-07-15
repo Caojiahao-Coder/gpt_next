@@ -34,4 +34,8 @@ export default {
   dialog_delete_confirm_title: '你确定要删除这条记录吗?',
   dialog_edit_title: '修改你的聊天内容',
   export_failed: '抱歉，导出消息失败。请稍后重新尝试。',
+  enable_ipad_cursor_animation: '启用ipad鼠标动画',
+  enable: '启用',
+  disable: '禁用',
+  reload_page_to_see_change: '重新加载页面以查看更改。',
 }
