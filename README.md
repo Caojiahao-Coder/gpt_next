@@ -2,6 +2,7 @@
 
 # GPT Next 
 
+
 `GPT_NEXT` is an AI chat tool.
 
 [🧭Live preview](https://gpt-next-shvd.vercel.app/)
@@ -36,6 +37,7 @@
 
 ## THANKS
 - [anse-app/anse](https://github.com/anse-app/anse)
+- [CatsJuice/ipad-cursor](https://github.com/CatsJuice/ipad-cursor)
 
 ## LICENSE
 MIT © [Leo Cao](https://github.com/Caojiahao-Coder)
