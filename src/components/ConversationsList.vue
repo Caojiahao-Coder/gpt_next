@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-320px flex-1 conversations-list overflow-x-hidden overflow-y-scroll color-base">
+  <div class="flex-1 conversations-list overflow-x-hidden overflow-y-scroll color-base">
     <ConversationItem
       v-for="(item, index) in conversationStore.conversationsList" :key="index"
       :conversation-info="item"
