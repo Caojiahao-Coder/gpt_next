@@ -38,4 +38,13 @@ export default {
   enable: 'Enable',
   disable: 'Disable',
   reload_page_to_see_change: 'Reload the page to see the changes.',
+  auto: 'Auto',
+  developer: 'Developer',
+  doctor: 'Doctor',
+  teacher: 'Teacher',
+  student: 'Student',
+  leader: 'Leader',
+  subordinate: 'Subordinate',
+  chinese: 'Chinese',
+  english: 'English',
 }
