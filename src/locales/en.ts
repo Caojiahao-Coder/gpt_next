@@ -47,4 +47,5 @@ export default {
   subordinate: 'Subordinate',
   chinese: 'Chinese',
   english: 'English',
+  delete_confirm_title: 'Are you sure delete this item?', 
 }

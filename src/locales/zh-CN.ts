@@ -26,7 +26,7 @@ export default {
   apikey_empty_error: '抱歉Api Key不可以为空',
   reload: '重新回答',
   edit: '编辑对话',
-  delete: '删除对话',
+  delete: '删除',
   submit: '提交',
   export: '导出这个对话',
   conversation_clear: '删除对话内容',
@@ -47,4 +47,5 @@ export default {
   subordinate: '下属',
   chinese: '中文',
   english: '英文',
+  delete_confirm_title: '你确定要删除这条记录吗?',
 }

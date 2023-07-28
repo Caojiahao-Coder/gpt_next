@@ -51,9 +51,9 @@ onMounted(() => {
 
 <template>
   <div
-    id="left-menu" class="flex flex-row min-w-222px max-w-600px" :style="{
-      minWidth: expandStore.expand === true ? '222px' : '0px',
-      width: expandStore.expand === false ? '0px' : '222px',
+    id="left-menu" class="flex flex-row min-w-300px max-w-600px" :style="{
+      minWidth: expandStore.expand === true ? '300px' : '0px',
+      width: expandStore.expand === false ? '0px' : '300px',
     }"
   >
     <div
@@ -102,11 +102,14 @@ onMounted(() => {
       </div>
     </div>
     <div
-      v-show="expandStore.expand === true" id="left_menu_move_bar"
-      class="h-100vh border-base cursor-col-resize hover-border-blue-3 transition-all" b="r-1 solid 0"
+      v-show="expandStore.expand === true" id="left_menu_move_bar" class="h-100vh border-base"
+      b="r-1 solid 0"
     >
       <div id="move-item">
-        <div class="i-carbon-property-relationship icon-button text-4 m-auto color-base line-height-24px h-24px" />
+        <div
+          data-cursor="block"
+          class="i-carbon-property-relationship icon-button transition-all text-4 m-auto color-base line-height-24px h-24px cursor-col-resize "
+        />
       </div>
     </div>
   </div>
@@ -140,6 +143,5 @@ html.dark #move-item {
 #move-item:hover {
   border: 1px solid rgba(147, 197, 253, 30);
   opacity: 1;
-
 }
 </style>
