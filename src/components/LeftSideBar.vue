@@ -107,6 +107,7 @@ onMounted(() => {
     >
       <div id="move-item">
         <div
+          data-cursor="block"
           class="i-carbon-property-relationship icon-button transition-all text-4 m-auto color-base line-height-24px h-24px cursor-col-resize "
         />
       </div>
