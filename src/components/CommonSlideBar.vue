@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import DarkSwitcher from '@/components/DarkSwitcher.vue'
-import LocaleSwitcher from '@/components/LocaleSwitcher.vue'
+import LocaleSwitcher from '@/components/managedmode/LocaleSwitcher.vue'
 import IpadCursorSwitcher from '@/components/IpadCursorSwitcher.vue'
 </script>
 

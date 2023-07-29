@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 import ChatSetting from './ChatSetting.vue'
+import ManagedModelLink from './managedmode/ManagedModeLink.vue'
 
 const { t } = useI18n()
 
@@ -56,6 +57,7 @@ watch(width, (newValue) => {
     <ChatSetting />
     <OpenAISetting />
     <div class="flex-1" />
+    <ManagedModelLink />
     <CommonSlideBar />
     <div
       v-if="expand === false"
