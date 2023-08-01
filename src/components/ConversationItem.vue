@@ -45,8 +45,7 @@ function removeConversationItem() {
   >
     <div class="h-16px w-16px color-fade b-rd-1 m-t-4px" :class="props.conversationInfo.color" />
     <div
-      class="flex-1 h-24px w-24px overflow-hidden"
-      style="line-height: 24px; text-overflow: ellipsis; white-space: nowrap;"
+      class="flex-1 h-24px w-24px overflow-hidden line-height-24px truncate"
     >
       {{ props.conversationInfo.title }}
     </div>

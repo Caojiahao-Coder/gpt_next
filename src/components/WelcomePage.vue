@@ -32,7 +32,7 @@ function createNewMessage() {
         ]" @click="createNewMessage"
       >
         <div class="i-carbon-add text-6" />
-        <div class="flex-1 m-l-2" style="line-height: 24px;">
+        <div class="flex-1 m-l-2 line-height-24px">
           {{ t('new') }}
         </div>
       </div>

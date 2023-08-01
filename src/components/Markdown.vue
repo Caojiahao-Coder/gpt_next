@@ -44,22 +44,14 @@ function parseMarkdown(raw: string) {
 
 <template>
   <div
-    ref="contentRef"
-    data-cursor="text"
-    class="markdown-content" :style="{
+    ref="contentRef" data-cursor="text" class="line-height-32px break-words overflow-hidden" :style="{
       margin: `${needHidePadding === false ? '-1rem 0' : '0'}`,
     }" v-html="parseMarkdown(props.content)"
   />
 </template>
 
 <style scoped>
-.markdown-content {
-  line-height: 32px;
-  overflow: hidden;
-  word-wrap: break-word;
-}
-
-.markdown-content>* {
-  position: absolute;
+.hljs {
+  line-height: 24px !important;
 }
 </style>

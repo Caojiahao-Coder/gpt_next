@@ -58,13 +58,13 @@ function exportConversation() {
     </div>
     <div class="flex-1 flex flex-col overflow-hidden">
       <div class="flex-1" />
-      <div>
+      <div class="truncate">
         {{ conversationStore.conversationInfo?.title }}
         <div class="flex-1" />
       </div>
       <div
         v-if="conversationStore.conversationInfo?.description && conversationStore.conversationInfo?.description!.trim().length > 0"
-        class="text-3 color-fade m-t1 overflow-hidden" style="text-overflow: ellipsis;white-space: nowrap;"
+        class="text-3 color-fade m-t1 overflow-hidden truncate"
       >
         {{ conversationStore.conversationInfo?.description! }}
       </div>
@@ -84,7 +84,7 @@ function exportConversation() {
   </div>
 
   <Dialog :open="openConfirmDialog" :title="t('session_clear_title')" @on-close="closeDialog">
-    <div style="line-height: 32px;">
+    <div class="line-height-32px">
       {{ t('session_clear_desc') }}
       <br>
       <span class="color-red">{{ t('session_clear_warning') }}</span>

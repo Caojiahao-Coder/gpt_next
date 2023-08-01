@@ -62,7 +62,7 @@ onMounted(() => {
       }" class="transition-all h-100vh bg-base flex-shrink-0 flex flex-col color-base overflow-hidden"
     >
       <div class="h-47px p-16px border-base" b="0 b-1 solid">
-        <div class="flex flex-rows" style="line-height: 47px;">
+        <div class="flex flex-rows line-height-47px">
           <div class="flex-1 text-6 font-bold select-none">
             {{ t('conversation') }}
           </div>
