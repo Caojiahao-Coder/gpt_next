@@ -86,7 +86,7 @@ function copyOpenAiKey() {
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
       <div class="flex flex-row">
-        <div class="h-24px flex-1" style="line-height: 24px;">
+        <div class="h-24px flex-1 line-height-24px">
           Open AI
         </div>
         <div data-cursor="block" class="icon-button i-carbon-edit" @click="openEditModal" />
@@ -104,9 +104,9 @@ function copyOpenAiKey() {
         </div>
         <div
           data-cursor="block"
-          class="icon-button text-4 h-20px" :class="[
+          class="icon-button text-4 h-20px line-height-20px" :class="[
             copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
-          ]" style="line-height: 20px;" @click="copyOpenAiKey"
+          ]" @click="copyOpenAiKey"
         />
       </div>
 
