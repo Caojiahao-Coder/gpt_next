@@ -51,7 +51,7 @@ function closeModal() {
   <Transition>
     <div
       v-if="open"
-      ref="dialogRoot" class="flex flex-row h-100vh w-screen left-0 top-0 color-base backdrop-blur-3 fixed"
+      ref="dialogRoot" class="flex flex-row h-100vh w-screen left-0 top-0 color-base backdrop-blur-3 fixed z-10"
     >
       <div class="flex-1 hide-view" />
       <div class="flex flex-col">
