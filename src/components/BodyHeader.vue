@@ -101,7 +101,7 @@ function exportConversation() {
 
       <button
         data-cursor="block"
-        class="outline-none border-base bg-gray color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
+        class="outline-none border-base bg-body hover-bg-base color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
         @click="closeDialog"
       >
         {{ t('cancel') }}
