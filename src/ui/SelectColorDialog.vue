@@ -81,15 +81,29 @@ function onSelectedColor(color: string) {
         large === true ? 'w-8 h-8' : 'w-4 h-4',
       ]" @click="onOpenColorDialog"
     />
-    <div
-      v-if="openDialog" class="absolute grid grid-cols-6 gap-4 p-4 bg-base border-base shadow-2xl z100000"
-      b="1 solid rd-1"
-    >
+    <Transition>
       <div
-        v-for="(item, index) in colorList"
-        :key="index" data-cursor="block" class="color-item border-base w-4 h-4" b="1 solid rd-1"
-        :class="item" @click="onSelectedColor(item)"
-      />
-    </div>
+        v-if="openDialog" class="absolute grid grid-cols-6 gap-4 p-4 bg-base border-base shadow-2xl z100000 mt-1"
+        b="1 solid rd-1"
+      >
+        <div
+          v-for="(item, index) in colorList"
+          :key="index" data-cursor="block" class="color-item border-base w-4 h-4" b="1 solid rd-1"
+          :class="item" @click="onSelectedColor(item)"
+        />
+      </div>
+    </Transition>
   </div>
 </template>
+
+<style scoped>
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+</style>
