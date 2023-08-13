@@ -20,37 +20,37 @@ function handleChatCompletions(messages: { role: string; content: string }[]): {
     case 'developer':
       messages.unshift({
         role: 'user',
-        content: 'I am a software development engineer. Please answer the following questions from the perspective of a software development engineer.',
+        content: 'Please answer the following questions from the perspective of a software development engineer.',
       })
       break
     case 'doctor':
       messages.unshift({
         role: 'user',
-        content: 'I am a doctor. Please answer the following questions from the perspective of a doctor.',
+        content: 'Please answer the following questions from the perspective of a doctor.',
       })
       break
     case 'teacher':
       messages.unshift({
         role: 'user',
-        content: 'I am a doctor. Please answer the following questions from the perspective of a doctor.',
+        content: 'Please answer the following questions from the perspective of a doctor.',
       })
       break
     case 'student':
       messages.unshift({
         role: 'user',
-        content: 'I am a student. Please answer the following questions from the perspective of a student.',
+        content: 'Please answer the following questions from the perspective of a student.',
       })
       break
     case 'leader':
       messages.unshift({
         role: 'user',
-        content: 'I am a leader. Please answer the following questions from the perspective of a leader.',
+        content: 'Please answer the following questions from the perspective of a leader.',
       })
       break
     case 'subordinate':
       messages.unshift({
         role: 'user',
-        content: 'I am a subordinate. Please answer the following questions from the perspective of a subordinate.',
+        content: 'Please answer the following questions from the perspective of a subordinate.',
       })
       break
   }
