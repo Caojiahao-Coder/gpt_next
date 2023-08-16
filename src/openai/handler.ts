@@ -60,7 +60,7 @@ function handleChatCompletions(messages: { role: string; content: string }[]): {
 function handleCreateSessionNameByGPT(messages: { role: string; content: string }[]) {
   messages.push({
     role: 'user',
-    content: 'Please give this Session a name based on the above conversation.',
+    content: 'Create a concise and appropriate title based on the language in which the conversation is being held.',
   })
 
   return messages
