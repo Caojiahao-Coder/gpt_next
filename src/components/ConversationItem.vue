@@ -66,6 +66,7 @@ function fixedTop() {
         props.conversationInfo.fixed_top ?? false ? 'i-carbon-pin-filled' : 'i-carbon-pin',
         props.conversationInfo.color,
       ]"
+      data-cursor="block"
       @click="fixedTop"
     />
     <div v-else class="h-16px w-16px color-fade b-rd-1 m-t-4px" :class="props.conversationInfo.color" />

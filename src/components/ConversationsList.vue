@@ -41,7 +41,7 @@ function toggleHideNormalList(date: string) {
         <div class="flex-1">
           {{ t('fixed_top') }} ( {{ conversationStore.conversationsList.filter(a => (a.fixed_top ?? false)).length }} )
         </div>
-        <div class="w-14px h-14px icon-button" :class="showFixedTop ? 'i-carbon-chevron-down' : 'i-carbon-chevron-up'" />
+        <div class="w-14px h-14px icon-button" :class="showFixedTop ? 'i-carbon-chevron-down' : 'i-carbon-chevron-up'" data-cursor="block" />
       </div>
       <div
         v-if="!(item.fixed_top ?? false) && (index === 0 || (formatTimestamp(conversationStore.conversationsList[index - 1].create_time) !== formatTimestamp(item.create_time)) || ((item.fixed_top ?? false) === false && (conversationStore.conversationsList[index - 1].fixed_top ?? false)))"
@@ -51,7 +51,7 @@ function toggleHideNormalList(date: string) {
         <div flex-1>
           {{ formatTimestamp(item.create_time) }} ( {{ conversationStore.conversationsList.filter(a => !(a.fixed_top ?? false) && formatTimestamp(a.create_time) === formatTimestamp(item.create_time)).length }} )
         </div>
-        <div class="icon-button w-14px h-14px" :class="hideList.includes(formatTimestamp(item.create_time)) ? 'i-carbon-chevron-up' : 'i-carbon-chevron-down'" />
+        <div class="icon-button w-14px h-14px" :class="hideList.includes(formatTimestamp(item.create_time)) ? 'i-carbon-chevron-up' : 'i-carbon-chevron-down'" data-cursor="block" />
       </div>
       <template
         v-if="(item.fixed_top ?? false) ? showFixedTop : (
