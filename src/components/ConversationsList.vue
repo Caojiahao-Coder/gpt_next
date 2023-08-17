@@ -11,11 +11,16 @@ const showFixedTop = ref<boolean>(true)
 
 const hideList = ref<string[]>([])
 
-const { t } = useI18n()
-
 onMounted(() => {
-  conversationStore.updateConversationsList()
+  conversationStore.updateConversationsList(() => {
+    const dateData = conversationStore.conversationsList.filter(a => formatTimestamp(a.create_time) !== formatTimestamp(Date.now()))
+    hideList.value = dateData.map((a) => {
+      return formatTimestamp(a.create_time)
+    })
+  })
 })
+
+const { t } = useI18n()
 
 function toggleHideNormalList(date: string) {
   if (hideList.value.includes(date))
