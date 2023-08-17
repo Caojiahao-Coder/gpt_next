@@ -11,6 +11,8 @@ const props = defineProps<{
 
 const { t } = useI18n()
 
+const enterContainer = ref<boolean>(false)
+
 const conversationStore = useConversationStore()
 const showRemoveConfirmDialog = ref<boolean>(false)
 
@@ -35,15 +37,39 @@ function removeConversationItem() {
   showRemoveConfirmDialog.value = false
   conversationStore.deleteConversationById(props.conversationInfo.id)
 }
+
+function fixedTop() {
+  const info = props.conversationInfo
+
+  conversationStore.updateConversationInfoById({
+    id: info.id,
+    title: info.title,
+    create_time: info.create_time,
+    description: info.description,
+    conversation_token: info.conversation_token,
+    color: info.color,
+    fixed_top: !(info.fixed_top ?? false),
+  })
+}
 </script>
 
 <template>
   <div
-    b="0 b-1 solid" class="flex flex-row gap-2 p-16px border-base cursor-pointer" :class="[
+    b="0 b-1 solid" class="flex flex-row gap-4 p-4 border-base cursor-pointer" :class="[
       conversationStore.conversationInfo?.conversation_token! === props.conversationInfo.conversation_token! ? 'bg-gray-2 dark:bg-dark-8 selected' : '',
-    ]" @click="onSelect"
+    ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false"
   >
-    <div class="h-16px w-16px color-fade b-rd-1 m-t-4px" :class="props.conversationInfo.color" />
+    <div
+      v-if="enterContainer || (props.conversationInfo.fixed_top ?? false)"
+      class="h-16px w-16px color-fade b-rd-1 m-t-4px icon-button"
+      :class="[
+        props.conversationInfo.fixed_top ?? false ? 'i-carbon-pin-filled' : 'i-carbon-pin',
+        props.conversationInfo.color,
+      ]"
+      @click="fixedTop"
+    />
+    <div v-else class="h-16px w-16px color-fade b-rd-1 m-t-4px" :class="props.conversationInfo.color" />
+
     <div
       class="flex-1 h-24px w-24px overflow-hidden line-height-24px truncate"
     >
@@ -60,24 +86,21 @@ function removeConversationItem() {
       {{ t('delete_confirm_title') }}
     </div>
 
-    <div class="m-t-4 flex flex-row">
-      <div flex-1 />
-      <div class="flex flex-row gap-2 ">
-        <Button
-          data-cursor="block"
-          class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-          @click="removeConversationItem()"
-        >
-          {{ t('delete') }}
-        </Button>
-        <Button
-          data-cursor="block"
-          class="bg-body color-white outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-          @click="showRemoveConfirmDialog = false"
-        >
-          {{ t('cancel') }}
-        </Button>
-      </div>
+    <div class="m-t-4 text-right">
+      <Button
+        data-cursor="block"
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="removeConversationItem()"
+      >
+        {{ t('delete') }}
+      </Button>
+      <Button
+        data-cursor="block"
+        class="bg-body m-l-2 color-white outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="showRemoveConfirmDialog = false"
+      >
+        {{ t('cancel') }}
+      </Button>
     </div>
   </Dialog>
 </template>

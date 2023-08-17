@@ -21,6 +21,7 @@ interface TBConverstationInfo {
   color: string
   create_time: number
   conversation_token: string
+  fixed_top?: boolean
 }
 
 interface NewGlobalSettingInfo {

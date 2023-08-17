@@ -58,7 +58,14 @@ const useConversationStore = defineStore('conversationStore', () => {
       db.selectAll('tb_conversation').then((res) => {
         conversationsList.value = (res as TBConverstationInfo[])
           .sort((a, b) => {
-            return b.create_time - a.create_time
+            if (a.fixed_top && !b.fixed_top)
+              return -1
+
+            else if (!a.fixed_top && b.fixed_top)
+              return 1
+
+            else
+              return b.create_time - a.create_time
           })
       })
     })

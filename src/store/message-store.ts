@@ -112,6 +112,7 @@ const useMessageStore = defineStore('messageStore', () => {
       color: converstationStore.conversationInfo!.color,
       create_time: converstationStore.conversationInfo!.create_time,
       conversation_token: converstationStore.conversationInfo!.conversation_token,
+      fixed_top: converstationStore.conversationInfo!.fixed_top ?? false,
     })
   }
 
