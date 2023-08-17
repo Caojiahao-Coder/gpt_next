@@ -53,7 +53,7 @@ const useConversationStore = defineStore('conversationStore', () => {
     })
   }
 
-  function updateConversationsList() {
+  function updateConversationsList(callback?: () => void) {
     db.init().then(() => {
       db.selectAll('tb_conversation').then((res) => {
         conversationsList.value = (res as TBConverstationInfo[])
@@ -67,6 +67,8 @@ const useConversationStore = defineStore('conversationStore', () => {
             else
               return b.create_time - a.create_time
           })
+        if (callback)
+          callback()
       })
     })
   }
