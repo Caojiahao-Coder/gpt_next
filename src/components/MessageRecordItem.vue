@@ -14,6 +14,7 @@ import { parserStreamText } from '@/openai/parser'
 import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
 import Message from '@/ui/message'
+import { useErrorDialogStore } from '@/store/error-dialog'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
@@ -21,6 +22,8 @@ const props = defineProps<{
 }>()
 
 const editorStore = useEditorStore()
+
+const messageStore = useMessageStore()
 
 const showTools = ref<boolean>(false)
 
@@ -35,7 +38,10 @@ const messageRef = ref<HTMLDivElement>()
 const { t } = useI18n()
 
 const messageInfo = ref<TBMessageInfo>(props.messageInfo)
+
 const gptContent = ref<string>('')
+
+const errorDialogStore = useErrorDialogStore()
 
 onMounted(() => {
   /**
@@ -53,8 +59,6 @@ onMounted(() => {
  */
 async function getChatAnswer() {
   editorStore.thinking = true
-
-  const messageStore = useMessageStore()
 
   const messageData: {
     role: string
@@ -83,45 +87,59 @@ async function getChatAnswer() {
   const globalStore = useGlobalStore()
   const globalSettingInfo = await globalStore.getGlobalSetting()
 
-  const response = await fetchChatCompletion({
-    apikey: globalSettingInfo.api_key,
-    body: {
-      model: globalSettingInfo.chat_model,
-      top_p: 1,
-      temperature: 0.7,
-      max_tokens: 2048,
-      messages: handleChatCompletions(messagesBody),
-      stream: true,
-    },
-  })
+  try {
+    const response = await fetchChatCompletion({
+      apikey: globalSettingInfo.api_key,
+      body: {
+        model: globalSettingInfo.chat_model,
+        top_p: 1,
+        temperature: 0.7,
+        max_tokens: 2048,
+        messages: handleChatCompletions(messagesBody),
+        stream: true,
+      },
+    })
 
-  await parserStreamText(response, (content) => {
-    gptContent.value = gptContent.value + content
-    props.scrollBody()
-  }, (error) => {
-    gptContent.value = error.error.message
-  })
+    await parserStreamText(response, (content) => {
+      gptContent.value = gptContent.value + content
+      props.scrollBody()
+    }, (error) => {
+      gptContent.value = error.error.message
+    })
 
+    setAnswerToMessageItem(gptContent.value, 'finished')
+
+    if (messageStore.messageList.length === 1) {
+      setTimeout(() => {
+        messageStore.createSessionTitle()
+      }, 120)
+    }
+  }
+  catch (error) {
+    setAnswerToMessageItem(String(error), 'error')
+
+    errorDialogStore.message = `Error occurred: ${error}`
+    errorDialogStore.showErrorDialog = true
+    editorStore.thinking = false
+  }
+}
+
+async function setAnswerToMessageItem(content: string, status: 'finished' | 'error' | 'waiting') {
   const info: TBMessageInfo = {
     id: messageInfo.value.id,
     conversation_id: messageInfo.value.conversation_id,
     token_id: messageInfo.value.token_id,
     user_content: messageInfo.value.user_content,
-    gpt_content: gptContent.value,
+    gpt_content: content,
     create_time: messageInfo.value.create_time,
-    status: 'finished',
+    status,
   }
 
   await messageStore.updateMessageInfo(info)
+  gptContent.value = content
   messageInfo.value = info
   editorStore.thinking = false
   messageStore.messageList = await messageStore.getMessageRecordsByConversationId(props.messageInfo.conversation_id)
-
-  if (messageStore.messageList.length === 1) {
-    setTimeout(() => {
-      messageStore.createSessionTitle()
-    }, 120)
-  }
 }
 
 function onMouseEnter() {
@@ -217,7 +235,7 @@ function onExportConversation() {
       <div class="avatar w-8 h-8 b-rd-1">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
-      <Markdown :content="gptContent" />
+      <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
     </div>
   </div>
 

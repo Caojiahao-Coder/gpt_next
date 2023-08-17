@@ -13,7 +13,7 @@ class DB {
 
   constructor() {
     this.db = null
-    this.version = 2
+    this.version = 3
   }
 
   /**
