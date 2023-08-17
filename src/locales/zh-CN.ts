@@ -48,4 +48,5 @@ export default {
   chinese: '中文',
   english: '英文',
   delete_confirm_title: '你确定要删除这条记录吗?',
+  fixed_top: '置顶',
 }

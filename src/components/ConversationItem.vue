@@ -60,7 +60,9 @@ function fixedTop() {
     ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false"
   >
     <div
-      v-if="enterContainer || (props.conversationInfo.fixed_top ?? false)" class="h-16px w-16px color-fade b-rd-1 m-t-4px icon-button" :class="[
+      v-if="enterContainer || (props.conversationInfo.fixed_top ?? false)"
+      class="h-16px w-16px color-fade b-rd-1 m-t-4px icon-button"
+      :class="[
         props.conversationInfo.fixed_top ?? false ? 'i-carbon-pin-filled' : 'i-carbon-pin',
         props.conversationInfo.color,
       ]"
@@ -84,24 +86,21 @@ function fixedTop() {
       {{ t('delete_confirm_title') }}
     </div>
 
-    <div class="m-t-4 flex flex-row">
-      <div flex-1 />
-      <div class="flex flex-row gap-2 ">
-        <Button
-          data-cursor="block"
-          class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-          @click="removeConversationItem()"
-        >
-          {{ t('delete') }}
-        </Button>
-        <Button
-          data-cursor="block"
-          class="bg-body color-white outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-          @click="showRemoveConfirmDialog = false"
-        >
-          {{ t('cancel') }}
-        </Button>
-      </div>
+    <div class="m-t-4 text-right">
+      <Button
+        data-cursor="block"
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="removeConversationItem()"
+      >
+        {{ t('delete') }}
+      </Button>
+      <Button
+        data-cursor="block"
+        class="bg-body m-l-2 color-white outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="showRemoveConfirmDialog = false"
+      >
+        {{ t('cancel') }}
+      </Button>
     </div>
   </Dialog>
 </template>
