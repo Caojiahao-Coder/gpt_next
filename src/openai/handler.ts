@@ -20,37 +20,37 @@ function handleChatCompletions(messages: { role: string; content: string }[]): {
     case 'developer':
       messages.unshift({
         role: 'user',
-        content: 'I am a software development engineer. Please answer the following questions from the perspective of a software development engineer.',
+        content: 'Please answer the following questions from the perspective of a software development engineer.',
       })
       break
     case 'doctor':
       messages.unshift({
         role: 'user',
-        content: 'I am a doctor. Please answer the following questions from the perspective of a doctor.',
+        content: 'Please answer the following questions from the perspective of a doctor.',
       })
       break
     case 'teacher':
       messages.unshift({
         role: 'user',
-        content: 'I am a doctor. Please answer the following questions from the perspective of a doctor.',
+        content: 'Please answer the following questions from the perspective of a doctor.',
       })
       break
     case 'student':
       messages.unshift({
         role: 'user',
-        content: 'I am a student. Please answer the following questions from the perspective of a student.',
+        content: 'Please answer the following questions from the perspective of a student.',
       })
       break
     case 'leader':
       messages.unshift({
         role: 'user',
-        content: 'I am a leader. Please answer the following questions from the perspective of a leader.',
+        content: 'Please answer the following questions from the perspective of a leader.',
       })
       break
     case 'subordinate':
       messages.unshift({
         role: 'user',
-        content: 'I am a subordinate. Please answer the following questions from the perspective of a subordinate.',
+        content: 'Please answer the following questions from the perspective of a subordinate.',
       })
       break
   }
@@ -60,7 +60,7 @@ function handleChatCompletions(messages: { role: string; content: string }[]): {
 function handleCreateSessionNameByGPT(messages: { role: string; content: string }[]) {
   messages.push({
     role: 'user',
-    content: 'Please give this Session a name based on the above conversation.',
+    content: 'Create a concise and appropriate title based on the language in which the conversation is being held.',
   })
 
   return messages
