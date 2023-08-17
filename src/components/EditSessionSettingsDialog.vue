@@ -31,6 +31,7 @@ async function onSaveSessionSettings() {
     description: description.value,
     conversation_token: info.conversation_token,
     color: color.value,
+    fixed_top: info.fixed_top ?? false,
   })
 
   openDialog.value = false
