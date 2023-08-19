@@ -13,33 +13,23 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <div
-    v-if="props.show" class="message-tools flex flex-row absolute border-base bg-base p-x-2 p-y-1 gap-1"
-    b="2 solid rd-5"
-  >
-    <div
-      i-carbon-restart icon-button class="w-4 h-4 color-base" :title="t('reload')" @click="() => {
-        emits('onReload')
-      }"
-    />
+  <div v-if="props.show" class="message-tools flex flex-row absolute border-base bg-base p-x-2 p-y-1 gap-1"
+    b="2 solid rd-5">
+    <div i-carbon-restart icon-button class="w-4 h-4 color-base" :title="t('reload')" @click="() => {
+      emits('onReload')
+    }" />
     <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />
-    <div
-      i-carbon-edit icon-button class="w-4 h-4 color-base" :title="t('edit')" @click="() => {
-        emits('onEdit')
-      }"
-    />
+    <div i-carbon-edit icon-button class="w-4 h-4 color-base" :title="t('edit')" @click="() => {
+      emits('onEdit')
+    }" />
     <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />
-    <div
-      i-carbon-save-series class="w-4 h-4 color-base icon-button" :title="t('export')" @click="() => {
-        emits('onExport')
-      }"
-    />
+    <div i-carbon-save-series class="w-4 h-4 color-base icon-button" :title="t('export')" @click="() => {
+      emits('onExport')
+    }" />
     <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />
-    <div
-      i-carbon-trash-can icon-button class="w-4 h-4 color-base" :title="t('delete')" @click="() => {
-        emits('onDelete')
-      }"
-    />
+    <div i-carbon-trash-can icon-button class="w-4 h-4 color-base" :title="t('delete')" @click="() => {
+      emits('onDelete')
+    }" />
   </div>
 </template>
 

@@ -54,10 +54,8 @@ watch(language, (newValue) => {
         {{ t('language') }}
       </div>
       <div class="text-4 m-t-2 flex flex-row">
-        <select
-          v-model="language" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
-          b="1 solid rd-1"
-        >
+        <select v-model="language" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
+          b="1 solid rd-1">
           <option value="auto">
             {{ t('auto') }}
           </option>

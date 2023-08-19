@@ -64,8 +64,7 @@ function exportConversation() {
       </div>
       <div
         v-if="conversationStore.conversationInfo?.description && conversationStore.conversationInfo?.description!.trim().length > 0"
-        class="text-3 color-fade m-t1 overflow-hidden truncate"
-      >
+        class="text-3 color-fade m-t1 overflow-hidden truncate">
         {{ conversationStore.conversationInfo?.description! }}
       </div>
       <div class="flex-1" />
@@ -76,8 +75,10 @@ function exportConversation() {
         <EditSessionSettingsDialog v-if="conversationStore.conversationInfo">
           <div data-cursor="block" class="icon-button i-carbon-audio-console" :title="t('conversation_edit')" />
         </EditSessionSettingsDialog>
-        <div v-if="conversationStore.conversationInfo" data-cursor="block" class="icon-button i-carbon-save-series" :title="t('export')" @click="exportConversation()" />
-        <div v-if="conversationStore.conversationInfo" data-cursor="block" class="icon-button i-carbon-clean" :title="t('conversation_clear')" @click="openDialog" />
+        <div v-if="conversationStore.conversationInfo" data-cursor="block" class="icon-button i-carbon-save-series"
+          :title="t('export')" @click="exportConversation()" />
+        <div v-if="conversationStore.conversationInfo" data-cursor="block" class="icon-button i-carbon-clean"
+          :title="t('conversation_clear')" @click="openDialog" />
       </div>
       <div class="flex-1" />
     </div>
@@ -91,19 +92,13 @@ function exportConversation() {
     </div>
     <div class="flex flex-1 m-t-2">
       <div class="flex-1" />
-      <button
-        data-cursor="block"
-        class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
-        @click="clearMessageRecords"
-      >
+      <button data-cursor="block" class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
+        @click="clearMessageRecords">
         {{ t('clear') }}
       </button>
 
-      <button
-        data-cursor="block"
-        class="outline-none border-base bg-body hover-bg-base color-white m-l-2" b="1 solid rd-1" p="x-4 y-2"
-        @click="closeDialog"
-      >
+      <button data-cursor="block" class="outline-none border-base bg-body hover-bg-base color-white m-l-2"
+        b="1 solid rd-1" p="x-4 y-2" @click="closeDialog">
         {{ t('cancel') }}
       </button>
     </div>
