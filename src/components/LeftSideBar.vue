@@ -133,7 +133,7 @@ html.dark #move-item {
   position: absolute;
   left: -12px;
   bottom: 140px;
-  z-index: 1000;
+  z-index: 1;
   border-radius: 90px;
   border: 1px solid rgb(191, 194, 198);
   opacity: .2;
