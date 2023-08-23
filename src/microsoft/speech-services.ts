@@ -29,6 +29,9 @@ function generateAudioFile(content: string, callback: (fileName: string) => void
           callback('')
       }
     })
+  }).catch(() => {
+    if (callback)
+      callback('')
   })
 }
 
