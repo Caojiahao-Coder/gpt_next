@@ -5,6 +5,7 @@ import { useI18n } from 'vue-i18n'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 import ChatSetting from './ChatSetting.vue'
+import MessageSpeechSetting from './MessageSpeechSetting.vue'
 
 const { t } = useI18n()
 
@@ -32,8 +33,10 @@ watch(width, (newValue) => {
 </script>
 
 <template>
-  <div :class="expand === true ? 'w-320px' : 'w-0'"
-    class="relative transition-all h-100vh flex-shrink-0 flex flex-col color-base border-base" b="0 l-1 solid">
+  <div
+    :class="expand === true ? 'w-320px' : 'w-0'"
+    class="relative transition-all h-100vh flex-shrink-0 flex flex-col color-base border-base" b="0 l-1 solid"
+  >
     <div class="h-79px border-base" p="x-16px" b="0 solid b-1">
       <div class="flex flex-row h-100%">
         <div class="flex-1 flex flex-col">
@@ -53,10 +56,13 @@ watch(width, (newValue) => {
     </div>
     <ChatSetting />
     <OpenAISetting />
+    <MessageSpeechSetting />
     <div class="flex-1" />
     <CommonSlideBar />
-    <div v-if="expand === false" class="transition-all inline-block h-48px absolute top-160px bg-base border-base"
-      b="1 solid rd-tl-3 rd-bl-3" left="-50px" @click="onOpenSettingBar">
+    <div
+      v-if="expand === false" class="transition-all inline-block h-48px absolute top-160px bg-base border-base"
+      b="1 solid rd-tl-3 rd-bl-3" left="-50px" @click="onOpenSettingBar"
+    >
       <div data-cursor="block" class="i-carbon-settings icon-button m-12px" text-6 />
     </div>
   </div>

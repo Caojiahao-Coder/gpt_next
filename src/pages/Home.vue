@@ -8,6 +8,7 @@ import WelcomePage from '@/components/WelcomePage.vue'
 import ErrorDialog from '@/components/ErrorDialog.vue'
 import { useErrorDialogStore } from '@/store/error-dialog'
 import useConversationStore from '@/store/conversation-store'
+import { gptRole } from '@/store/localstorage'
 
 const chatContentStore = useConversationStore()
 const errorDialogStore = useErrorDialogStore()
@@ -18,6 +19,12 @@ const errorDialogStore = useErrorDialogStore()
     <LeftSideBar />
     <div class="flex flex-col flex-1 h-100% overflow-hidden">
       <BodyHeader />
+      <div v-if="gptRole === 'chinese_culture'" class="bg-red-2 color-red-8 p-x-4 p-y-2 border-base b-0 b-b-1 b-solid shadow flex flex-row gap-2 font-bold">
+        <div i-carbon-information line-height-22px h-20px w-20px m-1px />
+        <div>
+          使用国粹模式可能会引起不适，该模式仅供娱乐，切勿当真。
+        </div>
+      </div>
       <div class="flex-1 bg-body overflow-hidden">
         <WelcomePage v-if="!chatContentStore.conversationInfo" />
         <ConversationBody v-else />

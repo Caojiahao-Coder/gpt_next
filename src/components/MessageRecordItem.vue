@@ -15,6 +15,7 @@ import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
 import Message from '@/ui/message'
 import { useErrorDialogStore } from '@/store/error-dialog'
+import { useMessageSpeechStore } from '@/store/message-speech-store'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
@@ -42,6 +43,10 @@ const messageInfo = ref<TBMessageInfo>(props.messageInfo)
 const gptContent = ref<string>('')
 
 const errorDialogStore = useErrorDialogStore()
+
+const speeching = ref<boolean>(false)
+
+const gptMessageSpeechStatus = ref<'pending' | 'processing' | 'finished'>('finished')
 
 onMounted(() => {
   /**
@@ -213,65 +218,104 @@ function onExportConversation() {
     downloadLink.click()
   })
 }
+
+/**
+ * 阅读聊天内容
+ */
+function onSpeechUserMessageContent() {
+  speeching.value = true
+  useMessageSpeechStore().playMessage(messageContent.value ?? '', status =>
+    speeching.value = !(status === 'finished'),
+  )
+}
+
+function onSpeechGPTMessageContent() {
+  useMessageSpeechStore().playMessage(gptContent.value ?? '', status => gptMessageSpeechStatus.value = status)
+}
 </script>
 
 <template>
   <div ref="messageRef">
-    <div class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
-      @mouseenter="onMouseEnter" @mouseleave="onMouseLeave">
+    <div
+      class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
+      @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
+    >
       <div class="avatar w-8 h-8 b-rd-1 bg-body">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-user />
       </div>
       <Markdown :content="messageInfo.user_content" />
 
-      <EditMessageRecordTools :show="showTools" class="top-2 right-2 absolute" @on-reload="onReload()"
-        @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()" @on-export="onExportConversation()" />
+      <EditMessageRecordTools
+        :speeching="speeching" :show="showTools" class="top-2 right-2 absolute"
+        @on-reload="onReload()" @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()"
+        @on-export="onExportConversation()" @on-speech="onSpeechUserMessageContent()"
+      />
     </div>
-    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px" b="0 b-1 solid">
+    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px relative" b="0 b-1 solid">
       <div class="avatar w-8 h-8 b-rd-1">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
       <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+      <div
+        class="icon-button absolute bottom-2 right-2 text-4" :class="[
+          gptMessageSpeechStatus === 'finished' ? 'i-carbon-voice-activate'
+          : gptMessageSpeechStatus === 'processing' ? 'i-svg-spinners-gooey-balls-1' : 'i-svg-spinners-180-ring',
+        ]" @click="onSpeechGPTMessageContent"
+      />
     </div>
   </div>
 
-  <Dialog :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
-    openDeleteConfirmDialog = false
-  }">
+  <Dialog
+    :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
+      openDeleteConfirmDialog = false
+    }"
+  >
     <div color-red>
       {{ t('session_clear_warning') }}
     </div>
 
     <div flex flex-row gap-2 m-t-2>
       <div flex-1 />
-      <button class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="onDelete()">
+      <button
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="onDelete()"
+      >
         {{ t('delete') }}
       </button>
-      <button class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
-        openDeleteConfirmDialog = false
-      }">
+      <button
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
+          openDeleteConfirmDialog = false
+        }"
+      >
         {{ t('cancel') }}
       </button>
     </div>
   </Dialog>
 
-  <Dialog :open="openEditMessageDialog" :title="t('dialog_edit_title')" @on-close="() => {
-    openEditMessageDialog = false
-  }">
+  <Dialog
+    :open="openEditMessageDialog" :title="t('dialog_edit_title')" @on-close="() => {
+      openEditMessageDialog = false
+    }"
+  >
     <div flex flex-row>
-      <textarea v-model.trim="messageContent" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1"
-        p="x-4 y-2" />
+      <textarea
+        v-model.trim="messageContent" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1"
+        p="x-4 y-2"
+      />
     </div>
     <div flex flex-row m-t-4 gap-2>
       <div flex-1 />
-      <button class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="onSubmitEditMessage()">
+      <button
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="onSubmitEditMessage()"
+      >
         {{ t('submit') }}
       </button>
-      <button class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
-        openEditMessageDialog = false
-      }">
+      <button
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
+          openEditMessageDialog = false
+        }"
+      >
         {{ t('cancel') }}
       </button>
     </div>
