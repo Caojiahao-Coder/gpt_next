@@ -12,10 +12,10 @@ const LangList: ILangListInfo[] = [
     ],
   },
   { Code: 'zh-CN-liaoning', Lang: '中文 (东北普通话，简体)', Voice: [{ Code: 'zh-CN-liaoning-XiaobeiNeural', Lang: 'XiaobeiNeural' }] },
-  { Code: 'zh-CN-shandong', Lang: '中文 (吉鲁普通话，简体)', Voice: [{ Code: 'zh-CN-shandong-YunxiangNeural名', Lang: 'YunxiangNeural名 (男)' }] },
+  { Code: 'zh-CN-shandong', Lang: '中文 (吉鲁普通话，简体)', Voice: [{ Code: 'zh-CN-shandong-YunxiangNeural', Lang: 'YunxiangNeural名 (男)' }] },
   { Code: 'zh-CN-shaanxi', Lang: '中文 (陕西中原官话，简体)', Voice: [{ Code: 'zh-CN-shaanxi-XiaoniNeural', Lang: 'XiaoniNeural' }] },
   { Code: 'zh-CN-sichuan', Lang: '中文 (西南普通话，简体)', Voice: [{ Code: 'zh-CN-sichuan-YunxiNeural', Lang: 'YunxiNeural' }] },
-  { Code: 'zh-CN-henan', Lang: '中文 (河南中原普通话，简体)', Voice: [{ Code: 'zh-CN-henan-YundengNeural名', Lang: 'YundengNeural名 (男)' }] },
+  { Code: 'zh-CN-henan', Lang: '中文 (河南中原普通话，简体)', Voice: [{ Code: 'zh-CN-henan-YundengNeural', Lang: 'YundengNeural名 (男)' }] },
 ]
 
 interface ILangListInfo {
