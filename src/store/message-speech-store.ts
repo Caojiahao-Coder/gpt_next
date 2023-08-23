@@ -42,7 +42,7 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
         const audioElement = document.createElement('audio')
         if (!audioElement)
           return
-        audioElement!.src = `http://localhost:3001/${fileName}.mp3`
+        audioElement!.src = `${import.meta.env.VITE_SPEECH_API}/${fileName}.mp3`
         audioElement!.play()
         currentAudio = audioElement
         audioElement.addEventListener('ended', () => {

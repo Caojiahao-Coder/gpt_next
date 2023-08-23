@@ -6,7 +6,7 @@ import { speechVoice } from '@/store/localstorage'
  * @param callback
  */
 function generateAudioFile(content: string, callback: (fileName: string) => void) {
-  fetch('http://localhost:3001/generate-audio-file', {
+  fetch(`${import.meta.env.VITE_SPEECH_API}/generate-audio-file`, {
     method: 'POST',
     headers: {
       'Content-Type': 'Application/JSON',
