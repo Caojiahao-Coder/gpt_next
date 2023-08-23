@@ -22,10 +22,8 @@ function toggleEnableIpadCursorAnimation() {
 </script>
 
 <template>
-  <button
-    m-auto data-cursor="block" icon-button i-carbon-cursor-1 color-base text-6 p-0 b-0 h-38px line-height-38px
-    @click="show = true"
-  />
+  <button m-auto data-cursor="block" icon-button i-carbon-cursor-1 color-base text-6 p-0 b-0 h-38px line-height-38px
+    @click="show = true" />
 
   <PopDialog :show="show" class="w-auto bottom-60px left-10px" @on-cancel="cancelPopDialog">
     <ul class="color-base">

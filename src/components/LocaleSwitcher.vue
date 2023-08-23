@@ -25,10 +25,8 @@ function changeToCN() {
 </script>
 
 <template>
-  <button
-    m-auto data-cursor="block" icon-button i-carbon-translate color-base text-6 p-0 b-0 h-38px line-height-38px
-    @click="toggleShow"
-  />
+  <button m-auto data-cursor="block" icon-button i-carbon-translate color-base text-6 p-0 b-0 h-38px line-height-38px
+    @click="toggleShow" />
 
   <PopDialog :show="show" class="bottom-60px left-180px" @on-cancel="cancelPopDialog">
     <ul class="color-base">

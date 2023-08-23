@@ -1,30 +1,40 @@
 ![BANNER](./images/gpt_next.svg)
 
+[CHINESE](./README.zh_CN.md)
+
 # GPT Next 
 
-
-`GPT_NEXT` is an AI chat tool.
+> GPT Next is an AI chat tool that enables users to have conversations with an AI. The application is built using Vue.js as the frontend framework and utilizes IndexedDB as the database to guarantee the privacy and security of the session.
 
 [🧭Live preview](https://gpt-next-shvd.vercel.app/)
 
 ## Features 🚀
-- ⚔**Session Records Saving** → Using `IndexedDB` as the database can guarantee the privacy and security of the Session.
-- 🔗**Persistent Session Mode** → Support persistent Session mode to make answers more accurate.
-- 🤹‍♀️**Multiple Roles** → A variety of chat roles are built in to make AI's answers more accurate.
+- ⚔**Session Records Saving** → The application uses IndexedDB as the database to guarantee the privacy and security of the session. All session records are saved and can be accessed later.
+- 🔗**Persistent Session Mode** → This feature enables the AI to remember the context of the conversation and provide more accurate answers.
+- 🤹‍♀️**Multiple Roles** → A variety of chat roles are built-in to make AI's answers more accurate.
+- 👏**Readability** → Messages can be made playable by utilizing Microsoft's Speech Services.
 
 ## How to deploy 🎯
 
-### Docker
-1. Pull repository (main branch)
-2. RUN `docker build -t gpt_next:latest .`
-3. RUN `docker run -d -p 1003:8080 --name gpt_next --restart=always gpt_next:latest`
-4. Enjoy it.🎈
+### To run this project, follow these steps:
 
-### Source code
-1. Pull repository (main branch)
-2. RUN `pnpm install`
-3. RUN `pnpm dev`
-4. Enjoy it.🎈
+1. Clone this repository to your local machine.
+
+2. Install all the necessary dependencies by running pnpm install in the command line.
+
+### Use Docker to launch the application by following these steps:
+
+1. Pull the repository (main branch).
+2. Run docker build -t gpt_next:latest .
+3. Run docker run -d -p 1003:8080 --name gpt_next --restart=always gpt_next:latest
+4. Enjoy!
+
+### Alternatively, you can run the application using source code by following these steps:
+
+1. Pull the repository (main branch).
+2. Run pnpm install.
+3. Run pnpm dev.
+4. Enjoy!
 
 ## 🚧 Features List
 - [x] Session records saving
