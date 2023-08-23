@@ -1,7 +1,6 @@
 {
   "files": [],
   "include": [
-    "*.json"
   ],
   "references": [
     {
@@ -12,6 +11,9 @@
     }
   ],
   "compilerOptions": {
-    "types": ["webpack-env", "vue-i18n"]
+    "types": [
+      "webpack-env",
+      "vue-i18n"
+    ]
   }
 }

@@ -3,10 +3,11 @@ import { useI18n } from 'vue-i18n'
 
 const props = defineProps<{
   show: boolean
+  speeching: boolean
 }>()
 
 const emits = defineEmits([
-  'onReload', 'onEdit', 'onDelete', 'onExport',
+  'onReload', 'onEdit', 'onDelete', 'onExport', 'onSpeech',
 ])
 
 const { t } = useI18n()
@@ -15,7 +16,7 @@ const { t } = useI18n()
 <template>
   <div
     v-if="props.show" class="message-tools flex flex-row absolute border-base bg-base p-x-2 p-y-1 gap-1"
-    b="2 solid rd-5"
+    b="1 solid rd-5"
   >
     <div
       i-carbon-restart icon-button class="w-4 h-4 color-base" :title="t('reload')" @click="() => {
@@ -26,6 +27,14 @@ const { t } = useI18n()
     <div
       i-carbon-edit icon-button class="w-4 h-4 color-base" :title="t('edit')" @click="() => {
         emits('onEdit')
+      }"
+    />
+    <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />
+    <div
+      :class="[
+        props.speeching ? 'i-svg-spinners-gooey-balls-1' : 'i-carbon-voice-activate',
+      ]" icon-button class="w-4 h-4 color-base" :title="t('speak')" @click="() => {
+        emits('onSpeech')
       }"
     />
     <div class="w-1px h-2 m-y-1 border-base" b="0 solid l-1" />

@@ -25,12 +25,9 @@ function createNewMessage() {
     <div class="flex-1" />
     <div class="flex flex-row">
       <div class="flex-1" />
-      <div
-        data-cursor="block"
-        class="flex flex-row bg-base p-6 border-base color-base" b="1 solid rd-1" :class="[
-          width >= 1200 ? 'w-500px' : width >= 800 && width < 1200 ? 'w-400px' : 'w-300px',
-        ]" @click="createNewMessage"
-      >
+      <div data-cursor="block" class="flex flex-row bg-base p-6 border-base color-base" b="1 solid rd-1" :class="[
+        width >= 1200 ? 'w-500px' : width >= 800 && width < 1200 ? 'w-400px' : 'w-300px',
+      ]" @click="createNewMessage">
         <div class="i-carbon-add text-6" />
         <div class="flex-1 m-l-2 line-height-24px">
           {{ t('new') }}

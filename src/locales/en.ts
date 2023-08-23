@@ -49,4 +49,11 @@ export default {
   english: 'English',
   delete_confirm_title: 'Are you sure delete this item?',
   fixed_top: 'Fixed Top',
+  speak: 'Speak',
+  chinese_culture: 'Chinese Culture (国粹)',
+  speech_setting: 'Speech Setting',
+  voice_actor: 'Voice actor',
+  speech_processing: 'There is currently a text being read, please try again after finishing.',
+  speech_error: 'Sorry, failed to get voice. Please try again later.',
+  while_talking: 'While talking...',
 }

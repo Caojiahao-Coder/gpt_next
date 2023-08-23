@@ -15,6 +15,7 @@ import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
 import Message from '@/ui/message'
 import { useErrorDialogStore } from '@/store/error-dialog'
+import { useMessageSpeechStore } from '@/store/message-speech-store'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
@@ -42,6 +43,10 @@ const messageInfo = ref<TBMessageInfo>(props.messageInfo)
 const gptContent = ref<string>('')
 
 const errorDialogStore = useErrorDialogStore()
+
+const speeching = ref<boolean>(false)
+
+const gptMessageSpeechStatus = ref<'pending' | 'processing' | 'finished'>('finished')
 
 onMounted(() => {
   /**
@@ -213,6 +218,20 @@ function onExportConversation() {
     downloadLink.click()
   })
 }
+
+/**
+ * 阅读聊天内容
+ */
+function onSpeechUserMessageContent() {
+  speeching.value = true
+  useMessageSpeechStore().playMessage(messageContent.value ?? '', status =>
+    speeching.value = !(status === 'finished'),
+  )
+}
+
+function onSpeechGPTMessageContent() {
+  useMessageSpeechStore().playMessage(gptContent.value ?? '', status => gptMessageSpeechStatus.value = status)
+}
 </script>
 
 <template>
@@ -227,15 +246,22 @@ function onExportConversation() {
       <Markdown :content="messageInfo.user_content" />
 
       <EditMessageRecordTools
-        :show="showTools" class="top-2 right-2 absolute" @on-reload="onReload()"
-        @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()" @on-export="onExportConversation()"
+        :speeching="speeching" :show="showTools" class="top-2 right-2 absolute"
+        @on-reload="onReload()" @on-delete="onDeleteConfirm()" @on-edit="openEditDialog()"
+        @on-export="onExportConversation()" @on-speech="onSpeechUserMessageContent()"
       />
     </div>
-    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px" b="0 b-1 solid">
+    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px relative" b="0 b-1 solid">
       <div class="avatar w-8 h-8 b-rd-1">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
       <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+      <div
+        class="icon-button absolute bottom-2 right-2 text-4" :class="[
+          gptMessageSpeechStatus === 'finished' ? 'i-carbon-voice-activate'
+          : gptMessageSpeechStatus === 'processing' ? 'i-svg-spinners-gooey-balls-1' : 'i-svg-spinners-180-ring',
+        ]" @click="onSpeechGPTMessageContent"
+      />
     </div>
   </div>
 

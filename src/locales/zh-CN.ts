@@ -49,4 +49,11 @@ export default {
   english: '英文',
   delete_confirm_title: '你确定要删除这条记录吗?',
   fixed_top: '置顶',
+  speak: '朗读',
+  chinese_culture: '国粹',
+  speech_setting: '语音设置',
+  voice_actor: '嗓音设置',
+  speech_processing: '当前有一个正在阅读的文本，请结束后再试。',
+  speech_error: '抱歉，获取语音失败，请稍后重新尝试。',
+  while_talking: '播放音频中...',
 }

@@ -38,6 +38,9 @@ function removeConversationItem() {
   conversationStore.deleteConversationById(props.conversationInfo.id)
 }
 
+/**
+ * set conversation fixed top
+ */
 function fixedTop() {
   const info = props.conversationInfo
 
@@ -54,31 +57,21 @@ function fixedTop() {
 </script>
 
 <template>
-  <div
-    b="0 b-1 solid" class="flex flex-row gap-4 p-4 border-base cursor-pointer" :class="[
-      conversationStore.conversationInfo?.conversation_token! === props.conversationInfo.conversation_token! ? 'bg-gray-2 dark:bg-dark-8 selected' : '',
-    ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false"
-  >
-    <div
-      v-if="enterContainer || (props.conversationInfo.fixed_top ?? false)"
-      class="h-16px w-16px color-fade b-rd-1 m-t-4px icon-button"
-      :class="[
+  <div b="0 b-1 solid" class="flex flex-row gap-4 p-4 border-base cursor-pointer" :class="[
+    conversationStore.conversationInfo?.conversation_token! === props.conversationInfo.conversation_token! ? 'bg-gray-2 dark:bg-dark-8 selected' : '',
+  ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false">
+    <div v-if="enterContainer || (props.conversationInfo.fixed_top ?? false)"
+      class="h-16px w-16px color-fade b-rd-1 m-t-4px icon-button" :class="[
         props.conversationInfo.fixed_top ?? false ? 'i-carbon-pin-filled' : 'i-carbon-pin',
         props.conversationInfo.color,
-      ]"
-      @click="fixedTop"
-    />
+      ]" data-cursor="block" @click="fixedTop" />
     <div v-else class="h-16px w-16px color-fade b-rd-1 m-t-4px" :class="props.conversationInfo.color" />
 
-    <div
-      class="flex-1 h-24px w-24px overflow-hidden line-height-24px truncate"
-    >
+    <div class="flex-1 h-24px w-24px overflow-hidden line-height-24px truncate">
       {{ props.conversationInfo.title }}
     </div>
-    <div
-      v-if="deleteConfirm === false" id="item-close" class="i-carbon-close h-24px w-24px" data-cursor="block"
-      @click="onRemove"
-    />
+    <div v-if="deleteConfirm === false" id="item-close" class="i-carbon-close h-24px w-24px" data-cursor="block"
+      @click="onRemove" />
   </div>
 
   <Dialog :open="showRemoveConfirmDialog" :title="t('delete_confirm_title')" @on-close="onCloseDeleteConfirmDialog">
@@ -87,18 +80,12 @@ function fixedTop() {
     </div>
 
     <div class="m-t-4 text-right">
-      <Button
-        data-cursor="block"
-        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="removeConversationItem()"
-      >
+      <Button data-cursor="block" class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1"
+        p="x-4 y-2" @click="removeConversationItem()">
         {{ t('delete') }}
       </Button>
-      <Button
-        data-cursor="block"
-        class="bg-body m-l-2 color-white outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="showRemoveConfirmDialog = false"
-      >
+      <Button data-cursor="block" class="bg-body m-l-2 color-white outline-none border-base hover-bg-base"
+        b="1px solid rd-1" p="x-4 y-2" @click="showRemoveConfirmDialog = false">
         {{ t('cancel') }}
       </Button>
     </div>

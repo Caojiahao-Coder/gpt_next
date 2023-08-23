@@ -1,16 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@600&display=swap');
+
 body {
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
 
-@font-face {
-  font-family: PrimaryFont;
-  src: url(../fonts/Main.ttf);
-}
-
 * {
-  font-family: 'PrimaryFont';
+  font-family: 'Open Sans' !important;
 }
 
 .message-container {
@@ -25,7 +22,17 @@ body {
   margin: 12px auto;
 }
 
-code {
+html.dark code {
   border-radius: 4px !important;
   border: solid 1px #50505050;
+}
+
+code
+{
+  border-radius: 4px !important;
+  border: solid 1px #60606030;
+}
+
+p>code {
+  padding: 0px .2rem;
 }

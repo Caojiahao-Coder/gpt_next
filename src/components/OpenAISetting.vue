@@ -102,12 +102,9 @@ function copyOpenAiKey() {
             apiKey ? `${apiKey.substring(0, 6)}****${apiKey.substring(apiKey.length - 6, apiKey.length)}` : 'undefined'
           }}
         </div>
-        <div
-          data-cursor="block"
-          class="icon-button text-4 h-20px line-height-20px" :class="[
+        <div data-cursor="block" class="icon-button text-4 h-20px line-height-20px" :class="[
             copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
-          ]" @click="copyOpenAiKey"
-        />
+          ]" @click="copyOpenAiKey" />
       </div>
 
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
@@ -127,20 +124,15 @@ function copyOpenAiKey() {
         Api Key:
       </div>
       <div class="flex flex-row m-t-2">
-        <input
-          v-model="apiKey_modal"
-          data-cursor="text" class="flex-1 border-base outline-none bg-body color-base" type="password"
-          placeholder="Please input your OpenAI Key" p="x-4 y-2" b="1 solid rd-1"
-        >
+        <input v-model="apiKey_modal" data-cursor="text" class="flex-1 border-base outline-none bg-body color-base"
+          type="password" placeholder="Please input your OpenAI Key" p="x-4 y-2" b="1 solid rd-1">
       </div>
       <div class="m-t-4">
         GPT Model:
       </div>
       <div class="flex flex-row m-t-2">
-        <select
-          v-model="gptModel_modal" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
-          b="1 solid rd-1"
-        >
+        <select v-model="gptModel_modal" class="flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
+          b="1 solid rd-1">
           <option value="gpt-3.5-turbo">
             gpt-3.5-turbo
           </option>
@@ -165,18 +157,12 @@ function copyOpenAiKey() {
       <div class="flex flex-row m-t-4">
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
-          <button
-            data-cursor="block"
-            class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="onSaveOpenAIConfig"
-          >
+          <button data-cursor="block" class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1"
+            p="x-4 y-2" @click="onSaveOpenAIConfig">
             Save
           </button>
-          <button
-            data-cursor="block"
-            class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-            @click="() => open = false"
-          >
+          <button data-cursor="block" class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1"
+            p="x-4 y-2" @click="() => open = false">
             Cancel
           </button>
         </div>
