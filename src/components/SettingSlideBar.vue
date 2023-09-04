@@ -54,10 +54,11 @@ watch(width, (newValue) => {
         </div>
       </div>
     </div>
-    <ChatSetting />
-    <OpenAISetting />
-    <MessageSpeechSetting />
-    <div class="flex-1" />
+    <div class="flex-1 overflow-y-scroll setting-bar-menu-list">
+      <ChatSetting />
+      <OpenAISetting />
+      <MessageSpeechSetting />
+    </div>
     <CommonSlideBar />
     <div
       v-if="expand === false" class="transition-all inline-block h-48px absolute top-160px bg-base border-base"
@@ -67,3 +68,15 @@ watch(width, (newValue) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.setting-bar-menu-list::-webkit-scrollbar {
+  width: 4px;
+  border-left: 1px solid #33333380;
+}
+
+.setting-bar-menu-list::-webkit-scrollbar-thumb {
+  border-radius: 8px;
+  background-color: #50505050;
+}
+</style>
