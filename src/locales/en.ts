@@ -56,4 +56,9 @@ export default {
   speech_processing: 'There is currently a text being read, please try again after finishing.',
   speech_error: 'Sorry, failed to get voice. Please try again later.',
   while_talking: 'While talking...',
+  restore_db_success: 'Restore database successfully!',
+  restore_db_failed: 'Restore database failed!',
+  backup_db: 'Backup database',
+  restore_db: 'Restore database',
+  db_setting: 'Backup database',
 }

@@ -86,18 +86,18 @@ function fixedTop() {
     </div>
 
     <div class="m-t-4 text-right">
-      <Button
+      <button
         data-cursor="block" class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1"
         p="x-4 y-2" @click="removeConversationItem()"
       >
         {{ t('delete') }}
-      </Button>
-      <Button
+      </button>
+      <button
         data-cursor="block" class="bg-body m-l-2 color-white outline-none border-base hover-bg-base"
         b="1px solid rd-1" p="x-4 y-2" @click="showRemoveConfirmDialog = false"
       >
         {{ t('cancel') }}
-      </Button>
+      </button>
     </div>
   </Dialog>
 </template>
