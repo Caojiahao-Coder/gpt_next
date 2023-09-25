@@ -146,6 +146,25 @@ class DB {
     })
   }
 
+  clear(tb: 'tb_global' | 'tb_conversation' | 'tb_message') {
+    return new Promise((resolve, reject) => {
+      const request = this.db?.transaction([tb])
+        .objectStore(tb)
+        .clear()
+
+      request!.onsuccess = () => {
+        if (request?.result)
+          resolve(request.result)
+        else
+          resolve(-1)
+      }
+
+      request!.onerror = (error) => {
+        reject(error)
+      }
+    })
+  }
+
   /**
    * 通过Id删除数据
    * @param tb

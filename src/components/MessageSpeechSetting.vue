@@ -13,9 +13,9 @@ watch(speechLang, (newValue: string) => {
 
 <template>
   <div class="border-base" b="0 b-1 solid">
-    <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
-      {{ t('speech_setting') }}
-    </div>
+      <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
+        {{ t('speech_setting') }}
+      </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
         {{

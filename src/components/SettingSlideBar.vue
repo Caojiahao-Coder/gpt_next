@@ -6,6 +6,7 @@ import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 import ChatSetting from './ChatSetting.vue'
 import MessageSpeechSetting from './MessageSpeechSetting.vue'
+import DBSetting from './DBSetting.vue'
 
 const { t } = useI18n()
 
@@ -58,6 +59,7 @@ watch(width, (newValue) => {
       <ChatSetting />
       <OpenAISetting />
       <MessageSpeechSetting />
+      <DBSetting />
     </div>
     <CommonSlideBar />
     <div
