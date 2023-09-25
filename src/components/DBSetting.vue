@@ -119,9 +119,9 @@ function onCloseDialog() {
     </div>
   </div>
 
-  <Dialog title="Backup Database" :open="showDialog" @on-close="onCloseDialog">
+  <Dialog :title="t('db_setting')" :open="showDialog" @on-close="onCloseDialog">
     <div>
-      Export the existing data into json files to achieve data migration.
+      {{ t('db_setting_desc') }}
     </div>
 
     <div class="flex flex-row-reverse gap-2 mt-4">
