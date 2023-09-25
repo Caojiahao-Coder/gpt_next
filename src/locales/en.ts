@@ -61,4 +61,5 @@ export default {
   backup_db: 'Backup database',
   restore_db: 'Restore database',
   db_setting: 'Backup database',
+  db_setting_desc: 'A database backup can back up the current session data locally so that it can be used on other devices.',
 }

@@ -61,4 +61,5 @@ export default {
   backup_db: '备份数据库',
   restore_db: '还原数据库',
   db_setting: '数据库备份',
+  db_setting_desc: '数据库备份可以将当前的对话数据备份到本地，以便于在其他设备上使用。',
 }
