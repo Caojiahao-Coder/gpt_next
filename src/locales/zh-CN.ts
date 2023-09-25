@@ -56,4 +56,9 @@ export default {
   speech_processing: '当前有一个正在阅读的文本，请结束后再试。',
   speech_error: '抱歉，获取语音失败，请稍后重新尝试。',
   while_talking: '播放音频中...',
+  restore_db_success: '还原数据库成功!',
+  restore_db_failed: '还原数据库失败!',
+  backup_db: '备份数据库',
+  restore_db: '还原数据库',
+  db_setting: '数据库备份',
 }

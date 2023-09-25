@@ -58,4 +58,7 @@ export default {
   while_talking: 'While talking...',
   restore_db_success: 'Restore database successfully!',
   restore_db_failed: 'Restore database failed!',
+  backup_db: 'Backup database',
+  restore_db: 'Restore database',
+  db_setting: 'Backup database',
 }

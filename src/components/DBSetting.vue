@@ -85,7 +85,7 @@ function onCloseDialog() {
 <template>
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
-      Backup Database
+      {{ t('db_setting') }}
     </div>
 
     <div class="p-16px">
@@ -100,7 +100,7 @@ function onCloseDialog() {
           <div v-if="showExportSuccess" class="i-carbon-checkmark text-5 transition-all" />
           <div>
             {{
-              showExportSuccess ? 'Backup successfully!' : 'Backup Database'
+              showExportSuccess ? 'Backup successfully!' : t('backup_db')
             }}
           </div>
           <div class="flex-1" />
@@ -113,7 +113,7 @@ function onCloseDialog() {
           p="x-4 y-2"
           @click="onRestoreDatabase"
         >
-          Restore Database
+          {{ t('restore_db') }}
         </button>
       </div>
     </div>
