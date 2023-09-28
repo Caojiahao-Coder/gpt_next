@@ -93,7 +93,7 @@ function fixedTop() {
         {{ t('delete') }}
       </button>
       <button
-        data-cursor="block" class="bg-body m-l-2 color-white outline-none border-base hover-bg-base"
+        data-cursor="block" class="bg-body m-l-2 color-base outline-none border-base hover-bg-base"
         b="1px solid rd-1" p="x-4 y-2" @click="showRemoveConfirmDialog = false"
       >
         {{ t('cancel') }}
