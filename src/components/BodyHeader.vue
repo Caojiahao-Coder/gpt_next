@@ -51,7 +51,10 @@ function exportConversation() {
 </script>
 
 <template>
-  <div id="body-header" class="h-79px flex flex-row text-6 color-base border-base overflow-hidden gap-2" b="0 b-1 solid" p="x-24px">
+  <div
+    id="body-header" class="h-79px flex flex-row text-6 color-base border-base overflow-hidden gap-2" b="0 b-1 solid"
+    p="x-24px"
+  >
     <div v-if="leftSideBarStore.expand === false" class="flex flex-col m-r-4">
       <div class="flex-1" />
       <div data-cursor="block" class="icon-button i-carbon-menu" @click="onOpenLeftSideBar" />
@@ -92,7 +95,7 @@ function exportConversation() {
     <MessageSpeech />
 
     <Dialog :open="openConfirmDialog" :title="t('session_clear_title')" @on-close="closeDialog">
-      <div class="line-height-32px">
+      <div class="text-4">
         {{ t('session_clear_desc') }}
         <br>
         <span class="color-red">{{ t('session_clear_warning') }}</span>

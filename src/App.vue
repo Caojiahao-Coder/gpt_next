@@ -18,12 +18,10 @@ watch(isDark, () => {
 
 function changeBodyBgColor() {
   if (isDark.value === true) {
-    document.body.style.backgroundColor = 'black'
     const codeTheme = document.getElementById('code-theme') as HTMLLinkElement
     codeTheme.href = '/darcula.css'
   }
   else {
-    document.body.style.backgroundColor = 'white'
     const codeTheme = document.getElementById('code-theme') as HTMLLinkElement
     codeTheme.href = '/github.css'
   }
