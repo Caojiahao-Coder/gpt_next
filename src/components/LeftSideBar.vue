@@ -97,7 +97,7 @@ onMounted(() => {
           <div
             i-carbon-campsite class="text-16px h-24px"
           />
-          <div class="text-12px text-light line-height-24px">
+          <div class="text-12px color-base line-height-24px">
             {{ config.version }}
           </div>
         </a>
