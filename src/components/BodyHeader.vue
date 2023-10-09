@@ -103,8 +103,8 @@ function exportConversation() {
       <div class="flex flex-1 m-t-2">
         <div class="flex-1" />
         <button
-          data-cursor="block" class="outline-none border-base bg-red color-white" b="1 solid rd-1" p="x-4 y-2"
-          @click="clearMessageRecords"
+          data-cursor="block" class="outline-none border-base color-red" b="1 solid rd-1"
+          p="x-4 y-2" @click="clearMessageRecords"
         >
           {{ t('clear') }}
         </button>
