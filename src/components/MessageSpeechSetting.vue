@@ -52,4 +52,3 @@ watch(speechLang, (newValue: string) => {
     </div>
   </div>
 </template>
-@/assets/lang-list
