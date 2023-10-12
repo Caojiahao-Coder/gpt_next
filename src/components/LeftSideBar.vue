@@ -79,12 +79,12 @@ onMounted(() => {
 
       <ConversationsList />
 
-      <div class="flex flex-row h-47px text-3 border-base select-none" p="16px" b="0 t-1 solid">
+      <div class="flex flex-row h-47px text-3 border-base select-none color-fade" p="16px" b="0 t-1 solid">
         <div line-height-47px>
           <span>
             Designed By
           </span>
-          <a class="decoration-dashed color-base hover-color-primary" href="https://github.com/Caojiahao-Coder">Leo
+          <a class="decoration-dashed color-base hover-color-primary color-fade" href="https://github.com/Caojiahao-Coder">Leo
             Cao</a>.
         </div>
 
@@ -94,9 +94,7 @@ onMounted(() => {
           href="https://leocao-me.vercel.app/gpt_next-updatelogs"
           class="text-right color-base flex flex-row gap-1 icon-button cursor-pointer"
         >
-          <div
-            i-carbon-campsite class="text-16px h-24px"
-          />
+          <div i-carbon-campsite class="text-16px h-24px" />
           <div class="text-12px color-base line-height-24px">
             {{ config.version }}
           </div>
