@@ -49,9 +49,9 @@ watch(language, (newValue) => {
           <option value="subordinate">
             {{ t('subordinate') }}
           </option>
-          <option value="chinese_culture">
+          <!-- <option value="chinese_culture">
             {{ t('chinese_culture') }}
-          </option>
+          </option> -->
         </select>
       </div>
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">

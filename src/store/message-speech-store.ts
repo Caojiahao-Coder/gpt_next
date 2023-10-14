@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { generateAudioFile } from '@/microsoft/speech-services'
-import message from '@/ui/message'
+import { push } from '@/main'
 
 /**
  * 音频播放组件
@@ -20,7 +20,7 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
 
   function playMessage(content: string, callback?: (status: 'pending' | 'processing' | 'finished') => void) {
     if (isPlaying.value === true) {
-      message.info(t('speech_processing'))
+      push.info(t('speech_processing'))
       return
     }
     isPlaying.value = true
@@ -29,7 +29,7 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
     generateAudioFile(content, (fileName) => {
       if (fileName.length === 0) {
         isPlaying.value = false
-        message.info(t('speech_error'))
+        push.info(t('speech_error'))
         show.value = false
         if (callback)
           callback('finished')

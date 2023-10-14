@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import { exportDBFileToJson, restoreDatabase } from '@/database/utils'
-import Message from '@/ui/message'
+import { push } from '@/main'
 
 const { t } = useI18n()
 
@@ -65,12 +65,12 @@ function onRestoreDatabase() {
       const result = restoreDatabase(jsonData)
 
       if (result) {
-        Message.info(t('restore_db_success'))
+        push.info(t('restore_db_success'))
         setTimeout(() => {
           window.location.reload()
         }, 600)
       }
-      else { Message.error(t('restore_db_failed')) }
+      else { push.error(t('restore_db_failed')) }
     }
 
     reader.readAsText(file)

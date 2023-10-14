@@ -13,7 +13,7 @@ class DB {
 
   constructor() {
     this.db = null
-    this.version = 3
+    this.version = 7
   }
 
   /**
@@ -260,6 +260,7 @@ class DB {
     objectStore.createIndex('create_time', 'create_time')
     objectStore.createIndex('conversation_token', 'conversation_token')
     objectStore.createIndex('fixed_top', 'fixed_top')
+    objectStore.createIndex('type', 'type')
   }
 }
 

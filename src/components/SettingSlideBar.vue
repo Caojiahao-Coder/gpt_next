@@ -5,8 +5,9 @@ import { useI18n } from 'vue-i18n'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 import ChatSetting from './ChatSetting.vue'
-import MessageSpeechSetting from './MessageSpeechSetting.vue'
 import DBSetting from './DBSetting.vue'
+import MessageSpeechSetting from './MessageSpeechSetting.vue'
+import ToolsSetting from './ToolsSetting.vue'
 
 const { t } = useI18n()
 
@@ -58,6 +59,7 @@ watch(width, (newValue) => {
     <div class="flex-1 overflow-y-scroll setting-bar-menu-list">
       <ChatSetting />
       <OpenAISetting />
+      <ToolsSetting />
       <MessageSpeechSetting />
       <DBSetting />
     </div>
