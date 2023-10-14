@@ -31,11 +31,14 @@ class DB {
       request.onupgradeneeded = (event) => {
         this.db = (event.target as IDBOpenDBRequest).result
 
-        this.initGlobalTable()
+        if (!this.db.objectStoreNames.contains(this.tb_global))
+          this.initGlobalTable()
 
-        this.initMessageTable()
+        if (!this.db.objectStoreNames.contains(this.tb_message))
+          this.initMessageTable()
 
-        this.initConversationTable()
+        if (!this.db.objectStoreNames.contains(this.tb_conversation))
+          this.initConversationTable()
       }
 
       request.onerror = (error) => {
