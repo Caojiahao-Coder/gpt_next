@@ -24,7 +24,15 @@ function onSelect(event: MouseEvent) {
   if ((event.target as HTMLHtmlElement).id === 'item-close')
     return
 
-  conversationStore.conversationInfo = props.conversationInfo
+  if ((conversationStore.conversationInfo?.type ?? 'chat') === 'dataworker') {
+    conversationStore.conversationInfo = null
+    setTimeout(() => {
+      conversationStore.conversationInfo = props.conversationInfo
+    }, 10)
+  }
+  else {
+    conversationStore.conversationInfo = props.conversationInfo
+  }
 }
 
 const deleteConfirm = ref<boolean>(false)
@@ -75,8 +83,8 @@ function fixedTop() {
       {{ props.conversationInfo.title }}
     </div>
     <div
-      v-if="deleteConfirm === false" id="item-close" class="i-carbon-close h-24px w-24px icon-button" data-cursor="block"
-      @click="onRemove"
+      v-if="deleteConfirm === false" id="item-close" class="i-carbon-close h-24px w-24px icon-button"
+      data-cursor="block" @click="onRemove"
     />
   </div>
 

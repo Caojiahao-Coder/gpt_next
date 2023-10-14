@@ -13,9 +13,9 @@ import useGlobalStore from '@/store/global-store'
 import { parserStreamText } from '@/openai/parser'
 import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
-import Message from '@/ui/message'
 import { useErrorDialogStore } from '@/store/error-dialog'
 import { useMessageSpeechStore } from '@/store/message-speech-store'
+import { push } from '@/main'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
@@ -99,8 +99,7 @@ async function getChatAnswer() {
         model: globalSettingInfo.chat_model,
         top_p: 1,
         temperature: 0.7,
-        max_tokens: 2048,
-        messages: handleChatCompletions(messagesBody),
+        messages: messagesBody,
         stream: true,
       },
     })
@@ -179,7 +178,7 @@ function openEditDialog() {
 async function onSubmitEditMessage() {
   const message = messageContent.value.trim()
   if (message.length === 0) {
-    Message.error(t('message_cannot_empty'))
+    push.error(t('message_cannot_empty'))
     return
   }
 
@@ -205,7 +204,7 @@ async function onSubmitEditMessage() {
 
 function onExportConversation() {
   if (!messageRef.value) {
-    Message.error(t('export-failed'))
+    push.error(t('export-failed'))
     return
   }
 

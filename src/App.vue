@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue'
 import { RouterView } from 'vue-router'
+import { Notifications, Notivue } from 'notivue'
 import { themeColor } from './store/localstorage'
 import { isDark } from './store/dark'
 
@@ -31,5 +32,9 @@ function changeBodyBgColor() {
 <template>
   <main :style="style">
     <RouterView />
+
+    <Notivue v-slot="item">
+      <Notifications :item="item" />
+    </Notivue>
   </main>
 </template>

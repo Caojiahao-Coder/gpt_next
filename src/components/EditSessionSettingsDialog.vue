@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import useConversationStore from '@/store/conversation-store'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
-import Message from '@/ui/message'
+import { push } from '@/main'
 
 const { t } = useI18n()
 
@@ -18,7 +18,7 @@ const color = ref<string>('')
 
 async function onSaveSessionSettings() {
   if (title.value.trim().length === 0) {
-    Message.error(t('message_session_title_empty'))
+    push.error(t('message_session_title_empty'))
     return
   }
 
@@ -32,6 +32,7 @@ async function onSaveSessionSettings() {
     conversation_token: info.conversation_token,
     color: color.value,
     fixed_top: info.fixed_top ?? false,
+    type: info.type,
   })
 
   openDialog.value = false
@@ -66,26 +67,34 @@ function onCloseDialog() {
         {{ t('session_title') }}
       </div>
       <div class="m-t-2 flex flex-row">
-        <input v-model="title" data-cursor="text" class="flex-1 border-base outline-none bg-body color-base"
-          b="1 solid rd-1" p="x-4 y-2">
+        <input
+          v-model="title" data-cursor="text" class="flex-1 border-base outline-none bg-body color-base"
+          b="1 solid rd-1" p="x-4 y-2"
+        >
       </div>
       <div class="m-t-4">
         {{ t('session_desc') }}
       </div>
       <div class="m-t-2 flex flex-row">
-        <textarea v-model="description" data-cursor="text"
-          class="flex-1 border-base outline-none bg-body color-base min-h-240px" b="1 solid rd-1" p="x-4 y-2" />
+        <textarea
+          v-model="description" data-cursor="text"
+          class="flex-1 border-base outline-none bg-body color-base min-h-240px" b="1 solid rd-1" p="x-4 y-2"
+        />
       </div>
 
       <div class="m-t-4 flex flex-row">
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
-          <button data-cursor="block" class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1"
-            p="x-4 y-2" @click="onSaveSessionSettings">
+          <button
+            data-cursor="block" class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1"
+            p="x-4 y-2" @click="onSaveSessionSettings"
+          >
             {{ t('save') }}
           </button>
-          <button data-cursor="block" class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1"
-            p="x-4 y-2" @click="onCloseDialog">
+          <button
+            data-cursor="block" class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1"
+            p="x-4 y-2" @click="onCloseDialog"
+          >
             {{ t('cancel') }}
           </button>
         </div>

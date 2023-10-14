@@ -27,12 +27,47 @@ html.dark code {
   border: solid 1px #50505050;
 }
 
-code
-{
+code {
   border-radius: 4px !important;
   border: solid 1px #60606030;
 }
 
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  border: 1px solid #50505050;
+}
+
+th,
+td {
+  padding: 10px;
+  border-bottom: 1px solid #50505050;
+}
+
+html.dark th {
+  background-color: #20202080;
+  color: #ffffff;
+}
+
+th {
+  background-color: #20202010;
+  color: #202020;
+}
+
 p>code {
   padding: 0px .2rem;
+}
+
+#data-work-markdown>div {
+  overflow-x: scroll;
+}
+
+#data-work-markdown>div::-webkit-scrollbar {
+  height: 8px;
+}
+
+#data-work-markdown>div::-webkit-scrollbar-thumb {
+  background-color: #20202080;
 }

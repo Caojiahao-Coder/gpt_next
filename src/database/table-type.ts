@@ -22,6 +22,7 @@ interface TBConverstationInfo {
   create_time: number
   conversation_token: string
   fixed_top?: boolean
+  type?: 'chat' | 'dataworker'
 }
 
 interface NewGlobalSettingInfo {
@@ -44,6 +45,7 @@ interface NewConverstationInfo {
   color: string
   create_time: number
   conversation_token: string
+  type?: 'chat' | 'dataworker'
 }
 
 export type {

@@ -13,7 +13,7 @@ class DB {
 
   constructor() {
     this.db = null
-    this.version = 3
+    this.version = 7
   }
 
   /**
@@ -31,14 +31,11 @@ class DB {
       request.onupgradeneeded = (event) => {
         this.db = (event.target as IDBOpenDBRequest).result
 
-        if (!this.db.objectStoreNames.contains(this.tb_global))
-          this.initGlobalTable()
+        this.initGlobalTable()
 
-        if (!this.db.objectStoreNames.contains(this.tb_message))
-          this.initMessageTable()
+        this.initMessageTable()
 
-        if (!this.db.objectStoreNames.contains(this.tb_conversation))
-          this.initConversationTable()
+        this.initConversationTable()
       }
 
       request.onerror = (error) => {
@@ -260,6 +257,7 @@ class DB {
     objectStore.createIndex('create_time', 'create_time')
     objectStore.createIndex('conversation_token', 'conversation_token')
     objectStore.createIndex('fixed_top', 'fixed_top')
+    objectStore.createIndex('type', 'type')
   }
 }
 
