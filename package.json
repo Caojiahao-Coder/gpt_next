@@ -1,6 +1,6 @@
 {
   "name": "gpt_next",
-  "version": "1.1.9",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "vite",
@@ -55,6 +55,8 @@
     "html2canvas": "^1.4.1",
     "ipad-cursor": "^0.4.4",
     "katex": "^0.16.8",
+    "monaco-editor": "^0.44.0",
+    "notivue": "^1.4.1",
     "rehype-highlight": "^6.0.0",
     "typescript": "~5.0.4",
     "unocss": "^0.52.7",

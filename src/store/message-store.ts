@@ -91,7 +91,6 @@ const useMessageStore = defineStore('messageStore', () => {
         model: globalSettingInfo.chat_model,
         top_p: 1,
         temperature: 0.7,
-        max_tokens: 2048,
         messages: handleCreateSessionNameByGPT(messageData),
         stream: true,
       },

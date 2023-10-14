@@ -23,6 +23,7 @@ export default {
   message_apikey_empty: 'Sorry, the Api key can\'t be empty.',
   message_session_title_empty: 'Sorry the session title can\'t be empty.',
   new_conversation_title: 'New Message',
+  new_data_worker_title: 'New data worker',
   apikey_empty_error: 'Sorry the api key can\'t be empty',
   reload: 'Reload',
   edit: 'Edit',
@@ -62,4 +63,10 @@ export default {
   restore_db: 'Restore database',
   db_setting: 'Backup database',
   db_setting_desc: 'A database backup can back up the current session data locally so that it can be used on other devices.',
+  ai_tools: 'AI Tools',
+  load_data: 'Load Data',
+  generate_sql: 'Generate Sql',
+  data_tools_desc: 'Data simulation with custom columns',
+  add_new_columns: 'Add new columns',
+  loading: 'Loading...',
 }

@@ -23,6 +23,7 @@ export default {
   message_apikey_empty: '抱歉,ApiKey不可以为空.',
   message_session_title_empty: '抱歉，对话框标题不可以为空.',
   new_conversation_title: '新对话',
+  new_data_worker_title: '新数据生成器',
   apikey_empty_error: '抱歉Api Key不可以为空',
   reload: '重新回答',
   edit: '编辑对话',
@@ -62,4 +63,10 @@ export default {
   restore_db: '还原数据库',
   db_setting: '数据库备份',
   db_setting_desc: '数据库备份可以将当前的对话数据备份到本地，以便于在其他设备上使用。',
+  ai_tools: 'AI 工具',
+  load_data: '加载数据',
+  generate_sql: '生成Sql数据表',
+  data_tools_desc: '通过自定义列进行数据模拟',
+  add_new_columns: '添加新的列',
+  loading: '加载数据中...',
 }

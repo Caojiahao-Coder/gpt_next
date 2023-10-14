@@ -3,8 +3,8 @@ import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import useGlobalStore from '@/store/global-store'
-import Message from '@/ui/message'
 import gpt_models from '@/assets/models-list'
+import { push } from '@/main'
 
 const open = ref<boolean>(false)
 
@@ -48,7 +48,7 @@ function openEditModal() {
 
 async function onSaveOpenAIConfig() {
   if (!apiKey_modal.value || (apiKey_modal.value?.trim() ?? '').length === 0) {
-    Message.error(t('apikey_empty_error'))
+    push.error(t('apikey_empty_error'))
     return
   }
   globalStore.addApiKey({
