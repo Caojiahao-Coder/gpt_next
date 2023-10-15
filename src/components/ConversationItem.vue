@@ -60,6 +60,7 @@ function fixedTop() {
     conversation_token: info.conversation_token,
     color: info.color,
     fixed_top: !(info.fixed_top ?? false),
+    type: info.type,
   })
 }
 </script>
