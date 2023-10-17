@@ -25,6 +25,7 @@ const useMessageStore = defineStore('messageStore', () => {
   function addNewMessage(data: NewMessageInfo) {
     db.init().then(() => {
       db.add('tb_message', data).then(() => {
+        messageList.value = []
         getMessageRecordsByConversationId(data.conversation_id).then((res) => {
           messageList.value = res
         })
@@ -100,7 +101,7 @@ const useMessageStore = defineStore('messageStore', () => {
 
     await parserStreamText(response, (content) => {
       sessionTitle += content
-    }, () => {})
+    }, () => { })
 
     const converstationStore = useConversationStore()
 
