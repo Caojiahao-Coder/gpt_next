@@ -52,7 +52,6 @@ async function onSubmitMessage(columns: string[]) {
     token_id: uid(32),
     status: 'waiting',
   }
-
   messageStore.addNewMessage(messageInfo)
 }
 </script>
