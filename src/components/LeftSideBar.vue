@@ -7,6 +7,7 @@ import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
 import useConversationStore from '@/store/conversation-store'
+import useMessageStore from '@/store/message-store'
 
 const { t } = useI18n()
 const { width } = useWindowSize()
@@ -22,6 +23,8 @@ function onCloseLeftSideBar() {
 }
 
 function onCreateNewConversation() {
+  const messageStore = useMessageStore()
+  messageStore.messageList = []
   const conversationStore = useConversationStore()
   conversationStore.createNewConversation({
     title: t('new_conversation_title'),
@@ -29,6 +32,7 @@ function onCreateNewConversation() {
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
+    type: 'chat',
   })
 }
 
@@ -84,7 +88,10 @@ onMounted(() => {
           <span>
             Designed By
           </span>
-          <a class="decoration-dashed color-base hover-color-primary color-fade" href="https://github.com/Caojiahao-Coder">Leo
+          <a
+            class="decoration-dashed color-base hover-color-primary color-fade"
+            href="https://github.com/Caojiahao-Coder"
+          >Leo
             Cao</a>.
         </div>
 

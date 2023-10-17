@@ -14,8 +14,6 @@ import { push } from '@/main'
 
 const { t } = useI18n()
 
-const sqlDialogRef = ref<HTMLDivElement>()
-
 const editorDiv = ref<HTMLDivElement>()
 
 const openSQLDialog = ref<boolean>(false)
@@ -42,10 +40,6 @@ let editor: any = null
 
 onMounted(() => {
   loadMessageRecords()
-
-  window.onresize = () => {
-    resetEditorSize()
-  }
 })
 
 function onCloseView() {
@@ -54,21 +48,11 @@ function onCloseView() {
 
 function toggleFullScreen() {
   fullScreen.value = !fullScreen.value
-  resetEditorSize()
 }
 
 function openPreviewSqlDialog() {
   openSQLDialog.value = true
   initMonacoEditor()
-}
-
-function resetEditorSize() {
-  if (editor) {
-    editor.layout({
-      width: sqlDialogRef.value!.clientWidth - 32,
-      height: sqlDialogRef.value!.clientHeight - 50 - 32 - 32,
-    })
-  }
 }
 
 function initMonacoEditor() {
@@ -79,6 +63,7 @@ function initMonacoEditor() {
     // if the editor div is exist, create a new editor instance
     if (editorDiv.value) {
       editor = monaco.editor.create(editorDiv.value, {
+        automaticLayout: true,
         language: 'sql',
         theme: isDark.value ? 'vs-dark' : 'vs',
         minimap: {
@@ -337,7 +322,6 @@ function onCopySqlCode() {
   <Transition>
     <div
       v-if="openSQLDialog"
-      ref="sqlDialogRef"
       class="fixed top-0 left-0 w-full h-100vh backdrop-blur z-100 flex-col flex color-base"
     >
       <div :class="[fullScreen ? 'h-16px' : 'h-20%']" class="transition-duration-.2s" @click="onCloseView" />
@@ -367,7 +351,10 @@ function onCopySqlCode() {
               </div>
 
               <div class="flex-1 flex flex-row-reverse gap-2">
-                <div class="w-24px h-24px b-1 b-solid border-base b-rd bg-body m-y-3px bg-body hover-bg-base" @click="onCopySqlCode">
+                <div
+                  class="w-24px h-24px b-1 b-solid border-base b-rd bg-body m-y-3px bg-body hover-bg-base"
+                  @click="onCopySqlCode"
+                >
                   <div class=" m4px i-carbon-copy" />
                 </div>
               </div>

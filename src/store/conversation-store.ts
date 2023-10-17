@@ -18,6 +18,7 @@ const useConversationStore = defineStore('conversationStore', () => {
     if (newValue) {
       messageStore.getMessageRecordsByConversationId(newValue!.id).then((res) => {
         messageStore.messageList = res
+        console.error(res)
       })
     }
   })
