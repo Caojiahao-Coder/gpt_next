@@ -110,7 +110,7 @@ function exportConversation() {
         </button>
 
         <button
-          data-cursor="block" class="outline-none border-base bg-body hover-bg-base color-white m-l-2"
+          data-cursor="block" class="outline-none border-base bg-body hover-bg-base color-base m-l-2"
           b="1 solid rd-1" p="x-4 y-2" @click="closeDialog"
         >
           {{ t('cancel') }}
