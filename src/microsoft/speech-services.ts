@@ -43,7 +43,7 @@ function generateAudioFile(content: string, callback: (fileName: string) => void
 function startPlayAudioFile(fileName: string, statusChange: (status: 'pending' | 'running' | 'finished') => void) {
   const context = new AudioContext()
   const request = new XMLHttpRequest()
-  request.open('GET', `http://localhost:3001/musicSrc/${fileName}.wav`, true)
+  request.open('GET', `${import.meta.env.VITE_SPEECH_API}/musicSrc/${fileName}.wav`, true)
   request.responseType = 'arraybuffer'
   request.onload = function () {
     context.decodeAudioData(request.response, (buffer) => {
