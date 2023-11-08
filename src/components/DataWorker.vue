@@ -39,7 +39,7 @@ function onRemoveColumn(index: number) {
       <div class="flex flex-row">
         <input
           ref="itemRefs" type="text"
-          class="flex-1 border-solid border-1 border-base m-0 p-2 bg-base b-rd outline-none color-base hover-bg-body"
+          class="flex-1 border-solid border-1 border-base m-0 p-2 bg-base b-rd outline-none color-base focus-bg-body"
           placeholder="Column name"
         >
       </div>

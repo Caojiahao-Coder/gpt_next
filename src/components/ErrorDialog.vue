@@ -11,8 +11,10 @@ function onCancel() {
 
 <template>
   <Transition name="expand">
-    <div v-if="errorDialogStore.showErrorDialog"
-      class="transition-all border-red bg-red-1 color-red z-99999 overflow-hidden" p="6" b="0 t-1 solid">
+    <div
+      v-if="errorDialogStore.showErrorDialog"
+      class="transition-all border-red bg-red-1 color-red z-99999 overflow-hidden" p="6" b="0 t-1 solid"
+    >
       <div class="font-bold">
         Error.
       </div>
