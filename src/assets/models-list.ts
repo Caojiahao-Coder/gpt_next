@@ -15,6 +15,10 @@ const gpt_models: {
     name: 'gpt-4-1106(preview)',
   },
   {
+    value: 'gpt-4-vision-preview',
+    name: 'gpt-4-vision(preview)',
+  },
+  {
     value: 'gpt-4-32k',
     name: 'gpt-4-32k (Plus)',
   },
