@@ -70,4 +70,11 @@ export default {
   add_new_columns: '添加新的列',
   loading: '加载数据中...',
   tts_model: 'TTS 模型',
+  draw_img_mode: '绘图模式',
+  fit_canvas: '自适应画布大小 (默认600x600)',
+  generate_image: '生成图片',
+  download_image: '下载图片',
+  draw_img_hint: '请输入你的要求...',
+  image_requirement_cannot_empty: '抱歉，图片要求不可以为空。',
+  generate_image_ing: '正在生成图片...',
 }

@@ -10,6 +10,7 @@ import { useErrorDialogStore } from '@/store/error-dialog'
 import useConversationStore from '@/store/conversation-store'
 import { gptRole } from '@/store/localstorage'
 import DataWorkerBody from '@/components/DataWorkerBody.vue'
+import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 
 const chatContentStore = useConversationStore()
 const errorDialogStore = useErrorDialogStore()
@@ -33,9 +34,10 @@ const errorDialogStore = useErrorDialogStore()
         <WelcomePage v-if="!chatContentStore.conversationInfo" />
         <ConversationBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'chat'" />
         <DataWorkerBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'dataworker'" />
+        <DrawImageModeBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'draw_img_mode'" />
       </div>
       <Editor
-        v-if="(!errorDialogStore.showErrorDialog) && (chatContentStore.conversationInfo?.type ?? 'chat') !== 'dataworker'"
+        v-if="(!errorDialogStore.showErrorDialog) && (chatContentStore.conversationInfo?.type ?? 'chat') === 'chat'"
       />
       <ErrorDialog />
     </div>

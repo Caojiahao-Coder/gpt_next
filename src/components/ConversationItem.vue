@@ -24,7 +24,7 @@ function onSelect(event: MouseEvent) {
   if ((event.target as HTMLHtmlElement).id === 'item-close')
     return
 
-  if ((conversationStore.conversationInfo?.type ?? 'chat') === 'dataworker') {
+  if ((conversationStore.conversationInfo?.type ?? 'chat') === 'dataworker' || (conversationStore.conversationInfo?.type ?? 'chat') === 'draw_img_mode') {
     conversationStore.conversationInfo = null
     setTimeout(() => {
       conversationStore.conversationInfo = props.conversationInfo
