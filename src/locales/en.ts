@@ -77,4 +77,12 @@ export default {
   draw_img_hint: 'Please enter your requirements...',
   image_requirement_cannot_empty: 'Sorry, image requirements cannot be empty.',
   generate_image_ing: 'Generating image...',
+  generate_image_error: 'Sorry, failed to generate image. Please try again later.',
+  previous_img: 'Previous Image',
+  next_img: 'Next Image',
+  upload_img: 'Upload Image',
+  vivid_mode: 'Vivid Mode',
+  natural_mode: 'Natural Mode',
+  edit_img: 'Edit Image',
+  edit_img_hint: 'Say your change requirements for the picture',
 }

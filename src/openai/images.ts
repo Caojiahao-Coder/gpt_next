@@ -1,3 +1,4 @@
+import axios from 'axios'
 import type { OpenAIFetchInfo } from './api'
 
 export async function fetchGenerateImages(payload: OpenAIFetchInfo) {
@@ -11,4 +12,14 @@ export async function fetchGenerateImages(payload: OpenAIFetchInfo) {
   }
 
   return fetch('https://api.openai.com/v1/images/generations', initOptions)
+}
+
+export async function downloadImgByURL(url: string) {
+  axios({
+    method: 'GET',
+    url,
+    responseType: 'stream',
+  }).then((res) => {
+    console.log(res.data)
+  })
 }
