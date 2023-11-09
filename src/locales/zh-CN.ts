@@ -52,7 +52,7 @@ export default {
   fixed_top: '置顶',
   speak: '朗读',
   chinese_culture: '国粹',
-  speech_setting: '语音设置',
+  speech_setting: '语音设置 (TTS)',
   voice_actor: '嗓音设置',
   speech_processing: '当前有一个正在阅读的文本，请结束后再试。',
   speech_error: '抱歉，获取语音失败，请稍后重新尝试。',
@@ -69,4 +69,5 @@ export default {
   data_tools_desc: '通过自定义列进行数据模拟',
   add_new_columns: '添加新的列',
   loading: '加载数据中...',
+  tts_model: 'TTS 模型',
 }

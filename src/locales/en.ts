@@ -52,7 +52,7 @@ export default {
   fixed_top: 'Fixed Top',
   speak: 'Speak',
   chinese_culture: 'Chinese Culture (国粹)',
-  speech_setting: 'Speech Setting',
+  speech_setting: 'Speech Setting (TTS)',
   voice_actor: 'Voice actor',
   speech_processing: 'There is currently a text being read, please try again after finishing.',
   speech_error: 'Sorry, failed to get voice. Please try again later.',
@@ -69,4 +69,5 @@ export default {
   data_tools_desc: 'Data simulation with custom columns',
   add_new_columns: 'Add new columns',
   loading: 'Loading...',
+  tts_model: 'TTS Model',
 }
