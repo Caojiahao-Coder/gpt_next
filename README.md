@@ -41,7 +41,7 @@
 - [x] Session records saving
 - [x] Persistent session mode
 - [x] Multiple roles
-- [ ] Support image generation
+- [x] Support image generation
 - [x] Support for editing conversations
 
 ## 🐞 Bug List
