@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { watch } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import LangList from '@/assets/lang-list'
-import { speechLang, speechVoice } from '@/store/localstorage'
+import VoiceList from '@/assets/voice-list'
+import { speechVoice, ttsModels } from '@/store/localstorage'
+import tts_models from '@/assets/tts-models-list'
 
 const { t } = useI18n()
 
-watch(speechLang, (newValue: string) => {
-  speechVoice.value = LangList.filter(a => a.Code === newValue)[0].Voice[0].Code
-})
+const voice = ref(speechVoice)
 </script>
 
 <template>
@@ -18,37 +17,33 @@ watch(speechLang, (newValue: string) => {
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        {{
-          t('language')
-        }}
+        {{ t('tts_model') }}
       </div>
       <div class="m-t-2">
         <select
-          v-model="speechLang" class="w-full flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
+          v-model="ttsModels" class="w-full flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
           b="1 solid rd-1"
         >
-          <option v-for="(item, index) in LangList" :key="index" :value="item.Code">
-            {{ item.Lang }}
+          <option v-for="(item, index) in tts_models" :key="index" :value="item.value">
+            {{ item.name }}
           </option>
         </select>
       </div>
 
-      <div class="text-3 color-gray m-t-4" style="font-family: Light;">
+      <div class="text-3 color-gray mt-4" style="font-family: Light;">
         {{ t('voice_actor') }}
       </div>
       <div class="m-t-2">
         <select
-          v-model="speechVoice" class="w-full flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
+          v-model="voice" class="w-full flex-1 border-base outline-none bg-body color-base" p="x-4 y-2"
           b="1 solid rd-1"
         >
-          <option
-            v-for="(item, index) in LangList.filter(a => a.Code === speechLang)[0].Voice" :key="index"
-            :value="item.Code"
-          >
-            {{ item.Lang }}
+          <option v-for="(item, index) in VoiceList" :key="index" :value="item.Code">
+            {{ item.Voice }}
           </option>
         </select>
       </div>
     </div>
   </div>
 </template>
+@/assets/voice-list

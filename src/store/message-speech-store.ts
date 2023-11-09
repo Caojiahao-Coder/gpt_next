@@ -1,8 +1,10 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { generateAudioFile } from '@/microsoft/speech-services'
+import useGlobalStore from './global-store'
+import { speechVoice, ttsModels } from './localstorage'
 import { push } from '@/main'
+import { fetchText2Speech } from '@/openai/tts'
 
 /**
  * 音频播放组件
@@ -11,6 +13,8 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
   const { t } = useI18n()
   const isPlaying = ref<boolean>(false)
 
+  const globalStore = useGlobalStore()
+
   // 是否显示播放组件
   const show = ref<boolean>(false)
   // 当前正在播放的文件名称
@@ -18,46 +22,63 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
 
   let currentAudio: HTMLAudioElement | null = null
 
-  function playMessage(content: string, callback?: (status: 'pending' | 'processing' | 'finished') => void) {
+  async function playMessage(content: string, callback?: (status: 'pending' | 'processing' | 'finished') => void) {
     if (isPlaying.value === true) {
       push.info(t('speech_processing'))
       return
     }
-    isPlaying.value = true
+
     if (callback)
       callback('pending')
-    generateAudioFile(content, (fileName) => {
-      if (fileName.length === 0) {
-        isPlaying.value = false
-        push.info(t('speech_error'))
+
+    const globalSettingInfo = await globalStore.getGlobalSetting()
+
+    fetchText2Speech({
+      apikey: globalSettingInfo.api_key,
+      body: {
+        model: ttsModels.value,
+        input: content,
+        voice: speechVoice.value,
+      },
+    }).then(async (res) => {
+      const reader = res.body?.getReader()
+
+      const data: number[] = []
+
+      await readFileData()
+      const fileBate64 = convertBytes2Base64(data)
+
+      playAudio(fileBate64, () => {
+        show.value = true
+        isPlaying.value = true
+        if (callback)
+          callback('processing')
+      }, () => {
         show.value = false
+        isPlaying.value = false
         if (callback)
           callback('finished')
-        return
+      }, () => {
+        show.value = false
+        isPlaying.value = false
+        if (callback)
+          callback('finished')
+      })
+
+      async function readFileData() {
+        const { done, value } = await reader!.read()
+        if (value)
+          value.forEach(a => data.push(a))
+
+        if (!done)
+          await readFileData()
       }
-      show.value = true
+    }).catch(() => {
+      push.info(t('speech_error'))
+    }).finally(() => {
+      show.value = false
       if (callback)
-        callback('processing')
-      setTimeout(() => {
-        const audioElement = document.createElement('audio')
-        if (!audioElement)
-          return
-        audioElement!.src = `${import.meta.env.VITE_SPEECH_API}/${fileName}.mp3`
-        audioElement!.play()
-        currentAudio = audioElement
-        audioElement.addEventListener('ended', () => {
-          show.value = false
-          isPlaying.value = false
-          if (callback)
-            callback('finished')
-        })
-        audioElement.addEventListener('pause', () => {
-          show.value = false
-          isPlaying.value = false
-          if (callback)
-            callback('finished')
-        })
-      }, 120)
+        callback('finished')
     })
   }
 
@@ -70,5 +91,38 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
     curPlayingFileName,
     playMessage,
     cancelSpeech,
+  }
+
+  function convertBytes2Base64(data: number[]) {
+    const uintArray = new Uint8Array(data)
+
+    let binaryString = ''
+
+    uintArray.forEach((byte) => {
+      binaryString += String.fromCharCode(byte)
+    })
+
+    const base64String = window.btoa(binaryString)
+
+    return base64String
+  }
+
+  function playAudio(base64String: string, onStart: () => void, onEnd: () => void, onPause: () => void) {
+    if (currentAudio !== null) {
+      currentAudio.pause()
+      currentAudio = null
+    }
+    const audio = new Audio(`data:audio/mp3;base64,${base64String}`)
+    currentAudio = audio
+    currentAudio.play()
+    currentAudio.addEventListener('play', () => onStart())
+    currentAudio.addEventListener('ended', () => {
+      if (currentAudio) {
+        currentAudio.pause()
+        currentAudio = null
+      }
+      onEnd()
+    })
+    currentAudio.addEventListener('pause', () => onPause())
   }
 })
