@@ -70,4 +70,11 @@ export default {
   add_new_columns: 'Add new columns',
   loading: 'Loading...',
   tts_model: 'TTS Model',
+  draw_img_mode: 'Draw Image Mode',
+  fit_canvas: 'Adaptive canvas (Default 600x600)',
+  generate_image: 'Generate Image',
+  download_image: 'Download Image',
+  draw_img_hint: 'Please enter your requirements...',
+  image_requirement_cannot_empty: 'Sorry, image requirements cannot be empty.',
+  generate_image_ing: 'Generating image...',
 }

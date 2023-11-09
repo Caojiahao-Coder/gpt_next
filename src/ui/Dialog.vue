@@ -5,9 +5,7 @@ import { onMounted, ref, watch } from 'vue'
 const props = withDefaults(defineProps<{
   open: boolean
   title: string
-  hasPadding: boolean
 }>(), {
-  hasPadding: true,
 })
 
 const emits = defineEmits([
@@ -72,7 +70,7 @@ function closeModal() {
               @click="emits('onClose')"
             />
           </div>
-          <div :class="hasPadding ? 'p-4' : ''">
+          <div class="p-4">
             <slot />
           </div>
         </div>
