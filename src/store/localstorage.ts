@@ -6,6 +6,6 @@ export const gptRole: any = useStorage('role', 'auto')
 
 export const speechLang: any = useStorage('speech-lang', 'zh-CN')
 
-export const speechVoice: any = useStorage('speech-voice', 'zh-CN-XiaoxiaoNeural')
+export const speechVoice: any = useStorage('speech-voice', 'alloy')
 
 export const ttsModels: any = useStorage('tts-models', 'tts-1')
