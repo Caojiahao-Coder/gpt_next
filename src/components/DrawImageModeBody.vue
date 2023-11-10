@@ -42,18 +42,21 @@ function loadImgList() {
     imagesList.value = res
     curIndex.value = res.length - 1
     bindNewImg()
+
+    if (res.length === 0)
+      canvasRef.value!.style.backgroundImage = 'url("")'
   })
 }
 
 watch(curIndex, () => {
   curIndex.value = Math.max(curIndex.value, 0)
-  curIndex.value = Math.min(imagesList.value.length, curIndex.value)
+  curIndex.value = Math.min(imagesList.value.length - 1, curIndex.value)
   bindNewImg()
 })
 
 function bindNewImg() {
   if (canvasRef.value)
-    canvasRef.value.style.backgroundImage = `url(data:image/png;base64,${imagesList.value[curIndex.value].gpt_content})`
+    canvasRef.value.style.backgroundImage = `url(data:image/png;base64,${imagesList.value[curIndex.value]?.gpt_content})`
 }
 
 function onCanvasReSize() {
@@ -207,7 +210,7 @@ async function onDelete() {
           <div class="flex-1" />
 
           <div class="icon-button p-2 b-1 b-solid border-base b-rd hover-bg-base" @click="onDeleteConfirm">
-            <div class="color-base i-carbon-trash-can text-5" />
+            <div class="color-red i-carbon-trash-can text-5" />
           </div>
 
           <div class="b-1 b-rd border-base b-solid p-1 flex flex-row color-base text-3 cursor-pointer gap-1 select-none">
