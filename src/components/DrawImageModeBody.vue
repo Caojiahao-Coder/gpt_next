@@ -30,6 +30,8 @@ const imgStyle = ref<'vivid' | 'natural'>('natural')
 
 const openDeleteConfirmDialog = ref<boolean>(false)
 
+const openEditTools = ref<boolean>(false)
+
 onMounted(() => {
   loadImgList()
   window.onresize = onCanvasReSize
@@ -74,6 +76,11 @@ function onCanvasReSize() {
 }
 
 async function generateImage() {
+  if (loadingImg.value === true) {
+    push.warning(t('generate_image_ing_hint'))
+    return
+  }
+
   if (!prompt.value || prompt.value.length === 0) {
     push.error(t('image_requirement_cannot_empty'))
     return
@@ -164,15 +171,19 @@ async function onDelete() {
   await messageStore.deleteMessageItem(imagesList.value[curIndex.value].id)
   loadImgList()
 }
+
+function toggleOpenEditTools() {
+  openEditTools.value = !openEditTools.value
+}
 </script>
 
 <template>
   <div class="bg-body h-full flex flex-col">
-    <div id="editor-view" class="bg-body p-4 b-0 b-b-1 b-solid border-base flex flex-col gap-2">
-      <textarea
+    <div id="editor-view" class="bg-base p-4 b-0 b-b-1 b-solid border-base flex flex-col gap-2">
+      <input
         v-model.trim="prompt" class=" outline-none w-full color-base text-4 bg-transparent b-0 min-w-100%"
-        autofocus :placeholder="t('draw_img_hint')"
-      />
+        :placeholder="t('draw_img_hint')" @keydown.enter="generateImage"
+      >
 
       <div class="flex flex-row-reverse gap-2">
         <button
@@ -188,7 +199,7 @@ async function onDelete() {
       </div>
     </div>
 
-    <div class="flex-1 flex flex-row overflow-hidden">
+    <div class="flex-1 flex flex-row overflow-hidden bg-base relative">
       <div id="canvas-root-view" class="flex flex-col flex-1 overflow-hidden">
         <div class="b-0 b-b-1 b-solid border-base p-2 px-4 flex flex-row gap-2">
           <button
@@ -243,21 +254,33 @@ async function onDelete() {
           :style="{ width: `${canvasSize}px`, height: `${canvasSize}px` }"
         />
       </div>
-      <div id="edit-message-list" class="flex flex-col w-360px b-0 b-l-1 b-solid border-base bg-body max-h-100%">
-        <div class="p-13px pt-14px b-0 b-b-1 border-base b-solid color-base font-bold text-5">
-          {{ t('edit_img') }}
+      <div
+        id="edit-message-list" class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all"
+        :class="[
+          openEditTools ? 'w-360px' : 'w-0px',
+        ]"
+      >
+        <div class="p-13px pt-14px b-0 b-b-1 border-base b-solid color-base font-bold text-5 flex flex-row">
+          <div class="flex-1">
+            {{ t('edit_img') }}
+          </div>
+          <div class="h-27px w-27px icon-button i-carbon-close" @click="toggleOpenEditTools" />
         </div>
 
-        <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0">
+        <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base">
           <li class="py-2">
             去掉人物的眉毛
           </li>
         </ul>
 
         <input
-          class="outline-none b-0 b-b-1 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
+          class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
           :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
         >
+      </div>
+
+      <div v-if="!openEditTools" class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-80px right-24px hover-bg-base transition-all" @click="toggleOpenEditTools">
+        <div class="i-carbon-edit color-base w-24px h-24px m-8px" />
       </div>
     </div>
 
@@ -304,5 +327,9 @@ async function onDelete() {
 
 .edit-img-list::-webkit-scrollbar-thumb {
   background-color: #50505050;
+}
+
+.image-edit-tool:hover {
+  box-shadow: 1px 2px 8px #00ffb330, -1px -2px 8px #00a2ff30;
 }
 </style>
