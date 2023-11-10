@@ -11,6 +11,7 @@ import useGlobalStore from '@/store/global-store'
 import { parserStreamText } from '@/openai/parser'
 import { isDark } from '@/store/dark'
 import { push } from '@/main'
+import { language } from '@/store/localstorage'
 
 const { t } = useI18n()
 
@@ -97,6 +98,9 @@ async function loadData() {
     role: string
     content: string
   }[] = [{
+    role: 'system',
+    content: 'You are a data analyst, and you need to create a table based on the data you have. And you need generate raw markdown table data, not markdown table code!',
+  }, {
     role: 'user',
     content: 'I will give you the list, and I hope you can create some test data from this list for me.',
   }, {
@@ -104,13 +108,13 @@ async function loadData() {
     content: 'Ok, I\'m going to combine this breakdown closely to create some test data for you.',
   }, {
     role: 'user',
-    content: 'I want the data you generate to use Markdown\'s Table format.',
+    content: 'I want the generated data to use Markdown\'s tabular format. Make sure you don\'t use code notation because I need to render directly into the table style in Markdown rendering.',
   }, {
     role: 'assistant',
     content: 'Ok, I\'m going to generate the data in Markdown Table format.',
   }, {
     role: 'user',
-    content: 'A minimum of 6 and a maximum of 20 pieces of data are generated.',
+    content: 'A minimum of 6 and a maximum of 20 pieces of data are generated.Bastard! I want to generate 15 pieces of data.',
   }, {
     role: 'assistant',
     content: 'Ok, I will generate data according to the number of data strips.',
@@ -118,6 +122,13 @@ async function loadData() {
     role: 'user',
     content: myColumns.value.join(';'),
   }]
+
+  if (language.value !== 'auto') {
+    messageData.unshift({
+      role: 'system',
+      content: `All answers are in the following language: ${language.value}.`,
+    })
+  }
 
   const globalStore = useGlobalStore()
   const globalSettingInfo = await globalStore.getGlobalSetting()
@@ -139,6 +150,9 @@ async function loadData() {
     }, (error) => {
       dataSourceData.value = error.error.message
     })
+
+    dataSourceData.value = extractMarkdownTableCode(dataSourceData.value)
+
     setAnswerToMessageItem(messageRecords.value[messageRecords.value.length - 1], dataSourceData.value, 'finished')
   }
   catch (error) {
@@ -158,6 +172,9 @@ async function loadCreateTableSql() {
     role: string
     content: string
   }[] = [{
+    role: 'system',
+    content: 'You are a SQL analyst, and you need to create a sql script with the data you have.',
+  }, {
     role: 'user',
     content: 'Now, I\'ll give you a list that contains all the column names of a data table.',
   }, {
@@ -245,6 +262,11 @@ function extractSqlCode(mdText: string): string[] {
   return matches
 }
 
+function extractMarkdownTableCode(mdText: string): string {
+  const regex = /```(.*?)```/gs
+  return mdText.replace(regex, (match, code) => code)
+}
+
 async function setAnswerToMessageItem(messageInfo: TBMessageInfo, content: string, status: 'finished' | 'error' | 'waiting') {
   const info: TBMessageInfo = {
     id: messageInfo.id,
@@ -292,7 +314,7 @@ function onCopySqlCode() {
       </div>
     </div>
 
-    <div class="data-view bg-body b-solid border-base b-0 b-b-1 color-base">
+    <div class="data-view bg-base b-solid border-base b-0 b-b-1 color-base">
       <div class="data-source p-x-4 p-y-2 b-solid border-base b-0 b-b-1 flex flex-row gap-2">
         <div class="flex-1 line-height-36px">
           Data Source
@@ -313,17 +335,14 @@ function onCopySqlCode() {
         </button>
       </div>
 
-      <div id="data-work-markdown" class="p4 pb-8 bg-base">
+      <div id="data-work-markdown" class="p-x-4 pb-8 bg-base mt-4">
         <Markdown :content="dataSourceData" />
       </div>
     </div>
   </div>
 
   <Transition>
-    <div
-      v-if="openSQLDialog"
-      class="fixed top-0 left-0 w-full h-100vh backdrop-blur z-100 flex-col flex color-base"
-    >
+    <div v-if="openSQLDialog" class="fixed top-0 left-0 w-full h-100vh backdrop-blur z-100 flex-col flex color-base">
       <div :class="[fullScreen ? 'h-16px' : 'h-20%']" class="transition-duration-.2s" @click="onCloseView" />
       <div class="flex flex-row" :class="fullScreen ? 'h-100%' : 'h-600px'">
         <div :class="[fullScreen ? 'w-16px' : 'w-25%']" class="transition-duration-.2s" @click="onCloseView" />
