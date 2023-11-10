@@ -76,7 +76,10 @@ const useConversationStore = defineStore('conversationStore', () => {
   function getConversationInfoById(conversationId: number) {
     db.init().then(() => {
       db.selectById('tb_conversation', conversationId).then((res) => {
-        conversationInfo.value = res as TBConverstationInfo
+        conversationInfo.value = null
+        setTimeout(() => {
+          conversationInfo.value = res as TBConverstationInfo
+        }, 10)
       })
     })
   }

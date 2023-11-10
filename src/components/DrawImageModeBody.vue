@@ -142,6 +142,11 @@ function nextImg() {
 }
 
 function uploadImg() {
+  if (loadingImg.value === true) {
+    push.warning(t('generate_image_ing_hint'))
+    return
+  }
+
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = 'image/png'
@@ -267,13 +272,10 @@ function toggleOpenEditTools() {
           <div class="h-27px w-27px icon-button i-carbon-close" @click="toggleOpenEditTools" />
         </div>
 
-        <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base">
-          <li class="py-2">
-            去掉人物的眉毛
-          </li>
-        </ul>
+        <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base" />
 
         <input
+          disabled
           class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
           :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
         >

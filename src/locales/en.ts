@@ -85,5 +85,5 @@ export default {
   vivid_mode: 'Vivid Mode',
   natural_mode: 'Natural Mode',
   edit_img: 'Edit Image',
-  edit_img_hint: 'Say your change requirements for the picture',
+  edit_img_hint: 'This feature is under development.',
 }

@@ -85,5 +85,5 @@ export default {
   vivid_mode: '生动模式',
   natural_mode: '自然模式',
   edit_img: '图片微调',
-  edit_img_hint: '说出你对图片的更改要求',
+  edit_img_hint: '该功能正在开发中.',
 }
