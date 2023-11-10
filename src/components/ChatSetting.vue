@@ -1,19 +1,14 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { gptRole } from '@/store/localstorage'
+import { gptRole, language } from '@/store/localstorage'
 
 const { t } = useI18n()
 
 const role = ref<string>(window.localStorage.getItem('role') ?? 'auto')
-const language = ref<string>(window.localStorage.getItem('language') ?? 'auto')
 
 watch(role, (newValue) => {
   gptRole.value = newValue
-})
-
-watch(language, (newValue) => {
-  window.localStorage.setItem('language', newValue)
 })
 </script>
 

@@ -1,6 +1,7 @@
 import { ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import useMessageStore from './message-store'
+import { filterType } from './localstorage'
 import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type'
 import db from '@/database/db'
 
@@ -20,6 +21,12 @@ const useConversationStore = defineStore('conversationStore', () => {
         messageStore.messageList = res
       })
     }
+  })
+
+  watch(filterType, () => {
+    updateConversationsList(() => {
+      conversationInfo.value = null
+    })
   })
 
   function createNewConversation(data: NewConverstationInfo): Promise<number> {
@@ -56,17 +63,24 @@ const useConversationStore = defineStore('conversationStore', () => {
   function updateConversationsList(callback?: () => void) {
     db.init().then(() => {
       db.selectAll('tb_conversation').then((res) => {
-        conversationsList.value = (res as TBConverstationInfo[])
-          .sort((a, b) => {
-            if (a.fixed_top && !b.fixed_top)
-              return -1
+        conversationsList.value = (res as TBConverstationInfo[]).filter(a =>
+          filterType.value === 'all'
+            ? true
+            : filterType.value === 'chat'
+              ? a.type === 'chat'
+              : filterType.value === 'data'
+                ? a.type === 'dataworker'
+                : filterType.value === 'drawing' ? a.type === 'draw_img_mode' : false,
+        ).sort((a, b) => {
+          if (a.fixed_top && !b.fixed_top)
+            return -1
 
-            else if (!a.fixed_top && b.fixed_top)
-              return 1
+          else if (!a.fixed_top && b.fixed_top)
+            return 1
 
-            else
-              return b.create_time - a.create_time
-          })
+          else
+            return b.create_time - a.create_time
+        })
         if (callback)
           callback()
       })
@@ -76,7 +90,10 @@ const useConversationStore = defineStore('conversationStore', () => {
   function getConversationInfoById(conversationId: number) {
     db.init().then(() => {
       db.selectById('tb_conversation', conversationId).then((res) => {
-        conversationInfo.value = res as TBConverstationInfo
+        conversationInfo.value = null
+        setTimeout(() => {
+          conversationInfo.value = res as TBConverstationInfo
+        }, 10)
       })
     })
   }

@@ -77,6 +77,7 @@ export default {
   draw_img_hint: 'Please enter your requirements...',
   image_requirement_cannot_empty: 'Sorry, image requirements cannot be empty.',
   generate_image_ing: 'Generating image...',
+  generate_image_ing_hint: 'Please wait a moment...',
   generate_image_error: 'Sorry, failed to generate image. Please try again later.',
   previous_img: 'Previous Image',
   next_img: 'Next Image',
@@ -84,5 +85,9 @@ export default {
   vivid_mode: 'Vivid Mode',
   natural_mode: 'Natural Mode',
   edit_img: 'Edit Image',
-  edit_img_hint: 'Say your change requirements for the picture',
+  edit_img_hint: 'This feature is under development.',
+  filter_type_all: 'All',
+  filter_type_chat: 'Chat',
+  filter_type_data: 'Mock Data',
+  filter_type_drawing: 'Drawing Image',
 }

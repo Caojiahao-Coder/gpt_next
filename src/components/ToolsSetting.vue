@@ -54,6 +54,28 @@ async function onSubmitMessage(columns: string[]) {
   }
   messageStore.addNewMessage(messageInfo)
 }
+
+async function createDrawImageModeConversation() {
+  const conversationStore = useConversationStore()
+  const messageStore = useMessageStore()
+  const globalSettingStore = useGlobalStore()
+
+  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
+
+  if (!globalSettingInfo) {
+    push.error(t('message_apikey_empty'))
+    return
+  }
+
+  await conversationStore.createNewConversation({
+    title: t('draw_img_mode'),
+    color: 'bg-yellow-2',
+    create_time: Date.now(),
+    description: '',
+    conversation_token: uid(32),
+    type: 'draw_img_mode',
+  })
+}
 </script>
 
 <template>
@@ -68,6 +90,13 @@ async function onSubmitMessage(columns: string[]) {
         @click="openDialog = true"
       >
         <div class=" text-6 i-carbon-data-volume" />
+      </div>
+
+      <div
+        class="bg-body border-solid b-1 border-base p-2 b-rd hover-bg-base color-base transition-all"
+        @click="createDrawImageModeConversation()"
+      >
+        <div class=" text-6 i-carbon-image" />
       </div>
     </div>
 
