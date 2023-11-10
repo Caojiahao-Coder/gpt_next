@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { onMounted, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import config from '../../package.json'
@@ -8,11 +8,14 @@ import ConversationsList from './ConversationsList.vue'
 import { useLeftSideBarStore } from '@/store/leftsidebar'
 import useConversationStore from '@/store/conversation-store'
 import useMessageStore from '@/store/message-store'
+import { filterType } from '@/store/localstorage'
 
 const { t } = useI18n()
 const { width } = useWindowSize()
 
 const expandStore = useLeftSideBarStore()
+
+const showFilterMenu = ref<boolean>(false)
 
 watch(width, (newValue) => {
   expandStore.expand = (newValue >= 800)
@@ -50,7 +53,24 @@ onMounted(() => {
       document.onmouseup = null
     }
   })
+
+  window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('filter-type-view')?.firstChild)
+      return
+
+    if (showFilterMenu.value === true)
+      showFilterMenu.value = false
+  })
 })
+
+function toggleFilterMenu() {
+  showFilterMenu.value = !showFilterMenu.value
+}
+
+function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
+  filterType.value = type
+  toggleFilterMenu()
+}
 </script>
 
 <template>
@@ -78,6 +98,41 @@ onMounted(() => {
             v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px "
             @click="onCloseLeftSideBar"
           />
+        </div>
+      </div>
+
+      <div>
+        <div id="filter-type-view" class="p-2 b-0 b-b-1 border-base b-solid relative">
+          <div
+            class="b-1 b-solid border-base p2 bg-base flex flex-row gap-2 " :class="[
+              showFilterMenu ? 'b-rd-tl b-rd-tr bg-body' : 'b-rd hover-bg-body',
+            ]" @click="toggleFilterMenu"
+          >
+            <div class="i-carbon-filter text-5" />
+            <div>
+              {{ t(`filter_type_${filterType}`) }}
+            </div>
+          </div>
+
+          <div
+            v-if="showFilterMenu"
+            class="z-1000 top-40px bg-body b-rd-br b-rd-bl b-0 border-solid border-base b-b-1 b-l-1 b-r-1 overflow-hidden"
+          >
+            <ul class="m-0 list-none p-0">
+              <li class="py-2 px-4 cursor-pointer bg-base hover-bg-body" @click="selectFilterType('all')">
+                {{ t('filter_type_all') }}
+              </li>
+              <li class="py-2 px-4 cursor-pointer bg-base hover-bg-body" @click="selectFilterType('chat')">
+                {{ t('filter_type_chat') }}
+              </li>
+              <li class="py-2 px-4 cursor-pointer bg-base hover-bg-body" @click="selectFilterType('data')">
+                {{ t('filter_type_data') }}
+              </li>
+              <li class="py-2 px-4 cursor-pointer bg-base hover-bg-body" @click="selectFilterType('drawing')">
+                {{ t('filter_type_drawing') }}
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
 

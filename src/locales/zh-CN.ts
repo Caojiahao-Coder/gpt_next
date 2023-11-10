@@ -86,4 +86,8 @@ export default {
   natural_mode: '自然模式',
   edit_img: '图片微调',
   edit_img_hint: '该功能正在开发中.',
+  filter_type_all: '全部',
+  filter_type_chat: '聊天',
+  filter_type_data: '生成数据',
+  filter_type_drawing: '生成图片',
 }

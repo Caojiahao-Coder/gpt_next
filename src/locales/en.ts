@@ -86,4 +86,8 @@ export default {
   natural_mode: 'Natural Mode',
   edit_img: 'Edit Image',
   edit_img_hint: 'This feature is under development.',
+  filter_type_all: 'All',
+  filter_type_chat: 'Chat',
+  filter_type_data: 'Mock Data',
+  filter_type_drawing: 'Drawing Image',
 }
