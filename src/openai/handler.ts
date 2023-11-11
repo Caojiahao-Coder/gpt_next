@@ -4,7 +4,7 @@ import { language } from '@/store/localstorage'
  * 对聊天信息进行引导 使其答案更加准确
  * 处理 聊天对话内容
  */
-function handleChatCompletions(messages: { role: string; content: string }[]): { role: string; content: string }[] {
+function handleChatCompletions(messages: { role: 'user' | 'assistant' | 'tool' | 'system'; content: string }[]): { role: 'user' | 'assistant' | 'tool' | 'system'; content: string }[] {
   if (language.value !== 'auto') {
     messages.unshift({
       role: 'system',
@@ -57,7 +57,12 @@ function handleChatCompletions(messages: { role: string; content: string }[]): {
   return messages
 }
 
-function handleCreateSessionNameByGPT(messages: { role: string; content: string }[]) {
+/**
+ * 根据聊天内容创建会话名称
+ * @param messages
+ * @returns
+ */
+function handleCreateSessionNameByGPT(messages: { role: 'user' | 'assistant' | 'tool' | 'system'; content: string }[]) {
   messages.push({
     role: 'system',
     content: 'Summarize a short and relevant title of input with no more than 5 words. (Use the language of the current conversation)',

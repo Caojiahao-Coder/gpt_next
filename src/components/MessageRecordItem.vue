@@ -4,11 +4,15 @@ import { useI18n } from 'vue-i18n'
 import html2canvas from 'html2canvas'
 import { uid } from 'uid'
 import EditMessageRecordTools from './EditMessageRecordTools.vue'
+import CheckingFunctionCalling from './CheckingFunctionCalling.vue'
+import MarkFunctionCallingMessage from './MarkFunctionCallingMessage.vue'
 import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
 import useMessageStore from '@/store/message-store'
 import { handleChatCompletions } from '@/openai/handler'
+import { getCurrentWeather, toolsList } from '@/openai/tool-call'
 import { fetchChatCompletion } from '@/openai/api'
+import type { ToolCallInfo } from '@/openai/openai-type'
 import useGlobalStore from '@/store/global-store'
 import { parserStreamText } from '@/openai/parser'
 import useEditorStore from '@/store/editor-store'
@@ -48,6 +52,8 @@ const speeching = ref<boolean>(false)
 
 const gptMessageSpeechStatus = ref<'pending' | 'processing' | 'finished'>('finished')
 
+const checkingFunctionCalling = ref<boolean>(false)
+
 onMounted(() => {
   /**
    * 需要请求结果
@@ -66,7 +72,7 @@ async function getChatAnswer() {
   editorStore.thinking = true
 
   const messageData: {
-    role: string
+    role: 'user' | 'assistant' | 'system' | 'tool'
     content: string
   }[] = []
 
@@ -87,10 +93,112 @@ async function getChatAnswer() {
     return messageData
   })
 
+  // 包装问答内容
   const messagesBody = handleChatCompletions(messageData)
 
   const globalStore = useGlobalStore()
   const globalSettingInfo = await globalStore.getGlobalSetting()
+
+  try {
+    checkingFunctionCalling.value = true
+
+    // 第一次执行任务，携带tools进入
+    const response = await fetchChatCompletion({
+      apikey: globalSettingInfo.api_key,
+      body: {
+        model: globalSettingInfo.chat_model,
+        top_p: 1,
+        temperature: 0.7,
+        messages: messagesBody,
+        stream: true,
+        tools: toolsList,
+      },
+    })
+
+    const functionCallingResult = await parserStreamText(response, (content) => {
+      gptContent.value = gptContent.value + content
+      props.scrollBody()
+    }, (error) => {
+      gptContent.value = error.error.message
+    })
+
+    checkingFunctionCalling.value = false
+    if (!functionCallingResult) {
+      setAnswerToMessageItem(gptContent.value, 'finished')
+      if (messageStore.messageList.length === 1) {
+        setTimeout(() => {
+          messageStore.createSessionTitle()
+        }, 120)
+      }
+    }
+    else {
+      getChatAnswerByToolCall(functionCallingResult, messageData)
+    }
+  }
+  catch (error) {
+    setAnswerToMessageItem(String(error), 'error')
+
+    errorDialogStore.message = `Error occurred: ${error}`
+    errorDialogStore.showErrorDialog = true
+    editorStore.thinking = false
+  }
+}
+
+async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: {
+  role: 'user' | 'assistant' | 'system' | 'tool'
+  content: string
+}[]) {
+  const functionInfo = toolsList.filter(a => a.function.name === toolCallInfo.function.name)[0]
+
+  const globalStore = useGlobalStore()
+  const globalSettingInfo = await globalStore.getGlobalSetting()
+
+  const messages: any[] = []
+
+  messageData.map(item =>
+    messages.push({
+      role: item.role,
+      content: item.content,
+    }),
+  )
+
+  messages.push({
+    role: 'assistant',
+    content: '',
+    tool_calls: [
+      toolCallInfo,
+    ],
+  })
+
+  const adcode = JSON.parse(toolCallInfo.function.arguments).adcode
+
+  let content = ''
+
+  switch (toolCallInfo.function.name) {
+    case 'get_current_weather':
+      content = await getCurrentWeather(adcode)
+      break
+  }
+
+  if (content.length === 0) {
+    setAnswerToMessageItem('Failed to call the networking interface.', 'error', {
+      function_name: functionInfo.function.name,
+      function_description: functionInfo.function.description,
+    })
+
+    errorDialogStore.message = 'Error occurred: Failed to call the networking interface.'
+    errorDialogStore.showErrorDialog = true
+    editorStore.thinking = false
+
+    return
+  }
+
+  messages.push({
+    role: 'tool',
+    tool_call_id: toolCallInfo.id,
+    name: toolCallInfo.function.name,
+    content,
+  })
 
   try {
     const response = await fetchChatCompletion({
@@ -99,7 +207,7 @@ async function getChatAnswer() {
         model: globalSettingInfo.chat_model,
         top_p: 1,
         temperature: 0.7,
-        messages: messagesBody,
+        messages,
         stream: true,
       },
     })
@@ -111,8 +219,10 @@ async function getChatAnswer() {
       gptContent.value = error.error.message
     })
 
-    setAnswerToMessageItem(gptContent.value, 'finished')
-
+    setAnswerToMessageItem(gptContent.value, 'finished', {
+      function_name: functionInfo.function.name,
+      function_description: functionInfo.function.description,
+    })
     if (messageStore.messageList.length === 1) {
       setTimeout(() => {
         messageStore.createSessionTitle()
@@ -128,7 +238,10 @@ async function getChatAnswer() {
   }
 }
 
-async function setAnswerToMessageItem(content: string, status: 'finished' | 'error' | 'waiting') {
+async function setAnswerToMessageItem(content: string, status: 'finished' | 'error' | 'waiting', tool_call: {
+  function_name: string
+  function_description: string
+} | undefined = undefined) {
   const info: TBMessageInfo = {
     id: messageInfo.value.id,
     conversation_id: messageInfo.value.conversation_id,
@@ -137,6 +250,7 @@ async function setAnswerToMessageItem(content: string, status: 'finished' | 'err
     gpt_content: content,
     create_time: messageInfo.value.create_time,
     status,
+    tool_call,
   }
 
   await messageStore.updateMessageInfo(info)
@@ -190,6 +304,7 @@ async function onSubmitEditMessage() {
     gpt_content: '',
     create_time: messageInfo.value.create_time,
     status: 'waiting',
+    tool_call: messageInfo.value.tool_call,
   }
 
   openEditMessageDialog.value = false
@@ -250,11 +365,15 @@ function onSpeechGPTMessageContent() {
         @on-export="onExportConversation()" @on-speech="onSpeechUserMessageContent()"
       />
     </div>
-    <div class="record-item gpt-item bg-body border-base flex flex-row gap-16px relative" b="0 b-1 solid">
+    <div class="record-item gpt-item bg-body border-base relative flex flex-row gap-4" b="0 b-1 solid">
       <div class="avatar w-8 h-8 b-rd-1">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
-      <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+      <div class="flex-1 overflow-hidden">
+        <CheckingFunctionCalling v-if="checkingFunctionCalling" />
+        <MarkFunctionCallingMessage v-if="messageInfo.tool_call !== undefined" :function-description="messageInfo.tool_call.function_description" :function-name="messageInfo.tool_call.function_name" />
+        <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+      </div>
       <div
         class="icon-button absolute bottom-2 right-2 text-4" :class="[
           gptMessageSpeechStatus === 'finished' ? 'i-carbon-voice-activate'

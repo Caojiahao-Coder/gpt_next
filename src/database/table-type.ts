@@ -12,6 +12,10 @@ interface TBMessageInfo {
   create_time: number
   token_id: string
   status: 'finished' | 'waiting' | 'error'
+  tool_call?: {
+    function_name: string
+    function_description: string
+  }
 }
 
 interface TBConverstationInfo {
@@ -37,6 +41,10 @@ interface NewMessageInfo {
   create_time: number
   token_id: string
   status: 'finished' | 'waiting'
+  tool_call?: {
+    function_name: string
+    function_description: string
+  }
 }
 
 interface NewConverstationInfo {

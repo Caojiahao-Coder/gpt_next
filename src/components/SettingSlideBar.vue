@@ -8,6 +8,7 @@ import ChatSetting from './ChatSetting.vue'
 import DBSetting from './DBSetting.vue'
 import MessageSpeechSetting from './MessageSpeechSetting.vue'
 import ToolsSetting from './ToolsSetting.vue'
+import FunctionCallingSetting from './FunctionCallingSetting.vue'
 
 const { t } = useI18n()
 
@@ -60,6 +61,7 @@ watch(width, (newValue) => {
       <ChatSetting />
       <OpenAISetting />
       <ToolsSetting />
+      <FunctionCallingSetting />
       <MessageSpeechSetting />
       <DBSetting />
     </div>

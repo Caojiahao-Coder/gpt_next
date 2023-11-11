@@ -385,7 +385,7 @@ function onCopySqlCode() {
       </div>
       <div :class="[fullScreen ? 'h-16px' : 'h-20%']" class="transition-duration-.2s" @click="onCloseView" />
     </div>
-  </transition>
+  </Transition>
 </template>
 
 <style scoped>
