@@ -90,4 +90,7 @@ export default {
   filter_type_chat: '聊天',
   filter_type_data: '生成数据',
   filter_type_drawing: '生成图片',
+  mark_function_calling_hint: '该消息来自互联网，请注意核实。',
+  function_calling_setting: 'Function Calling 设置',
+  view_function_calling_list: '查看 Function Calling 列表',
 }

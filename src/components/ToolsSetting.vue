@@ -84,7 +84,7 @@ async function createDrawImageModeConversation() {
       {{ t('ai_tools') }}
     </div>
 
-    <div class="flex flex-row gap-2 p-4">
+    <div class="flex flex-row gap-4 p-4">
       <div
         class="bg-body border-solid b-1 border-base p-2 b-rd hover-bg-base color-base transition-all"
         @click="openDialog = true"

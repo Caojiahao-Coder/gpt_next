@@ -90,4 +90,7 @@ export default {
   filter_type_chat: 'Chat',
   filter_type_data: 'Mock Data',
   filter_type_drawing: 'Drawing Image',
+  mark_function_calling_hint: 'This news comes from the Internet, please pay attention to check.',
+  function_calling_setting: 'Function Calling Setting',
+  view_function_calling_list: 'View Function Calling List',
 }
