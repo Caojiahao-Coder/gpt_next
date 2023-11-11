@@ -63,15 +63,20 @@ const useConversationStore = defineStore('conversationStore', () => {
   function updateConversationsList(callback?: () => void) {
     db.init().then(() => {
       db.selectAll('tb_conversation').then((res) => {
-        conversationsList.value = (res as TBConverstationInfo[]).filter(a =>
-          filterType.value === 'all'
-            ? true
-            : filterType.value === 'chat'
-              ? ((a.type ?? 'chat') === 'chat')
-              : filterType.value === 'data'
-                ? a.type === 'dataworker'
-                : filterType.value === 'drawing' ? a.type === 'draw_img_mode' : false,
-        ).sort((a, b) => {
+        let conversationsListData = (res as TBConverstationInfo[])
+        switch (filterType.value) {
+          case 'chat':
+            conversationsListData = conversationsListData.filter(item => item.type === 'chat' || !item.type)
+            break
+          case 'data':
+            conversationsListData = conversationsListData.filter(item => item.type === 'dataworker')
+            break
+          case 'drawing':
+            conversationsListData = conversationsListData.filter(item => item.type === 'draw_img_mode')
+            break
+          default:break
+        }
+        conversationsList.value = conversationsListData.sort((a, b) => {
           if (a.fixed_top && !b.fixed_top)
             return -1
 

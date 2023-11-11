@@ -109,7 +109,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
             ]" @click="toggleFilterMenu"
           >
             <div class="i-carbon-filter text-5" />
-            <div>
+            <div id="filter-type-text" class="cursor-pointer select-none">
               {{ t(`filter_type_${filterType}`) }}
             </div>
           </div>
