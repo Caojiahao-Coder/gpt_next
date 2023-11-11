@@ -67,7 +67,7 @@ const useConversationStore = defineStore('conversationStore', () => {
           filterType.value === 'all'
             ? true
             : filterType.value === 'chat'
-              ? a.type === 'chat'
+              ? ((a.type ?? 'chat') === 'chat')
               : filterType.value === 'data'
                 ? a.type === 'dataworker'
                 : filterType.value === 'drawing' ? a.type === 'draw_img_mode' : false,
