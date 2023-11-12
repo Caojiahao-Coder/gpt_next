@@ -18,7 +18,7 @@ function toggleShowFunctionDetail() {
 
 <template>
   <div id="checking-view" class="b-1 border-base b-solid b-rd  bg-base color-fade transition-all mb1 select-none">
-    <div class="flex flex-row h-32px line-height-32px" @click="toggleShowFunctionDetail">
+    <div class="flex flex-row line-height-32px" @click="toggleShowFunctionDetail">
       <div class="w-24px h-24px m-4px mr-8px i-carbon-information-square-filled" />
       <div class="flex-1">
         {{ t('mark_function_calling_hint') }}

@@ -6,6 +6,7 @@ import { uid } from 'uid'
 import EditMessageRecordTools from './EditMessageRecordTools.vue'
 import CheckingFunctionCalling from './CheckingFunctionCalling.vue'
 import MarkFunctionCallingMessage from './MarkFunctionCallingMessage.vue'
+import WaitingForFunctionCallingResponse from './WaitingForFunctionCallingResponse.vue'
 import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
 import useMessageStore from '@/store/message-store'
@@ -54,6 +55,8 @@ const gptMessageSpeechStatus = ref<'pending' | 'processing' | 'finished'>('finis
 
 const checkingFunctionCalling = ref<boolean>(false)
 
+const useFunctionCalling = ref<boolean>(false)
+
 onMounted(() => {
   /**
    * 需要请求结果
@@ -69,6 +72,8 @@ onMounted(() => {
  * 获取对话结果
  */
 async function getChatAnswer() {
+  useFunctionCalling.value = false
+
   editorStore.thinking = true
 
   const messageData: {
@@ -148,6 +153,8 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
   role: 'user' | 'assistant' | 'system' | 'tool'
   content: string
 }[]) {
+  useFunctionCalling.value = true
+
   const functionInfo = toolsList.filter(a => a.function.name === toolCallInfo.function.name)[0]
 
   const globalStore = useGlobalStore()
@@ -369,9 +376,14 @@ function onSpeechGPTMessageContent() {
       <div class="avatar w-8 h-8 b-rd-1">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
-      <div class="flex-1 overflow-hidden">
+      <div class="flex-1 overflow-hidden flex flex-col gap-2">
         <CheckingFunctionCalling v-if="checkingFunctionCalling" />
-        <MarkFunctionCallingMessage v-if="messageInfo.tool_call !== undefined" :function-description="messageInfo.tool_call.function_description" :function-name="messageInfo.tool_call.function_name" />
+        <MarkFunctionCallingMessage
+          v-if="messageInfo.tool_call !== undefined && !editorStore.thinking"
+          :function-description="messageInfo.tool_call.function_description"
+          :function-name="messageInfo.tool_call.function_name"
+        />
+        <WaitingForFunctionCallingResponse v-if="editorStore.thinking && useFunctionCalling" />
         <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
       </div>
       <div

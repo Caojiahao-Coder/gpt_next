@@ -7,8 +7,8 @@ const { t } = useI18n()
 <template>
   <div id="checking-view" class="b-1 border-base b-solid b-rd line-height-36px bg-base color-base transition-all">
     <div class="flex flex-row">
-      <div class="w-16px h-16px m-10px mr-8px i-svg-spinners-blocks-wave" />
-      <div>{{ t('checking_function_calling') }}</div>
+      <div class="w-16px h-16px m-10px mr-8px i-svg-spinners-blocks-scale" />
+      <div>{{ t('waiting_for_function_calling_response') }}</div>
     </div>
   </div>
 </template>
