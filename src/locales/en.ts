@@ -93,4 +93,6 @@ export default {
   mark_function_calling_hint: 'This news comes from the Internet, please pay attention to check.',
   function_calling_setting: 'Function Calling Setting',
   view_function_calling_list: 'View Function Calling List',
+  checking_function_calling: 'Checking for available Function Calling...',
+  waiting_for_function_calling_response: 'Waiting for Function Calling response...',
 }

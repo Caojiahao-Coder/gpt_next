@@ -93,4 +93,6 @@ export default {
   mark_function_calling_hint: '该消息来自互联网，请注意核实。',
   function_calling_setting: 'Function Calling 设置',
   view_function_calling_list: '查看 Function Calling 列表',
+  checking_function_calling: '检查是否有可用的Function Calling...',
+  waiting_for_function_calling_response: '等待Function Calling响应...',
 }
