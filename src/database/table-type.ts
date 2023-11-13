@@ -16,6 +16,7 @@ interface TBMessageInfo {
     function_name: string
     function_description: string
   }
+  vision_file?: string
 }
 
 interface TBConverstationInfo {
@@ -45,6 +46,7 @@ interface NewMessageInfo {
     function_name: string
     function_description: string
   }
+  vision_file?: string
 }
 
 interface NewConverstationInfo {

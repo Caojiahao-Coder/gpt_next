@@ -10,7 +10,7 @@ export interface ChoicesResultInfo {
   finish_reason: string
   index: number
   message: {
-    content: string
+    content: string | any[]
     role: string
   }
 }

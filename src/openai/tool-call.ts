@@ -1,6 +1,6 @@
-async function getCurrentWeather(adcode: string, unit: 'celsius' | 'fahrenheit' = 'celsius'): Promise<string> {
+async function getCurrentWeather(lat: string, lon: string, exclude: string, units: string): Promise<string> {
   try {
-    const response = await fetch(`https://openai-proxy-wine-phi.vercel.app/weather/cur/${adcode}`)
+    const response = await fetch(`http://localhost:3000/weather/cur?lat=${lat}&lon=${lon}&exclude=${exclude}&units=${units}`)
     const data = await response.json()
     const result = JSON.stringify(data)
     return result
@@ -43,16 +43,26 @@ const toolsList: ToolInfo[] = [{
     parameters: {
       type: 'object',
       properties: {
-        adcode: {
+        lat: {
           type: 'string',
-          description: 'Regional adcode information for weather api in Amap.',
+          description: 'Latitude, decimal (-90; 90). If you need the geocoder to automatic convert city names and zip-codes to geo coordinates.',
         },
-        unit: {
+        lon: {
           type: 'string',
-          enum: ['Celsius', 'Fahrenheit'],
+          description: 'Longitude, decimal (-180; 180). If you need the geocoder to automatic convert city names and zip-codes to geo coordinates.',
+        },
+        exclude: {
+          type: 'string',
+          enum: ['current', 'minutely', 'hourly', 'daily', 'alerts'],
+          description: 'By using this parameter you can exclude some parts of the weather data from the API response. It should be a comma-delimited list (without spaces).',
+        },
+        units: {
+          type: 'string',
+          enum: ['standard', 'metric', 'imperial'],
+          description: 'Units of measurement. standard, metric and imperial units are available. If you do not use the units parameter, standard units will be applied by default.',
         },
       },
-      required: ['adcode'],
+      required: ['lat', 'lon', 'exclude', 'units'],
     },
   },
 }]
