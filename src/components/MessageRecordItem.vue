@@ -235,7 +235,7 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
 
   switch (toolCallInfo.function.name) {
     case 'get_current_weather':
-      content = await getCurrentWeather(lat, lon, exclude, units)
+      content = await getCurrentWeather(lat, lon, exclude)
       break
   }
 
