@@ -38,7 +38,7 @@ function toggleExpand() {
       </div>
       <div
         class="w-22px h-22px" :class="[
-          expand ? ' i-carbon-down i-carbon-chevron-down' : ' i-carbon-down i-carbon-chevron-up',
+          expand ? ' i-carbon-down i-carbon-chevron-up' : 'i-carbon-down i-carbon-chevron-down',
         ]"
       />
     </div>
