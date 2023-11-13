@@ -4,7 +4,7 @@ import { language } from '@/store/localstorage'
  * 对聊天信息进行引导 使其答案更加准确
  * 处理 聊天对话内容
  */
-function handleChatCompletions(messages: { role: 'user' | 'assistant' | 'tool' | 'system'; content: string }[]): { role: 'user' | 'assistant' | 'tool' | 'system'; content: string }[] {
+function handleChatCompletions(messages: { role: 'user' | 'assistant' | 'tool' | 'system'; content: string | any[] }[]): { role: 'user' | 'assistant' | 'tool' | 'system'; content: string | any[] }[] {
   if (language.value !== 'auto') {
     messages.unshift({
       role: 'system',

@@ -95,4 +95,7 @@ export default {
   view_function_calling_list: 'View Function Calling List',
   checking_function_calling: 'Checking for available Function Calling...',
   waiting_for_function_calling_response: 'Waiting for Function Calling response...',
+  use_gpt_vision_api: 'Use GPT Vision API (preview)',
+  use_function_calling_tools: 'Use Function Calling Tools',
+  vision: 'Vision',
 }

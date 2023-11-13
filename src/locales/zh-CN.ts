@@ -95,4 +95,7 @@ export default {
   view_function_calling_list: '查看 Function Calling 列表',
   checking_function_calling: '检查是否有可用的Function Calling...',
   waiting_for_function_calling_response: '等待Function Calling响应...',
+  use_gpt_vision_api: '使用GPT Vision API (预览)',
+  use_function_calling_tools: '使用Function Calling Tools',
+  vision: '视觉识别',
 }

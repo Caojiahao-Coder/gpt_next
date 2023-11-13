@@ -21,6 +21,8 @@ import Dialog from '@/ui/Dialog.vue'
 import { useErrorDialogStore } from '@/store/error-dialog'
 import { useMessageSpeechStore } from '@/store/message-speech-store'
 import { push } from '@/main'
+import useOpenAIVisionStore from '@/store/openai-vision-store'
+import GPTVisionList from '@/components/GPTVisionList.vue'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
@@ -57,6 +59,8 @@ const checkingFunctionCalling = ref<boolean>(false)
 
 const useFunctionCalling = ref<boolean>(false)
 
+const openAIVisionStore = useOpenAIVisionStore()
+
 onMounted(() => {
   /**
    * 需要请求结果
@@ -78,16 +82,54 @@ async function getChatAnswer() {
 
   const messageData: {
     role: 'user' | 'assistant' | 'system' | 'tool'
-    content: string
+    content: string | any[]
   }[] = []
 
   const data = await messageStore.getMessageRecordsByConversationId(messageInfo.value.conversation_id)
 
   data.filter(a => a.conversation_id === messageInfo.value!.conversation_id && a.id <= messageInfo.value!.id).map((a) => {
-    messageData.push({
-      role: 'user',
-      content: a.user_content,
-    })
+    if (!a.vision_file || a.status === 'finished') {
+      messageData.push({
+        role: 'user',
+        content: a.user_content,
+      })
+    }
+    else {
+      messageData.push({
+        role: 'system',
+        content: 'You\'re an image recognition assistant.',
+      })
+
+      const content = []
+
+      content.push({
+        type: 'text',
+        text: a.user_content,
+      })
+
+      try {
+        const fileList = JSON.parse(a.vision_file ?? '') as {
+          file_name: string
+          b64_data: string
+        }[]
+
+        for (const file of fileList) {
+          content.push({
+            type: 'image_url',
+            image_url: {
+              url: file.b64_data,
+            },
+          })
+        }
+      }
+      catch {
+
+      }
+      messageData.push({
+        role: 'user',
+        content,
+      })
+    }
 
     if (a.gpt_content.trim().length !== 0 && a.id !== messageInfo.value.id) {
       messageData.push({
@@ -105,18 +147,22 @@ async function getChatAnswer() {
   const globalSettingInfo = await globalStore.getGlobalSetting()
 
   try {
-    checkingFunctionCalling.value = true
+    if (!messageInfo.value.vision_file)
+      checkingFunctionCalling.value = true
 
     // 第一次执行任务，携带tools进入
     const response = await fetchChatCompletion({
       apikey: globalSettingInfo.api_key,
       body: {
-        model: globalSettingInfo.chat_model,
+        model: messageInfo.value.vision_file ? 'gpt-4-vision-preview' : globalSettingInfo.chat_model,
         top_p: 1,
         temperature: 0.7,
         messages: messagesBody,
         stream: true,
-        tools: toolsList,
+        max_tokens: 4096,
+        tools: !messageInfo.value.vision_file
+          ? toolsList
+          : undefined,
       },
     })
 
@@ -146,12 +192,15 @@ async function getChatAnswer() {
     errorDialogStore.message = `Error occurred: ${error}`
     errorDialogStore.showErrorDialog = true
     editorStore.thinking = false
+
+    checkingFunctionCalling.value = false
+    useFunctionCalling.value = false
   }
 }
 
 async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: {
   role: 'user' | 'assistant' | 'system' | 'tool'
-  content: string
+  content: string | any[]
 }[]) {
   useFunctionCalling.value = true
 
@@ -177,13 +226,16 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
     ],
   })
 
-  const adcode = JSON.parse(toolCallInfo.function.arguments).adcode
+  const lat = JSON.parse(toolCallInfo.function.arguments).lat
+  const lon = JSON.parse(toolCallInfo.function.arguments).lon
+  const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
+  const units = JSON.parse(toolCallInfo.function.arguments).units
 
   let content = ''
 
   switch (toolCallInfo.function.name) {
     case 'get_current_weather':
-      content = await getCurrentWeather(adcode)
+      content = await getCurrentWeather(lat, lon, exclude, units)
       break
   }
 
@@ -242,6 +294,8 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
     errorDialogStore.message = `Error occurred: ${error}`
     errorDialogStore.showErrorDialog = true
     editorStore.thinking = false
+    checkingFunctionCalling.value = false
+    useFunctionCalling.value = false
   }
 }
 
@@ -258,6 +312,7 @@ async function setAnswerToMessageItem(content: string, status: 'finished' | 'err
     create_time: messageInfo.value.create_time,
     status,
     tool_call,
+    vision_file: messageInfo.value.vision_file,
   }
 
   await messageStore.updateMessageInfo(info)
@@ -312,6 +367,7 @@ async function onSubmitEditMessage() {
     create_time: messageInfo.value.create_time,
     status: 'waiting',
     tool_call: messageInfo.value.tool_call,
+    vision_file: messageInfo.value.vision_file,
   }
 
   openEditMessageDialog.value = false
@@ -384,7 +440,26 @@ function onSpeechGPTMessageContent() {
           :function-name="messageInfo.tool_call.function_name"
         />
         <WaitingForFunctionCallingResponse v-if="editorStore.thinking && useFunctionCalling" />
+
+        <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" />
+
         <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+
+        <div class="flex flex-row-reverse gap-2 px-4 select-none">
+          <div v-if="messageInfo.vision_file" class="flex flex-row line-height-24px gap-1">
+            <div class="color-green m-4px i-carbon-checkmark-filled" />
+            <div class="color-fade text-3">
+              {{ t('use_gpt_vision_api') }}
+            </div>
+          </div>
+
+          <div v-if="messageInfo.tool_call" class="flex flex-row h-24px gap-1">
+            <div class="color-green m-4px i-carbon-checkmark-filled" />
+            <div class="color-fade text-3 line-height-24px">
+              {{ t('use_function_calling_tools') }}
+            </div>
+          </div>
+        </div>
       </div>
       <div
         class="icon-button absolute bottom-2 right-2 text-4" :class="[
