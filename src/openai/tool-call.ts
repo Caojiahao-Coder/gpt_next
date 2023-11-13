@@ -1,6 +1,6 @@
-async function getCurrentWeather(lat: string, lon: string, exclude: string, units: string): Promise<string> {
+async function getCurrentWeather(lat: string, lon: string, exclude: string): Promise<string> {
   try {
-    const response = await fetch(`https://openai-proxy-wine-phi.vercel.app/weather/cur?lat=${lat}&lon=${lon}&exclude=${exclude}&units=${units}`)
+    const response = await fetch(`https://openai-proxy-wine-phi.vercel.app/weather/cur?lat=${lat}&lon=${lon}&exclude=${exclude}`)
     const data = await response.json()
     const result = JSON.stringify(data)
     return result
