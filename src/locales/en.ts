@@ -98,4 +98,5 @@ export default {
   use_gpt_vision_api: 'Use GPT Vision API (preview)',
   use_function_calling_tools: 'Use Function Calling Tools',
   vision: 'Vision',
+  no_image_to_download: 'No image to download!',
 }

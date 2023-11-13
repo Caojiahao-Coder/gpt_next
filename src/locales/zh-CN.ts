@@ -98,4 +98,5 @@ export default {
   use_gpt_vision_api: '使用GPT Vision API (预览)',
   use_function_calling_tools: '使用Function Calling Tools',
   vision: '视觉识别',
+  no_image_to_download: '没有图片可以下载!',
 }

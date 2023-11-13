@@ -180,6 +180,19 @@ async function onDelete() {
 function toggleOpenEditTools() {
   openEditTools.value = !openEditTools.value
 }
+
+function downloadImg() {
+  if (imagesList.value.length <= 0) {
+    push.error(t('no_image_to_download'))
+    return
+  }
+
+  const cur_img_b64_data = `data:image/png;base64,${imagesList.value[curIndex.value].gpt_content}`
+  const link = document.createElement('a')
+  link.href = cur_img_b64_data
+  link.download = `${uid(32)}.png`
+  link.click()
+}
 </script>
 
 <template>
@@ -260,8 +273,8 @@ function toggleOpenEditTools() {
         />
       </div>
       <div
-        id="edit-message-list" class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all"
-        :class="[
+        id="edit-message-list"
+        class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all" :class="[
           openEditTools ? 'w-360px' : 'w-0px',
         ]"
       >
@@ -275,14 +288,26 @@ function toggleOpenEditTools() {
         <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base" />
 
         <input
-          disabled
-          class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
+          disabled class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
           :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
         >
       </div>
 
-      <div v-if="!openEditTools" class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-80px right-24px hover-bg-base transition-all" @click="toggleOpenEditTools">
+      <div
+        v-if="!openEditTools"
+        class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-80px right-24px hover-bg-base transition-all"
+        @click="toggleOpenEditTools"
+      >
         <div class="i-carbon-edit color-base w-24px h-24px m-8px" />
+      </div>
+
+      <div
+        class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-140px hover-bg-base transition-all"
+        :class="[
+          openEditTools ? 'right-380px' : 'right-24px',
+        ]" @click="downloadImg"
+      >
+        <div class="i-carbon-download color-base w-24px h-24px m-8px" />
       </div>
     </div>
 
