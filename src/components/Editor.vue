@@ -208,12 +208,12 @@ async function uploadImageFile(files: FileList) {
     </div>
 
     <div class="b-0 b-t-1 border-base border-solid flex flex-row gap-2 p-2">
-      <div class="bg-body border-1 b-rd border-solid border-base p2 icon-button flex flex-row gap-2 cursor-pointer">
+      <!-- <div class="bg-body border-1 b-rd border-solid border-base p2 icon-button flex flex-row gap-2 cursor-pointer">
         <div class="i-carbon-document w-22px h-22px color-base" />
         <div class="color-base font-light">
           Upload File
         </div>
-      </div>
+      </div> -->
       <div
         class="bg-body border-1 b-rd border-solid border-base p2 icon-button flex flex-row gap-2 cursor-pointer"
         @click="uploadVisionFiles"
