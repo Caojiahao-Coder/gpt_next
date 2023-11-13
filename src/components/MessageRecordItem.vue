@@ -21,7 +21,6 @@ import Dialog from '@/ui/Dialog.vue'
 import { useErrorDialogStore } from '@/store/error-dialog'
 import { useMessageSpeechStore } from '@/store/message-speech-store'
 import { push } from '@/main'
-import useOpenAIVisionStore from '@/store/openai-vision-store'
 import GPTVisionList from '@/components/GPTVisionList.vue'
 
 const props = defineProps<{
@@ -59,7 +58,7 @@ const checkingFunctionCalling = ref<boolean>(false)
 
 const useFunctionCalling = ref<boolean>(false)
 
-const openAIVisionStore = useOpenAIVisionStore()
+const loadingMessageAnswer = ref<boolean>(false)
 
 onMounted(() => {
   /**
@@ -147,6 +146,8 @@ async function getChatAnswer() {
   const globalSettingInfo = await globalStore.getGlobalSetting()
 
   try {
+    loadingMessageAnswer.value = true
+
     if (!messageInfo.value.vision_file)
       checkingFunctionCalling.value = true
 
@@ -174,6 +175,7 @@ async function getChatAnswer() {
     })
 
     checkingFunctionCalling.value = false
+    loadingMessageAnswer.value =false
     if (!functionCallingResult) {
       setAnswerToMessageItem(gptContent.value, 'finished')
       if (messageStore.messageList.length === 1) {
@@ -195,6 +197,7 @@ async function getChatAnswer() {
 
     checkingFunctionCalling.value = false
     useFunctionCalling.value = false
+    loadingMessageAnswer.value =false
   }
 }
 
@@ -229,7 +232,6 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
   const lat = JSON.parse(toolCallInfo.function.arguments).lat
   const lon = JSON.parse(toolCallInfo.function.arguments).lon
   const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
-  const units = JSON.parse(toolCallInfo.function.arguments).units
 
   let content = ''
 
@@ -441,7 +443,7 @@ function onSpeechGPTMessageContent() {
         />
         <WaitingForFunctionCallingResponse v-if="editorStore.thinking && useFunctionCalling" />
 
-        <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" />
+        <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" :loading="loadingMessageAnswer" />
 
         <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
 

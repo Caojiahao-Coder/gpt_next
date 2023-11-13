@@ -4,6 +4,7 @@ import type { TBMessageInfo } from '@/database/table-type'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
+  loading: boolean
 }>()
 
 const fileList = ref<{
@@ -32,7 +33,8 @@ function toggleExpand() {
 
 <template>
   <div id="vision-list-view" class="b-1 border-solid border-base b-rd bg-base">
-    <div class="py-2 px-4 border-base border-solid flex flex-row select-none" :class="[expand ? 'b-b-1 b-0' : 'b-0 b-rd']" @click="toggleExpand">
+    <div class="py-2 px-4 border-base border-solid flex flex-row select-none gap-2" :class="[expand ? 'b-b-1 b-0' : 'b-0 b-rd']" @click="toggleExpand">
+      <div v-if="loading" class="m-3px i-svg-spinners-blocks-shuffle-3" />
       <div class="flex-1">
         GPT Vision List
       </div>
