@@ -43,12 +43,20 @@
 - [x] Multiple roles
 - [x] Support image generation
 - [x] Support for editing conversations
+- [x] Support Function Calling
+- [x] Support OpenAI Vision API (Preview)
+- [x] Support OpenAI Text to Speech (TTS) API
 
 ## 🐞 Bug List
 
 ## THANKS
 - [anse-app/anse](https://github.com/anse-app/anse)
 - [CatsJuice/ipad-cursor](https://github.com/CatsJuice/ipad-cursor)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Caojiahao-Coder/gpt_next&type=Date)](https://star-history.com/#Caojiahao-Coder/gpt_next&Date)
+
 
 ## LICENSE
 MIT © [Leo Cao](https://github.com/Caojiahao-Coder)

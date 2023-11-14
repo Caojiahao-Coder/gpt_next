@@ -44,6 +44,9 @@
 - [x] 多个角色
 - [x] 支持图像生成
 - [x] 支持编辑对话
+- [x] 支持Function Calling调用
+- [x] 支持Open AI 视觉API (预览版)
+- [x] 支持Open AI 文本转语音API (TTS)
 
 ## Bug列表：
 
@@ -51,6 +54,10 @@
 
 - [anse-app/anse](https://github.com/anse-app/anse)
 - [CatsJuice/ipad-cursor](https://github.com/CatsJuice/ipad-cursor)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Caojiahao-Coder/gpt_next&type=Date)](https://star-history.com/#Caojiahao-Coder/gpt_next&Date)
 
 ## 许可证：
 MIT © [Leo Cao](https://github.com/Caojiahao-Coder)
