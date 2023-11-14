@@ -175,7 +175,7 @@ async function getChatAnswer() {
     })
 
     checkingFunctionCalling.value = false
-    loadingMessageAnswer.value =false
+    loadingMessageAnswer.value = false
     if (!functionCallingResult) {
       setAnswerToMessageItem(gptContent.value, 'finished')
       if (messageStore.messageList.length === 1) {
@@ -197,7 +197,7 @@ async function getChatAnswer() {
 
     checkingFunctionCalling.value = false
     useFunctionCalling.value = false
-    loadingMessageAnswer.value =false
+    loadingMessageAnswer.value = false
   }
 }
 
