@@ -54,7 +54,7 @@ function onRemoveColumn(index: number) {
     >
       <div class="flex-1" />
       <div class="w-24px h-24px line-height-24px m-auto i-carbon-add" />
-      <div class="flex-1 text-left h-24px line-height-24px">
+      <div class="text-left h-24px line-height-24px">
         {{ t('add_new_columns') }}
       </div>
       <div class="flex-1" />

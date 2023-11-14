@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 const props = withDefaults(defineProps<{
   large?: boolean
@@ -71,19 +71,35 @@ function onSelectedColor(color: string) {
   emits('onSelectedColor', color)
   openDialog.value = false
 }
+
+onMounted(() => {
+  window.addEventListener('click', (event) => {
+    if (event.target === document.getElementById('color-picker')?.firstChild)
+      return
+
+    if (openDialog.value === true)
+      openDialog.value = false
+  })
+})
 </script>
 
 <template>
-  <div class="relative">
-    <div data-cursor="block" class=" border-base" b="1 solid rd-1" :class="[
-      props.color,
-      large === true ? 'w-8 h-8' : 'w-4 h-4',
-    ]" @click="onOpenColorDialog" />
+  <div id="color-picker" class="relative">
+    <div
+      data-cursor="block" class=" border-base" b="1 solid rd-1" :class="[
+        props.color,
+        large === true ? 'w-8 h-8' : 'w-4 h-4',
+      ]" @click="onOpenColorDialog"
+    />
     <Transition>
-      <div v-if="openDialog" class="absolute grid grid-cols-6 gap-4 p-4 bg-base border-base shadow-2xl z100000 mt-1"
-        b="1 solid rd-1">
-        <div v-for="(item, index) in colorList" :key="index" data-cursor="block" class="color-item border-base w-4 h-4"
-          b="1 solid rd-1" :class="item" @click="onSelectedColor(item)" />
+      <div
+        v-if="openDialog" class="absolute grid grid-cols-6 gap-4 p-4 bg-base border-base shadow-2xl z100000 mt-1"
+        b="1 solid rd-1"
+      >
+        <div
+          v-for="(item, index) in colorList" :key="index" data-cursor="block" class="color-item border-base w-4 h-4"
+          b="1 solid rd-1" :class="item" @click="onSelectedColor(item)"
+        />
       </div>
     </Transition>
   </div>

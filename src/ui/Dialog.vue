@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 
 const props = withDefaults(defineProps<{
@@ -14,7 +13,11 @@ const emits = defineEmits([
 
 const dialogRoot = ref<HTMLDivElement>()
 
-const { width } = useWindowSize()
+const expandDialog = ref<boolean>(false)
+
+function toggleExpandDialog() {
+  expandDialog.value = !expandDialog.value
+}
 
 onMounted(() => {
   if (dialogRoot.value)
@@ -22,6 +25,7 @@ onMounted(() => {
 })
 
 watch(() => props.open, (newValue) => {
+  expandDialog.value = false
   if (newValue === true)
     openModal()
   else
@@ -52,31 +56,52 @@ function closeModal() {
   <Transition>
     <div
       v-if="open" ref="dialogRoot"
-      class="flex flex-row h-100vh w-screen left-0 top-0 color-base backdrop-blur-3 fixed z-10"
+      class="flex flex-row h-100vh w-screen left-0 top-0 color-base backdrop-blur-3 fixed z-100 transition-all"
     >
-      <div class="flex-1 hide-view" />
-      <div class="flex flex-col">
-        <div class="flex-1 hide-view" />
+      <div
+        class="hide-view transition-all" :class="[
+          expandDialog ? 'w-24px' : 'w-32% min-w-24px',
+        ]"
+      />
+      <div class="flex flex-col flex-1 h-full">
         <div
-          class="bg-base border-base shadow-2xl" b="1 rd-1 solid"
-          :class="width >= 1200 ? 'w-600px' : width >= 800 && width < 1200 ? 'w-500px' : 'w-300px'"
+          class="hide-view transition-all flex-shrink-0" :class="[
+            expandDialog ? 'h-24px' : 'flex-1 min-h-24px',
+          ]"
+        />
+        <div
+          class="bg-base border-base b-1 b-solid b-rd shadow-2xl  w-full transition-all flex flex-col overflow-hidden"
+          :class="[expandDialog ? 'flex-1' : '']"
         >
-          <div class="flex flex-row p-4 border-base" b="0 b-1 solid">
+          <div class="flex flex-row p-4 border-base gap-2 b-0 b-b-1 b-solid">
             <div class="flex-1 text-5 font-bold">
               {{ props.title }}
             </div>
             <div
-              data-cursor="block" icon-button class="i-carbon-close text-5 h-24px line-height-24px"
+              class="icon-button text-4 h-24px line-height-24px" :class="[
+                expandDialog ? 'i-carbon-minimize' : 'i-carbon-maximize',
+              ]" @click="toggleExpandDialog"
+            />
+            <div
+              data-cursor="block" icon-button class="i-carbon-close text-7 h-24px line-height-24px"
               @click="emits('onClose')"
             />
           </div>
-          <div class="p-4">
+          <div class="p-4 flex-1 overflow-y-scroll dialog-content-view">
             <slot />
           </div>
         </div>
-        <div class="flex-1 hide-view" />
+        <div
+          class="hide-view transition-all flex-shrink-0" :class="[
+            expandDialog ? 'h-24px' : 'flex-1 min-h-24px',
+          ]"
+        />
       </div>
-      <div class="flex-1 hide-view" />
+      <div
+        class="hide-view transition-all" :class="[
+          expandDialog ? 'w-24px' : 'w-32% min-w-24px',
+        ]"
+      />
     </div>
   </Transition>
 </template>
@@ -90,5 +115,9 @@ function closeModal() {
 .v-enter-from,
 .v-leave-to {
   opacity: 0;
+}
+
+.dialog-content-view::-webkit-scrollbar {
+  display: none;
 }
 </style>
