@@ -197,7 +197,7 @@ async function uploadImageFile(files: FileList) {
 /**
  * 从剪切板粘贴图片
  */
-function handlePasteImage() {
+function handlePasteImage(event: Event) {
   const items = (event as ClipboardEvent).clipboardData?.items
 
   if (!items)
@@ -221,7 +221,7 @@ function handlePasteImage() {
 }
 
 onMounted(() => {
-  document.addEventListener('paste', handlePasteImage)
+  document.addEventListener('paste', event => handlePasteImage(event))
 })
 </script>
 
