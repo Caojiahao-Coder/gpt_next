@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { uid } from 'uid'
+import { useI18n } from 'vue-i18n'
 import BodyHeader from '@/components/BodyHeader.vue'
 import Editor from '@/components/Editor.vue'
 import LeftSideBar from '@/components/LeftSideBar.vue'
@@ -14,6 +17,30 @@ import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 
 const chatContentStore = useConversationStore()
 const errorDialogStore = useErrorDialogStore()
+
+const { t } = useI18n()
+
+onMounted(() => {
+  createNewConversationHotKey()
+})
+
+/**
+ * used ctrl + alt + t to create new conversation
+ */
+function createNewConversationHotKey() {
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.altKey && e.key === 't') {
+      const converstionStore = useConversationStore()
+      converstionStore.createNewConversation({
+        title: t('new_conversation_title'),
+        color: 'bg-gray',
+        create_time: Date.now(),
+        description: '',
+        conversation_token: uid(32),
+      })
+    }
+  })
+}
 </script>
 
 <template>
