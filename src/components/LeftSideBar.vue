@@ -39,6 +39,10 @@ function onCreateNewConversation() {
   })
 }
 
+function toggleOpenLeftSideBar() {
+  expandStore.expand = !expandStore.expand
+}
+
 onMounted(() => {
   document.getElementById('move-item')!.addEventListener('mousedown', (e: MouseEvent) => {
     const startX = e.clientX
@@ -75,7 +79,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 
 <template>
   <div
-    id="left-menu" class="flex flex-row min-w-300px max-w-600px" :style="{
+    id="left-menu" class="flex flex-row min-w-300px max-w-600px transition-all" :style="{
       minWidth: expandStore.expand === true ? '300px' : '0px',
       width: expandStore.expand === false ? '0px' : '300px',
     }"
@@ -101,8 +105,8 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
         </div>
       </div>
 
-      <div>
-        <div id="filter-type-view" class="p-2 b-0 b-b-1 border-base b-solid relative">
+      <div class="flex flex-row b-0 b-b-1 border-base b-solid">
+        <div id="filter-type-view" class="p-2 relative flex-1">
           <div
             class="b-1 b-solid border-base p2 bg-base flex flex-row gap-2 " :class="[
               showFilterMenu ? 'b-rd-tl b-rd-tr bg-body' : 'b-rd hover-bg-body',
@@ -132,6 +136,12 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
                 {{ t('filter_type_drawing') }}
               </li>
             </ul>
+          </div>
+        </div>
+
+        <div class="p-y-2 p-r-2">
+          <div class="h-24px w-24px icon-button p-7px b-solid b-1 border-base b-rd">
+            <div class="w-24px h-24px i-carbon-side-panel-close" @click="toggleOpenLeftSideBar" />
           </div>
         </div>
       </div>
