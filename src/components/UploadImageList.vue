@@ -10,8 +10,13 @@ const { t } = useI18n()
 
 <template>
   <div class="b-0 b-t-1 border-base b-solid color-base">
-    <ul class="list-none p-0 m-0">
-      <UploadImageItem v-for="(item, index) in openAIVisionStore.fileList" :key="index" :file-name="item.fileName" :file-data="item.fileData" :index="index" />
+    <ul class="list-none p-0 m-0 bg-base">
+      <UploadImageItem
+        v-for="(item, index) in openAIVisionStore.fileList" :key="index" :file-name="item.fileName"
+        :file-data="item.fileData" :index="index" class="b-0 b-solid border-base" :class="[
+          index < openAIVisionStore.fileList.length - 1 ? 'b-b-1' : '',
+        ]"
+      />
     </ul>
   </div>
 </template>
