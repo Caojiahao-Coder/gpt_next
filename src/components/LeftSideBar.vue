@@ -106,7 +106,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
       </div>
 
       <div class="flex flex-row b-0 b-b-1 border-base b-solid">
-        <div id="filter-type-view" class="p-2 relative flex-1">
+        <div id="filter-type-view" class="p-2 relative flex-1 icon-button">
           <div
             class="b-1 b-solid border-base p2 bg-base flex flex-row gap-2 " :class="[
               showFilterMenu ? 'b-rd-tl b-rd-tr bg-body' : 'b-rd hover-bg-body',
