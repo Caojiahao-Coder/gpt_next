@@ -1,28 +1,19 @@
 <script setup lang="ts">
-import { useWindowSize } from '@vueuse/core'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
-import { useLeftSideBarStore } from '@/store/leftsidebar'
 import useConversationStore from '@/store/conversation-store'
 import useMessageStore from '@/store/message-store'
-import { filterType } from '@/store/localstorage'
+import { expandLeftSideBar, filterType } from '@/store/localstorage'
 
 const { t } = useI18n()
-const { width } = useWindowSize()
-
-const expandStore = useLeftSideBarStore()
 
 const showFilterMenu = ref<boolean>(false)
 
-watch(width, (newValue) => {
-  expandStore.expand = (newValue >= 800)
-})
-
 function onCloseLeftSideBar() {
-  expandStore.expand = false
+  expandLeftSideBar.value = false
 }
 
 function onCreateNewConversation() {
@@ -40,7 +31,7 @@ function onCreateNewConversation() {
 }
 
 function toggleOpenLeftSideBar() {
-  expandStore.expand = !expandStore.expand
+  expandLeftSideBar.value = !expandLeftSideBar.value
 }
 
 onMounted(() => {
@@ -80,13 +71,13 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 <template>
   <div
     id="left-menu" class="flex flex-row min-w-300px max-w-600px transition-all" :style="{
-      minWidth: expandStore.expand === true ? '300px' : '0px',
-      width: expandStore.expand === false ? '0px' : '300px',
+      minWidth: expandLeftSideBar === true ? '300px' : '0px',
+      width: expandLeftSideBar === false ? '0px' : '300px',
     }"
   >
     <div
       :style="{
-        width: expandStore.expand === true ? 'calc(100% - 1px)' : '0px',
+        width: expandLeftSideBar === true ? 'calc(100% - 1px)' : '0px',
       }" class="transition-all h-100vh bg-base flex-shrink-0 flex flex-col color-base overflow-hidden"
     >
       <div class="h-47px p-16px border-base" b="0 b-1 solid">
@@ -97,10 +88,6 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
           <div
             data-cursor="block" i-carbon-add-comment class="text-6 icon-button" m="y-12px"
             @click="onCreateNewConversation"
-          />
-          <div
-            v-if="width <= 800" i-carbon-close class="text-6 icon-button m-l-2" m="y-12px "
-            @click="onCloseLeftSideBar"
           />
         </div>
       </div>
@@ -173,7 +160,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
         </a>
       </div>
     </div>
-    <div v-show="expandStore.expand === true" id="left_menu_move_bar" class="h-100vh border-base" b="r-1 solid 0">
+    <div v-show="expandLeftSideBar === true" id="left_menu_move_bar" class="h-100vh border-base" b="r-1 solid 0">
       <div id="move-item">
         <div
           data-cursor="block"

@@ -5,21 +5,19 @@ import html2canvas from 'html2canvas'
 import { uid } from 'uid'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import useConversationStore from '@/store/conversation-store'
-import { useLeftSideBarStore } from '@/store/leftsidebar'
 import useMessageStore from '@/store/message-store'
 import Dialog from '@/ui/Dialog.vue'
 import MessageSpeech from '@/components/MessageSpeech.vue'
+import { expandLeftSideBar } from '@/store/localstorage'
 
 const { t } = useI18n()
-
-const leftSideBarStore = useLeftSideBarStore()
 
 const conversationStore = useConversationStore()
 
 const openConfirmDialog = ref<boolean>(false)
 
 function onOpenLeftSideBar() {
-  leftSideBarStore.expand = !leftSideBarStore.expand
+  expandLeftSideBar.value = true
 }
 
 function openDialog() {
@@ -55,7 +53,7 @@ function exportConversation() {
     id="body-header" class="h-79px flex flex-row text-6 color-base border-base overflow-hidden gap-2" b="0 b-1 solid"
     p="x-24px"
   >
-    <div v-if="leftSideBarStore.expand === false" class="flex flex-col m-r-4">
+    <div v-if="expandLeftSideBar === false" class="flex flex-col m-r-4">
       <div class="flex-1" />
       <div data-cursor="block" class="icon-button i-carbon-menu" @click="onOpenLeftSideBar" />
       <div class="flex-1" />
