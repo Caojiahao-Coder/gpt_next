@@ -231,7 +231,7 @@ onMounted(() => {
       <div v-if="openAIVisionStore.fileList.length >= 1" class="flex flex-row line-height-24px gap-2">
         <div class="color-green m-4px i-carbon-checkmark-filled" />
         <div class="color-base text-4">
-          Enable OpenAI Vision API
+          {{ t('use_gpt_vision_api') }}
         </div>
       </div>
     </div>
