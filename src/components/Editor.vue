@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import useEditorStore from '@/store/editor-store.js'
@@ -154,7 +154,6 @@ async function uploadImageFile(files: FileList) {
     const file = files[i]
     reader.readAsDataURL(file)
     reader.onloadend = function (result) {
-      // openAIVisionStore.uploadImageFile(file.name, (result.target?.result ?? '') as string)
       const img = new Image()
       img.onload = function () {
         const canvas = document.createElement('canvas')
@@ -194,6 +193,36 @@ async function uploadImageFile(files: FileList) {
     }
   }
 }
+
+/**
+ * 从剪切板粘贴图片
+ */
+function handlePasteImage() {
+  const items = (event as ClipboardEvent).clipboardData?.items
+
+  if (!items)
+    return
+
+  const item = items[0]
+
+  if (!item.type.includes('image'))
+    return
+
+  const blob = item.getAsFile()
+
+  if (!blob)
+    return
+
+  const reader = new FileReader()
+  reader.readAsDataURL(blob)
+  reader.onloadend = function (result) {
+    openAIVisionStore.uploadImageFile(`clipboard${openAIVisionStore.fileList.length + 1}.png`, (result.target?.result ?? '') as string)
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('paste', handlePasteImage)
+})
 </script>
 
 <template>
@@ -210,12 +239,6 @@ async function uploadImageFile(files: FileList) {
     <div class="b-0 b-t-1 border-base border-solid flex flex-row gap-2 p-2">
       <div v-if="width >= 1000" class="w-15%" />
 
-      <!-- <div class="bg-body border-1 b-rd border-solid border-base p2 icon-button flex flex-row gap-2 cursor-pointer">
-        <div class="i-carbon-document w-22px h-22px color-base" />
-        <div class="color-base font-light">
-          Upload File
-        </div>
-      </div> -->
       <div
         class="bg-body border-1 b-rd border-solid border-base p2 icon-button flex flex-row gap-2 cursor-pointer"
         @click="uploadVisionFiles"

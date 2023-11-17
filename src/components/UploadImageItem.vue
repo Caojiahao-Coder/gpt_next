@@ -23,9 +23,7 @@ const show = ref<boolean>(false)
       <div class="flex-1">
         {{ props.fileName }}
       </div>
-      <div class="hover-color-red cursor-pointer" @click="openAIVisionStore.deleteFileByIndex(index)">
-        {{ t('delete') }}
-      </div>
+      <div class="hover-color-red h-22px w-22px cursor-pointer i-carbon-close" @click="openAIVisionStore.deleteFileByIndex(index)" />
     </li>
     <PopDialog :show="show" class="absolute bottom-32px left-16px" @on-cancel="show = false">
       <div class="w-200px h-120px bg-cover bg-center b-rd" :style="{ backgroundImage: `url(${props.fileData})` }" />
