@@ -240,12 +240,13 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
   const lat = JSON.parse(toolCallInfo.function.arguments).lat
   const lon = JSON.parse(toolCallInfo.function.arguments).lon
   const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
+  const units = JSON.parse(toolCallInfo.function.arguments).units
 
   let content = ''
 
   switch (toolCallInfo.function.name) {
     case 'get_current_weather':
-      content = await getCurrentWeather(lat, lon, exclude)
+      content = await getCurrentWeather(lat, lon, exclude, units)
       break
   }
 
