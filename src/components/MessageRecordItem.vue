@@ -107,10 +107,18 @@ async function getChatAnswer() {
       })
 
       try {
-        const fileList = JSON.parse(a.vision_file ?? '') as {
+        let fileList: {
           file_name: string
           b64_data: string
-        }[]
+        }[] = []
+
+        try {
+          if (a.vision_file)
+            fileList = JSON.parse(a.vision_file)
+        }
+        catch {
+          fileList = []
+        }
 
         for (const file of fileList) {
           content.push({

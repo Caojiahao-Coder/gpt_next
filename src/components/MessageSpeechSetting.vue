@@ -46,4 +46,3 @@ const voice = ref(speechVoice)
     </div>
   </div>
 </template>
-@/assets/voice-list

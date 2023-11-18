@@ -158,8 +158,8 @@ async function uploadImageFile(files: FileList) {
       img.onload = function () {
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
-        const MAX_WIDTH = 600
-        const MAX_HEIGHT = 400
+        const MAX_WIDTH = 800
+        const MAX_HEIGHT = 600
         let width = img.width
         let height = img.height
 
