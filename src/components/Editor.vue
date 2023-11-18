@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useWindowSize } from '@vueuse/core'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import useEditorStore from '@/store/editor-store.js'
@@ -13,6 +13,8 @@ import LoadingBar from '@/ui/LoadingBar.vue'
 import { push } from '@/main'
 import useOpenAIVisionStore from '@/store/openai-vision-store'
 import UploadImageList from '@/components/UploadImageList.vue'
+
+const inputRef = ref<HTMLTextAreaElement>()
 
 const editorStore = useEditorStore()
 
@@ -29,6 +31,14 @@ const inputMessage = ref<string>('')
 const errorDialogStore = useErrorDialogStore()
 
 const openAIVisionStore = useOpenAIVisionStore()
+
+/**
+ * when select new conversations, focus textarea
+ */
+watch(() => conversationStore.conversationInfo, () => {
+  if (inputRef.value)
+    inputRef.value.focus()
+})
 
 /**
  * 展开编辑器
@@ -269,7 +279,7 @@ onMounted(() => {
         <div class="flex-1 flex flex-col">
           <div :class="expand === true ? 'h-0' : 'flex-1'" />
           <textarea
-            v-model="inputMessage" data-cursor="text" :disabled="editorStore.thinking"
+            ref="inputRef" v-model="inputMessage" data-cursor="text" :disabled="editorStore.thinking"
             overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
             class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
             :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
