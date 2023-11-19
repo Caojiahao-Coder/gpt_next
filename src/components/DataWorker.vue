@@ -1,10 +1,18 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+
 import { useI18n } from 'vue-i18n'
+import { push } from '@/main'
+
+const props = defineProps<{
+  columns?: string[]
+}>()
 
 const emits = defineEmits(['onClose', 'onSubmit'])
 
 const { t } = useI18n()
+
+const columnsDataList = ref<string[]>(props.columns ?? [])
 
 const columnsList = ref<HTMLInputElement[]>([])
 
@@ -17,6 +25,11 @@ function addNewColumn() {
 }
 
 function submitData() {
+  if (itemRefs.value.length === 0) {
+    push.warning(t('please_add_at_least_one_column'))
+    return
+  }
+
   const columns = itemRefs.value.map((item: any) => item.value) as string[]
   emits('onSubmit', columns)
 }
@@ -31,6 +44,12 @@ function onRemoveColumn(index: number) {
   itemRefs.value = newRef
   document.getElementById(`item-${index}`)!.remove()
 }
+
+onMounted(() => {
+  const data = (props.columns ?? [])
+  for (let i = 0; i < data.length; i++)
+    addNewColumn()
+})
 </script>
 
 <template>
@@ -40,7 +59,7 @@ function onRemoveColumn(index: number) {
         <input
           ref="itemRefs" type="text"
           class="flex-1 border-solid border-1 border-base m-0 p-2 bg-base b-rd outline-none color-base focus-bg-body"
-          placeholder="Column name"
+          placeholder="Column name" :value="columnsDataList[index] ?? ''"
         >
       </div>
       <div class="w-20px h-20px icon-button right-8px top-8px absolute i-carbon-close" @click="onRemoveColumn(index)" />

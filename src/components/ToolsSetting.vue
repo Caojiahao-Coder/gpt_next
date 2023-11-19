@@ -46,7 +46,7 @@ async function onSubmitMessage(columns: string[]) {
 
   const messageInfo: NewMessageInfo = {
     conversation_id: conversationId,
-    user_content: `${columns.join(';')}`,
+    user_content: columns.join(';'),
     gpt_content: '',
     create_time: Date.now(),
     token_id: uid(32),
@@ -100,7 +100,7 @@ async function createDrawImageModeConversation() {
       </div>
     </div>
 
-    <Dialog title="Data worker" :open="openDialog" @on-close="openDialog = false">
+    <Dialog title="Mock Data" :open="openDialog" @on-close="openDialog = false">
       <div class="font-light mb-4 color-base text-4">
         {{ t('data_tools_desc') }}
       </div>
