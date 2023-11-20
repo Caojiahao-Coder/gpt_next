@@ -5,7 +5,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  init:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -17,7 +17,15 @@ jobs:
         run: npm install -g pnpm
       - name: Install dependencies
         run: pnpm install
-      - name: Eslint check
+  eslint:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run ESLint
         run: pnpm run lint
-      - name: Eslint fix
+  eslintfix:
+    needs: init
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run ESLint
         run: pnpm run lint:fix
