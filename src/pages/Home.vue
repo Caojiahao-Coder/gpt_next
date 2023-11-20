@@ -39,6 +39,17 @@ function createNewConversationHotKey() {
         conversation_token: uid(32),
       })
     }
+    // for mac
+    else if (e.metaKey && e.ctrlKey && e.key === 't') {
+      const converstionStore = useConversationStore()
+      converstionStore.createNewConversation({
+        title: t('new_conversation_title'),
+        color: 'bg-gray',
+        create_time: Date.now(),
+        description: '',
+        conversation_token: uid(32),
+      })
+    }
   })
 }
 </script>
