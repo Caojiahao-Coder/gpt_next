@@ -1,4 +1,4 @@
-name: 'release-project'
+name: Create Release
 
 on:
   push:
@@ -6,58 +6,28 @@ on:
       - 'v*'
 
 jobs:
-  eslint:
+  build-and-release:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.8.1'
-      - name: Install pnpm
-        run: npm install -g pnpm
-      - name: Install dependencies
-        run: pnpm install
-      - name: Eslint check
-        run: pnpm run lint
-      - name: Eslint fix
-        run: pnpm run lint:fix
 
-  build:
-    needs: eslint
-    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20.8.1'
-      - name: Install pnpm
-        run: npm install -g pnpm
-      - name: Install dependencies
-        run: pnpm install
-      - name: Build Project
-        run: pnpm run build
-
-  release:
-    needs: eslint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '20.8.1'
-
-      - name: Install pnpm
-        run: npm install -g pnpm
+          node-version: '14'
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
-      - name: Build
-        run: pnpm run build
+      - name: Build project
+        run: npm run build
+
+      - name: Archive production artifacts
+        run: |
+          zip -r release.zip ./dist
+        # Replace './dist' with the directory that contains your build artifacts
 
       - name: Create Release
         id: create_release
@@ -66,7 +36,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          body: "Description of the release"
           draft: false
           prerelease: false
 
@@ -76,6 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./GPT_Next_${{github.ref}}.zip # 替换为构建产物的路径
-          asset_name: GPT_Next_${{github.ref}}.zip # 替换为构建产物的名称
+          asset_path: ./release.zip
+          asset_name: release.zip
           asset_content_type: application/zip
