@@ -123,7 +123,7 @@ async function onSubmitEditMessage() {
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
       <div class="avatar w-8 h-8 b-rd-1 bg-body">
-        <div class="w-6 h-6 m-1 b-rd-1" i-carbon-user />
+        <div class="w-6 h-6 m-1 b-rd-1 i-carbon-tool-kit" />
       </div>
       <Markdown :content="messageInfo.user_content" />
 
