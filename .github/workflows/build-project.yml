@@ -5,11 +5,11 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  eslint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Use Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20.8.1'
@@ -21,3 +21,19 @@ jobs:
         run: pnpm run lint
       - name: Eslint fix
         run: pnpm run lint:fix
+
+  build:
+    needs: eslint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.8.1'
+      - name: Install pnpm
+        run: npm install -g pnpm
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build Project
+        run: pnpm run build
