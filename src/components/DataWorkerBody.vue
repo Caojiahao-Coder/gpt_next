@@ -433,16 +433,14 @@ async function submitEditColumnsData(columns: string[]) {
         />
       </div>
 
-      <div class="input-root-view flex flex-row p-24px h-31px bg-base b-0 b-solid b-b-1 border-base">
-        <div class="flex flex-col">
-          <textarea
-            ref="inputRef" v-model="inputMessage" data-cursor="text" :disabled="loading"
-            overflow="x-hidden y-scroll"
-            :placeholder="loading === true ? t('loading') : t('data_worker_enter_modification')"
-            class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0 line-height-31px"
-            @keydown.enter="onKeyDownEnter"
-          />
-        </div>
+      <div class="input-root-view flex flex-row p-24px bg-base b-0 b-solid b-b-1 border-base">
+        <textarea
+          ref="inputRef" v-model="inputMessage" data-cursor="text" :disabled="loading"
+          overflow="x-hidden y-scroll"
+          :placeholder="loading === true ? t('loading') : t('data_worker_enter_modification')"
+          class="bg-transparent b-0 outline-none color-base text-4 p-0 m-0 line-height-31px flex-1 h-31px focus-h-120px transition-all"
+          @keydown.enter="onKeyDownEnter"
+        />
       </div>
     </div>
 
