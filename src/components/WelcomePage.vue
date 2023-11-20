@@ -47,6 +47,20 @@ function createNewMessage() {
             T
           </div>
         </div>
+
+        <div class="ml-24px line-height-42px">
+          OR
+        </div>
+
+        <div class="create-hot-key flex flex-row b-rd b-1 border-base b-solid p-x-4 py-2 ml-24px bg-base">
+          <div class="line-height-24px h-24px i-carbon-mac-command" />
+          <div class="i-carbon-add h-24px" />
+          <div class="line-height-24px h-24px i-carbon-mac-option" />
+          <div class="i-carbon-add text-6 line-height-24px" />
+          <div class="line-height-24px">
+            T
+          </div>
+        </div>
       </div>
       <div class="flex-1" />
     </div>
