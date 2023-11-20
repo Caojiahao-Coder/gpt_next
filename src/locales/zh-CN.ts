@@ -99,7 +99,7 @@ export default {
   use_function_calling_tools: '使用Function Calling Tools',
   vision: '视觉识别',
   no_image_to_download: '没有图片可以下载!',
-  data_worker_enter_modification: '输入修改条件',
+  data_worker_enter_modification: '输入修改条件（输入回车提交）',
   please_use_the_reload_data_button_on_the_bottom_right: '请使用右下角的加载数据按钮。',
   data_columns: '数据列',
   modification_suggestion: '修改建议',
