@@ -99,7 +99,7 @@ export default {
   use_function_calling_tools: 'Use Function Calling Tools',
   vision: 'Vision',
   no_image_to_download: 'No image to download!',
-  data_worker_enter_modification: 'Enter modification',
+  data_worker_enter_modification: 'Enter modification conditions (enter to submit)',
   please_use_the_reload_data_button_on_the_bottom_right: 'Please use the load data button on the bottom right.',
   data_columns: 'Data Columns',
   modification_suggestion: 'Modification Suggestion',
