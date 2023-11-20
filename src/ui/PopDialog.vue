@@ -34,8 +34,10 @@ watch(() => props.show, (newValue) => {
 </script>
 
 <template>
-  <div v-if="show" ref="rootRef" class=" bg-body absolute p-1 b-rd-1 border-base b-1 b-solid m-y-2 absolute"
-    @mouseenter="regOnMouseEnter">
+  <div
+    v-if="show" ref="rootRef" class=" bg-body absolute p-1 b-rd-1 border-base b-1 b-solid m-y-2 absolute"
+    @mouseenter="regOnMouseEnter"
+  >
     <slot />
   </div>
 </template>

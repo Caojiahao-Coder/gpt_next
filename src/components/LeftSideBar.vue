@@ -12,10 +12,6 @@ const { t } = useI18n()
 
 const showFilterMenu = ref<boolean>(false)
 
-function onCloseLeftSideBar() {
-  expandLeftSideBar.value = false
-}
-
 function onCreateNewConversation() {
   const messageStore = useMessageStore()
   messageStore.messageList = []
