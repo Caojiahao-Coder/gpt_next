@@ -1,11 +1,8 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import useOpenAIVisionStore from '@/store/openai-vision-store'
 import UploadImageItem from '@/components/UploadImageItem.vue'
 
 const openAIVisionStore = useOpenAIVisionStore()
-
-const { t } = useI18n()
 </script>
 
 <template>

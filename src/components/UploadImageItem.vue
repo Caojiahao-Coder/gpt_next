@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
 import { ref } from 'vue'
 import useOpenAIVisionStore from '@/store/openai-vision-store'
 import PopDialog from '@/ui/PopDialog.vue'
@@ -11,8 +10,6 @@ const props = defineProps<{
 }>()
 
 const openAIVisionStore = useOpenAIVisionStore()
-
-const { t } = useI18n()
 
 const show = ref<boolean>(false)
 </script>

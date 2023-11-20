@@ -57,7 +57,6 @@ async function onSubmitMessage(columns: string[]) {
 
 async function createDrawImageModeConversation() {
   const conversationStore = useConversationStore()
-  const messageStore = useMessageStore()
   const globalSettingStore = useGlobalStore()
 
   const globalSettingInfo = await globalSettingStore.getGlobalSetting()
