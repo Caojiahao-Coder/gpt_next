@@ -10,6 +10,15 @@
 
 [🧭Live preview](https://gpt-next-shvd.vercel.app/)
 
+## Features Screenshots 📷
+| Draw Image Mode                        | Function Calling                          |
+| -------------------------------------- | ----------------------------------------- |
+| ![GPTNext](./images/DrawImageMode.gif) | ![GPTNext](./images/Function_Calling.gif) |
+
+| Text to Speech                  | Multimedia Input Box                        |
+| ------------------------------- | ------------------------------------------- |
+| ![GPTNext](./images/Speech.gif) | ![GPTNext](./images/MultimediaInputBox.gif) |
+
 ## Features 🚀
 - ⚔**Session Records Saving** → The application uses IndexedDB as the database to guarantee the privacy and security of the session. All session records are saved and can be accessed later.
 - 🔗**Persistent Session Mode** → This feature enables the AI to remember the context of the conversation and provide more accurate answers.

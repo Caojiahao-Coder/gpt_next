@@ -11,6 +11,15 @@
 
 [🧭在线体验](https://gpt-next-shvd.vercel.app/)
 
+## 特色功能截图 📷
+| 绘图模式                               | Function Calling                            |
+| -------------------------------------- | ------------------------------------------- |
+| ![GPTNext](./images/DrawImageMode.gif) | ![GPTNext](./images/Function_Calling.gif)   |
+
+| 文本转语音                             | 多媒体输入框                                |
+| -------------------------------------- | ------------------------------------------- |
+| ![GPTNext](./images/Speech.gif)        | ![GPTNext](./images/MultimediaInputBox.gif) |
+
 ## 产品特点 🚀
 
 - ⚔**会话记录保存**：该应用程序使用IndexedDB作为数据库，以保证会话的隐私和安全性。所有会话记录都被保存，以便以后访问。
