@@ -38,6 +38,6 @@ function changeBodyBgColor() {
       <Notifications :item="item" />
     </Notivue>
 
-    <DailyTips v-if="alwaysCloseDailyTips" />
+    <DailyTips v-if="!alwaysCloseDailyTips" />
   </main>
 </template>

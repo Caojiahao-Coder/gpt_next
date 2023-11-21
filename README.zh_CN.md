@@ -1,6 +1,4 @@
 ![GPTNext](./images/gpt_next.svg)
-![BANNER](./images/forms.png)
-
 
 [![English badge](https://img.shields.io/badge/%E8%8B%B1%E6%96%87-English-blue)](./README.md)
 [![简体中文 badge](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-Simplified%20Chinese-blue)](./README.zh_CN.md)
@@ -14,11 +12,11 @@
 ## 特色功能截图 📷
 | 绘图模式                               | Function Calling                            |
 | -------------------------------------- | ------------------------------------------- |
-| ![GPTNext](./images/DrawImageMode.gif) | ![GPTNext](./images/Function_Calling.gif)   |
+| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/DrawImageMode.gif) | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Function_Calling.gif)   |
 
 | 文本转语音                             | 多媒体输入框                                |
 | -------------------------------------- | ------------------------------------------- |
-| ![GPTNext](./images/Speech.gif)        | ![GPTNext](./images/MultimediaInputBox.gif) |
+| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Speech.gif)        | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/MultimediaInputBox.gif) |
 
 ## 产品特点 🚀
 

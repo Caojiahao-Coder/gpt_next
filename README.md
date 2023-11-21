@@ -1,5 +1,4 @@
 ![GPTNext](./images/gpt_next.svg)
-![BANNER](./images/forms.png)
 
 [![English badge](https://img.shields.io/badge/%E8%8B%B1%E6%96%87-English-blue)](./README.md)
 [![简体中文 badge](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-Simplified%20Chinese-blue)](./README.zh_CN.md)
@@ -13,11 +12,11 @@
 ## Features Screenshots 📷
 | Draw Image Mode                        | Function Calling                          |
 | -------------------------------------- | ----------------------------------------- |
-| ![GPTNext](./images/DrawImageMode.gif) | ![GPTNext](./images/Function_Calling.gif) |
+| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/DrawImageMode.gif) | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Function_Calling.gif) |
 
 | Text to Speech                  | Multimedia Input Box                        |
 | ------------------------------- | ------------------------------------------- |
-| ![GPTNext](./images/Speech.gif) | ![GPTNext](./images/MultimediaInputBox.gif) |
+| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Speech.gif) | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/MultimediaInputBox.gif) |
 
 ## Features 🚀
 - ⚔**Session Records Saving** → The application uses IndexedDB as the database to guarantee the privacy and security of the session. All session records are saved and can be accessed later.
