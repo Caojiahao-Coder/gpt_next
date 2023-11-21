@@ -127,6 +127,7 @@ async function loadData() {
       2. You need to generate data according to the Markdown syntax, because the resulting result will be rendered as a Markdown table.
       3. Generate 10-20 pieces of data at a time.
       4. Remember, don't use the \`\`\` tag outside of Markdown Table code anymore!
+      5. All columns should be merged into one table.
 
     The data you generate should be such as:
 
@@ -345,7 +346,7 @@ function downloadDataToCSV() {
   }
   try {
     const csvData = convertMarkdownTableContentToCSV(dataSourceData.value)
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' })
+    const blob = new Blob([`\uFEFF${csvData}`], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
     const link = document.createElement('a')
     link.setAttribute('href', url)
