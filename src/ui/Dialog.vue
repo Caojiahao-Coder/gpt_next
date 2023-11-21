@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
+import { useWindowSize } from '@vueuse/core'
 
 const props = withDefaults(defineProps<{
   open: boolean
@@ -10,6 +11,8 @@ const props = withDefaults(defineProps<{
 const emits = defineEmits([
   'onClose',
 ])
+
+const { width, height } = useWindowSize()
 
 const dialogRoot = ref<HTMLDivElement>()
 
@@ -60,7 +63,9 @@ function closeModal() {
     >
       <div
         class="hide-view transition-all" :class="[
-          expandDialog ? 'w-24px' : 'w-32% min-w-24px',
+          expandDialog ? 'w-24px' : (
+            width < 768 ? 'w-5% min-w-24px' : width < 1024 ? 'w-25% min-w-24px' : 'w-30% min-w-24px'
+          ),
         ]"
       />
       <div class="flex flex-col flex-1 h-full">
@@ -99,7 +104,9 @@ function closeModal() {
       </div>
       <div
         class="hide-view transition-all" :class="[
-          expandDialog ? 'w-24px' : 'w-32% min-w-24px',
+          expandDialog ? 'w-24px' : (
+            width < 768 ? 'w-5% min-w-24px' : width < 1024 ? 'w-25% min-w-24px' : 'w-30% min-w-24px'
+          ),
         ]"
       />
     </div>
