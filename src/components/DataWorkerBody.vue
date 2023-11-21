@@ -108,7 +108,7 @@ async function loadMessageRecords() {
   const data = await messageStore.getMessageRecordsByConversationId(converstoreStore.conversationInfo!.id)
   messageRecords.value = data
   myColumns.value = data[0].user_content.split(';').filter(a => (a.trim()).length > 0)
-  dataSourceData.value = data[0].gpt_content
+  dataSourceData.value = data[data.length - 1].gpt_content
 }
 
 async function loadData() {
@@ -122,10 +122,20 @@ async function loadData() {
   }[] = [{
     role: 'system',
     content: `
-    You are now an assistant helping professionals generate test data. You have the following responsibilities to fulfill:
-      1. Generate test data as close to the actual test data as possible according to the column names listed by the user, but do not use real data.
-      2. You need to generate data based on the Markdown syntax, because the results you generate will be rendered as a Markdown table.
-      3. Please generate 10-20 pieces of data each time.
+    You are now an assistant helping professionals generate test data. You have the following responsibilities:
+      1. According to the column name listed by the user, the test data is generated as close as possible to the actual test data, but the real data is not used.
+      2. You need to generate data according to the Markdown syntax, because the resulting result will be rendered as a Markdown table.
+      3. Generate 10-20 pieces of data at a time.
+      4. Remember, don't use the \`\`\` tag outside of Markdown Table code anymore!
+
+    The data you generate should be such as:
+
+      "Some introduction to the data"
+      |ID|Name|
+      -----------
+      |1|Leo|
+      |2|Aeo|
+      "Some summary statements"
     `,
   }, {
     role: 'user',
@@ -354,17 +364,24 @@ function downloadDataToCSV() {
 function convertMarkdownTableContentToCSV(markdownContent: string) {
   let csvData: string = ''
   const markdownTableContent = extractMarkdownTableCode(markdownContent)
-  const rows = markdownTableContent.split('\n').filter((_, index) => index !== 1)
+  const rows = markdownTableContent.split('\n').filter(a => a.trim().length > 0)
+
+  let curRowIndex = 0
 
   for (let i = 0; i < rows.length; i++) {
     const columns = rows[i].split('|').filter((_, index) => index !== 0 && index !== (rows[i].split('|').length - 1))
+    let myRowData = ''
     for (let j = 0; j < columns.length; j++) {
       if (j === 0)
-        csvData += columns[j].trim()
+        myRowData += columns[j].trim()
       else
-        csvData += `,${columns[j].trim()}`
+        myRowData += `,"${columns[j].trim()}"`
     }
-    csvData += '\n'
+    if (myRowData.trim().length > 0) {
+      if (curRowIndex !== 1)
+        csvData += `${myRowData}\n`
+      curRowIndex += 1
+    }
   }
 
   return csvData
