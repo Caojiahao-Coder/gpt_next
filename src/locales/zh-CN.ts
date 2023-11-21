@@ -110,4 +110,8 @@ export default {
   please_wait_for_data_to_be_generated: '请等待数据生成...',
   please_generate_data_first: '请先生成数据!',
   please_add_at_least_one_column: '请至少添加一列!',
+  daily_tips: '每日小贴士 ✨',
+  always_close_daily_tips: '不在启动时显示小贴士',
+  next_page: '下一个',
+  previous_page: '上一个',
 }
