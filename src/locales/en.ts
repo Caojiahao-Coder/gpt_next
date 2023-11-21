@@ -110,4 +110,8 @@ export default {
   please_wait_for_data_to_be_generated: 'Please wait for data to be generated...',
   please_generate_data_first: 'Please generate data first!',
   please_add_at_least_one_column: 'Please add at least one column!',
+  daily_tips: 'Tip of the Day ✨',
+  always_close_daily_tips: 'Don\'t show tips on start up',
+  next_page: 'Next',
+  previous_page: 'Previous',
 }

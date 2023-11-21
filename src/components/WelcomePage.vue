@@ -26,10 +26,11 @@ function createNewMessage() {
     <div class="flex flex-row">
       <div class="flex-1" />
       <div
-        data-cursor="block" class="flex flex-row bg-base p-4 border-base color-base" b="1 solid rd-1" :class="[
-          width >= 1200 ? 'w-500px' : width >= 800 && width < 1200 ? 'w-400px' : 'w-300px',
+        data-cursor="block" class="flex flex-row bg-base p-4 border-base color-base shadow-xl hover-bg-body transition-all" b="1 solid rd-1" :class="[
+          width >= 1200 ? 'w-600px' : width >= 800 && width < 1200 ? 'w-500px' : 'w-400px',
         ]" @click="createNewMessage"
       >
+        <div class="flex-1" />
         <div class="text-6 line-height-42px h-42px i-carbon-add" />
         <div class="m-l-2 line-height-42px h-42px">
           {{ t('new') }}
@@ -48,10 +49,6 @@ function createNewMessage() {
           </div>
         </div>
 
-        <div class="ml-24px line-height-42px">
-          OR
-        </div>
-
         <div class="create-hot-key flex flex-row b-rd b-1 border-base b-solid p-x-4 py-2 ml-24px bg-base">
           <div class="line-height-24px h-24px i-carbon-mac-command" />
           <div class="i-carbon-add h-24px" />
@@ -61,6 +58,7 @@ function createNewMessage() {
             T
           </div>
         </div>
+        <div class="flex-1" />
       </div>
       <div class="flex-1" />
     </div>

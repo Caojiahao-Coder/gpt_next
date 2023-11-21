@@ -14,6 +14,7 @@ import useConversationStore from '@/store/conversation-store'
 import { gptRole } from '@/store/localstorage'
 import DataWorkerBody from '@/components/DataWorkerBody.vue'
 import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
+import TipsButton from '@/components/TipsButton.vue'
 
 const chatContentStore = useConversationStore()
 const errorDialogStore = useErrorDialogStore()
@@ -80,5 +81,6 @@ function createNewConversationHotKey() {
       <ErrorDialog />
     </div>
     <SettingSlideBar />
+    <TipsButton />
   </main>
 </template>

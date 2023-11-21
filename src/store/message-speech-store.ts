@@ -46,33 +46,39 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
       const data: number[] = []
 
       await readFileData()
-      const fileBate64 = convertBytes2Base64(data)
-
-      playAudio(fileBate64, () => {
-        show.value = true
-        isPlaying.value = true
-        if (callback)
-          callback('processing')
-      }, () => {
-        show.value = false
-        isPlaying.value = false
-        if (callback)
-          callback('finished')
-      }, () => {
-        show.value = false
-        isPlaying.value = false
-        if (callback)
-          callback('finished')
-      })
 
       async function readFileData() {
         const { done, value } = await reader!.read()
-        if (value)
-          value.forEach(a => data.push(a))
-
+        if (value) {
+          for (let j = 0; j < value.length; j++) {
+            const item = value[j]
+            data.push(item)
+          }
+        }
         if (!done)
           await readFileData()
       }
+
+      const fileBate64 = convertBytes2Base64(data)
+
+      setTimeout(() => {
+        playAudio(fileBate64, () => {
+          show.value = true
+          isPlaying.value = true
+          if (callback)
+            callback('processing')
+        }, () => {
+          show.value = false
+          isPlaying.value = false
+          if (callback)
+            callback('finished')
+        }, () => {
+          show.value = false
+          isPlaying.value = false
+          if (callback)
+            callback('finished')
+        })
+      }, 100)
     }).catch(() => {
       push.info(t('speech_error'))
     }).finally(() => {

@@ -19,7 +19,7 @@ function toggleExpandSettingSideBar() {
 <template>
   <div
     :class="expandSettingSideBar === true ? 'w-320px' : 'w-0'"
-    class="relative transition-all h-100vh flex-shrink-0 flex flex-col color-base border-base" b="0 l-1 solid"
+    class="relative transition-all h-100vh flex-shrink-0 flex flex-col color-base border-base z-2 bg-base b-0 b-l-1 b-solid"
   >
     <div class="h-79px border-base" p="x-16px" b="0 solid b-1">
       <div class="flex flex-row h-100%">
