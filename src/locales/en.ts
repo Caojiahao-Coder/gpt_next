@@ -71,6 +71,7 @@ export default {
   loading: 'Loading...',
   tts_model: 'TTS Model',
   draw_img_mode: 'Draw Image Mode',
+  mock_data_mode: 'Mock Data Mode',
   fit_canvas: 'Adaptive canvas (Default 600x600)',
   generate_image: 'Generate Image',
   download_image: 'Download Image',

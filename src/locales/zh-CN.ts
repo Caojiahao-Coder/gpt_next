@@ -71,6 +71,7 @@ export default {
   loading: '加载数据中...',
   tts_model: 'TTS 模型',
   draw_img_mode: '绘图模式',
+  mock_data_mode: '模拟数据模式',
   fit_canvas: '自适应画布大小 (默认600x600)',
   generate_image: '生成图片',
   download_image: '下载图片',

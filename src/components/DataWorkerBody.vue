@@ -107,7 +107,9 @@ function initMonacoEditor() {
 async function loadMessageRecords() {
   const data = await messageStore.getMessageRecordsByConversationId(converstoreStore.conversationInfo!.id)
   messageRecords.value = data
-  myColumns.value = data[0].user_content.split(';').filter(a => (a.trim()).length > 0)
+  if (data.length === 0)
+    return
+  myColumns.value = data[0].user_content?.split(';').filter(a => (a.trim()).length > 0) ?? []
   dataSourceData.value = data[data.length - 1].gpt_content
 }
 
@@ -445,20 +447,32 @@ async function submitEditColumnsData(columns: string[]) {
 
   const messageInfo = messageStore.messageList[0]
 
-  const info: TBMessageInfo = {
-    id: messageInfo.id,
-    conversation_id: messageInfo.conversation_id,
-    token_id: messageInfo.token_id,
-    user_content: columns.join(';'),
-    gpt_content: '',
-    create_time: messageInfo.create_time,
-    status: 'waiting',
+  if (messageInfo) {
+    const info: TBMessageInfo = {
+      id: messageInfo.id,
+      conversation_id: messageInfo.conversation_id,
+      token_id: messageInfo.token_id,
+      user_content: columns.join(';'),
+      gpt_content: '',
+      create_time: messageInfo.create_time,
+      status: 'waiting',
+    }
+    await messageStore.updateMessageInfo(info)
+  }
+  else {
+    const info: NewMessageInfo = {
+      conversation_id: converstoreStore.conversationInfo!.id,
+      user_content: columns.join(';'),
+      gpt_content: '',
+      create_time: Date.now(),
+      token_id: uid(32),
+      status: 'waiting',
+      vision_file: undefined,
+    }
+    messageStore.addNewMessage(info)
   }
 
-  await messageStore.updateMessageInfo(info)
-
   loadMessageRecords()
-
   openEditDialog.value = false
 }
 </script>
