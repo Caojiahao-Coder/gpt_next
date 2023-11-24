@@ -362,6 +362,34 @@ function downloadDataToCSV() {
   }
 }
 
+function downloadDataToJSON() {
+  if (loading.value) {
+    push.warning(t('please_wait_for_data_to_be_generated'))
+    return
+  }
+  if (!dataSourceData.value || dataSourceData.value === '') {
+    push.warning(t('please_generate_data_first'))
+    return
+  }
+
+  try {
+    const jsonData = convertMarkdownTableContentToJSON(dataSourceData.value)
+    const blob = new Blob([jsonData], { type: 'application/json;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const link = document.createElement('a')
+    link.setAttribute('href', url)
+    link.setAttribute('download', 'data.json')
+    link.style.visibility = 'hidden'
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    push.success(t('download_json_successful'))
+  }
+  catch {
+    push.error(t('download_json_failed'))
+  }
+}
+
 function convertMarkdownTableContentToCSV(markdownContent: string) {
   let csvData: string = ''
   const markdownTableContent = extractMarkdownTableCode(markdownContent)
@@ -386,6 +414,23 @@ function convertMarkdownTableContentToCSV(markdownContent: string) {
   }
 
   return csvData
+}
+
+function convertMarkdownTableContentToJSON(markdownContent: string): string {
+  const markdownTableContent = extractMarkdownTableCode(markdownContent)
+  const rows = markdownTableContent.split('\n').filter(a => a.startsWith('|'))
+  const header = rows[0].split('|').map(cell => cell.trim()).filter(cell => cell !== '')
+  const data = rows.slice(2).map(row => row.split('|').map(cell => cell.trim()).filter(cell => cell !== ''))
+
+  const jsonData = data.map((row) => {
+    const jsonRow: { [key: string]: string } = {}
+    header.forEach((key, index) => {
+      jsonRow[key] = row[index]
+    })
+    return jsonRow
+  })
+
+  return JSON.stringify(jsonData, null, 2)
 }
 
 function openEditColumnsDialog() {
@@ -426,8 +471,11 @@ async function submitEditColumnsData(columns: string[]) {
           {{ t('data_columns') }}
         </div>
 
-        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base h-26px" @click="openEditColumnsDialog">
-          <div class="h-100% text-8 i-carbon-edit" />
+        <div
+          class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base h-26px shadow"
+          @click="openEditColumnsDialog"
+        >
+          <div class="h-100% text-5 i-carbon-edit" />
         </div>
       </div>
 
@@ -468,16 +516,20 @@ async function submitEditColumnsData(columns: string[]) {
           {{ t('data_result') }}
         </div>
 
-        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base" @click="openPreviewSqlDialog">
+        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base shadow" @click="openPreviewSqlDialog">
           <div class="h-100% text-8 i-carbon-sql" />
         </div>
 
-        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base" @click="downloadDataToCSV">
+        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-0 b-rd hover-bg-base shadow" @click="downloadDataToJSON">
+          <div class="h-100% text-8 i-carbon-json" />
+        </div>
+
+        <div class="bg-body b-solid b-1 border-base p-x-4 p-y-1 b-rd hover-bg-base shadow" @click="downloadDataToCSV">
           <div class="h-100% text-8 i-carbon-csv" />
         </div>
 
         <button
-          class="b-1 b-rd b-solid border-base bg-body hover-bg-base color-base outline-none p-x-4 p-y-2 flex flex-row gap-2"
+          class="b-1 b-rd b-solid border-base bg-body hover-bg-base color-base outline-none p-x-4 p-y-2 flex flex-row gap-2 shadow"
           @click="loadData"
         >
           <div v-if="loading" class="line-height-18px i-svg-spinners-180-ring h-18px" />

@@ -428,7 +428,7 @@ function onSpeechGPTMessageContent() {
       class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
-      <div class="avatar w-8 h-8 b-rd-1 bg-body">
+      <div class="avatar w-8 h-8 b-rd-1 bg-body shadow-2xl">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-user />
       </div>
       <Markdown :content="messageInfo.user_content" />
@@ -440,7 +440,7 @@ function onSpeechGPTMessageContent() {
       />
     </div>
     <div class="record-item gpt-item bg-body border-base relative flex flex-row gap-4" b="0 b-1 solid">
-      <div class="avatar w-8 h-8 b-rd-1">
+      <div class="avatar w-8 h-8 b-rd-1 bg-base shadow-2xl">
         <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
       </div>
       <div class="flex-1 overflow-hidden flex flex-col gap-2">

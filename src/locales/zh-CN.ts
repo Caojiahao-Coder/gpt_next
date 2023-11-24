@@ -114,4 +114,6 @@ export default {
   always_close_daily_tips: '不在启动时显示小贴士',
   next_page: '下一个',
   previous_page: '上一个',
+  download_json_successful: '下载JSON成功!',
+  download_json_failed: '下载JSON失败!',
 }

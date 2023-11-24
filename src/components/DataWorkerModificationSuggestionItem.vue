@@ -122,7 +122,7 @@ async function onSubmitEditMessage() {
       class="record-item user-item bg-base border-base flex flex-row gap-16px relative p-16px" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
-      <div class="avatar w-8 h-8 b-rd-1 bg-body">
+      <div class="avatar w-8 h-8 b-rd-1 bg-body shadow-2xl">
         <div class="w-6 h-6 m-1 b-rd-1 i-carbon-tool-kit" />
       </div>
       <Markdown :content="messageInfo.user_content" />
@@ -168,8 +168,8 @@ async function onSubmitEditMessage() {
     >
       <div flex flex-row>
         <textarea
-          v-model.trim="messageContent" class="flex-1 border-base outline-none bg-body color-base" b="1 solid rd-1"
-          p="x-4 y-2"
+          v-model.trim="messageContent" class="flex-1 border-base outline-none bg-body color-base"
+          b="1 solid rd-1" p="x-4 y-2"
         />
       </div>
       <div flex flex-row m-t-4 gap-2>
