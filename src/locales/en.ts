@@ -114,4 +114,6 @@ export default {
   always_close_daily_tips: 'Don\'t show tips on start up',
   next_page: 'Next',
   previous_page: 'Previous',
+  download_json_successful: 'Download JSON successful!',
+  download_json_failed: 'Download JSON failed!',
 }
