@@ -35,8 +35,8 @@ const openAIVisionStore = useOpenAIVisionStore()
 /**
  * when select new conversations, focus textarea
  */
-watch(() => conversationStore.conversationInfo, () => {
-  if (inputRef.value)
+watch(() => conversationStore.conversationInfo, (oldValue, newValue) => {
+  if (inputRef.value && (!oldValue || oldValue.id !== newValue?.id))
     inputRef.value.focus()
 })
 
