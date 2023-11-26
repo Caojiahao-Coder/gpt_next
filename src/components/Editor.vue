@@ -54,16 +54,24 @@ function onCloseEditor() {
   expand.value = false
 }
 
-/**
- * 发送一条新的消息
- * @param event
- */
-function onKeyDownEnter(event: KeyboardEvent) {
-  event.preventDefault()
-  if (event.isComposing)
-    return
-
-  sendNewMessage()
+function onKeyDown(event: KeyboardEvent) {
+  const textarea = event.target as HTMLTextAreaElement
+  // shift + ctrl
+  if (event.shiftKey && event.keyCode === 13) {
+    event.preventDefault()
+    const startPos = textarea.selectionStart
+    const endPos = textarea.selectionEnd
+    const oldValue = textarea.value
+    textarea.value = `${oldValue.substring(0, startPos)}\n${oldValue.substring(endPos)}`
+    textarea.selectionStart = textarea.selectionEnd = startPos + 1
+  }
+  // enter key
+  else if (event.keyCode === 13) {
+    event.preventDefault()
+    if (event.isComposing)
+      return
+    sendNewMessage()
+  }
 }
 
 function onClickSendMessage() {
@@ -283,7 +291,7 @@ onMounted(() => {
             overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
             class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
             :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
-            @keydown.enter="onKeyDownEnter"
+            @keydown="onKeyDown"
           />
           <div class="flex-1" />
         </div>

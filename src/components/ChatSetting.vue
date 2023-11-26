@@ -41,6 +41,10 @@ watch(role, (newValue) => {
       <div class="text-3 color-gray mt-4" style="font-family: Light;">
         {{ t('prompts') }}
       </div>
+
+      <button>
+        Manage Prompts
+      </button>
     </div>
   </div>
 </template>
