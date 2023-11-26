@@ -117,4 +117,5 @@ export default {
   previous_page: 'Previous',
   download_json_successful: 'Download JSON successful!',
   download_json_failed: 'Download JSON failed!',
+  prompts: 'Prompts',
 }

@@ -37,6 +37,10 @@ watch(role, (newValue) => {
           </option>
         </select>
       </div>
+
+      <div class="text-3 color-gray mt-4" style="font-family: Light;">
+        {{ t('prompts') }}
+      </div>
     </div>
   </div>
 </template>

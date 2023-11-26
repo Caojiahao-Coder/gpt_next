@@ -117,4 +117,5 @@ export default {
   previous_page: '上一个',
   download_json_successful: '下载JSON成功!',
   download_json_failed: '下载JSON失败!',
+  prompts: '提示',
 }
