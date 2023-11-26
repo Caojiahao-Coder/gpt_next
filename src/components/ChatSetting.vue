@@ -19,37 +19,6 @@ watch(role, (newValue) => {
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        {{ t('role') }}
-      </div>
-      <div class="text-4 m-t-2 w-full">
-        <select v-model="role" class="w-full border-base outline-none bg-body color-base" p="x-4 y-2" b="1 solid rd-1">
-          <option value="auto">
-            {{ t('auto') }}
-          </option>
-          <option value="developer">
-            {{ t('developer') }}
-          </option>
-          <option value="doctor">
-            {{ t('doctor') }}
-          </option>
-          <option value="teacher">
-            {{ t('teacher') }}
-          </option>
-          <option value="student">
-            {{ t('student') }}
-          </option>
-          <option value="leader">
-            {{ t('leader') }}
-          </option>
-          <option value="subordinate">
-            {{ t('subordinate') }}
-          </option>
-          <!-- <option value="chinese_culture">
-            {{ t('chinese_culture') }}
-          </option> -->
-        </select>
-      </div>
-      <div class="text-3 color-gray m-t-4" style="font-family: Light;">
         {{ t('language') }}
       </div>
       <div class="text-4 m-t-2 w-full">
