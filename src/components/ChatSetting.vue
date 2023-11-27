@@ -1,11 +1,23 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import PromptsManagement from '@/components/PromptsManagement.vue'
 import { gptRole, language } from '@/store/localstorage'
+import Dialog from '@/ui/Dialog.vue'
 
 const { t } = useI18n()
 
 const role = ref<string>(window.localStorage.getItem('role') ?? 'auto')
+
+const openManagePromptsDialog = ref<boolean>(false)
+
+function toggleManagePromptsDialog() {
+  openManagePromptsDialog.value = !openManagePromptsDialog.value
+}
+
+function onCloseDialog() {
+  openManagePromptsDialog.value = false
+}
 
 watch(role, (newValue) => {
   gptRole.value = newValue
@@ -19,37 +31,6 @@ watch(role, (newValue) => {
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        {{ t('role') }}
-      </div>
-      <div class="text-4 m-t-2 w-full">
-        <select v-model="role" class="w-full border-base outline-none bg-body color-base" p="x-4 y-2" b="1 solid rd-1">
-          <option value="auto">
-            {{ t('auto') }}
-          </option>
-          <option value="developer">
-            {{ t('developer') }}
-          </option>
-          <option value="doctor">
-            {{ t('doctor') }}
-          </option>
-          <option value="teacher">
-            {{ t('teacher') }}
-          </option>
-          <option value="student">
-            {{ t('student') }}
-          </option>
-          <option value="leader">
-            {{ t('leader') }}
-          </option>
-          <option value="subordinate">
-            {{ t('subordinate') }}
-          </option>
-          <!-- <option value="chinese_culture">
-            {{ t('chinese_culture') }}
-          </option> -->
-        </select>
-      </div>
-      <div class="text-3 color-gray m-t-4" style="font-family: Light;">
         {{ t('language') }}
       </div>
       <div class="text-4 m-t-2 w-full">
@@ -68,6 +49,36 @@ watch(role, (newValue) => {
           </option>
         </select>
       </div>
+
+      <div class="text-3 color-gray mt-4" style="font-family: Light;">
+        {{ t('prompts') }}
+      </div>
+
+      <div class="relative">
+        <button
+          class="mt-2 bg-body  color-base outline-none border-base hover-bg-base w-full transition-all px-4 py-2 b-1 b-solid border-base b-rd"
+          @click="toggleManagePromptsDialog"
+        >
+          {{ t("manage_prompts") }}
+        </button>
+
+        <div id="newPanel" class="b-rd color-white text-3 absolute right--3 top--6px rotate-20 font-light px-1 py-1px shadow">
+          New
+        </div>
+      </div>
     </div>
   </div>
+
+  <Dialog
+    :open="openManagePromptsDialog" :title="t('manage_prompts')" :padding="false" :default-full-screen="true"
+    @on-close="onCloseDialog"
+  >
+    <PromptsManagement @on-close="onCloseDialog" />
+  </Dialog>
 </template>
+
+<style scoped>
+#newPanel {
+  background: linear-gradient(221deg, rgba(255, 0, 0, 0.50) 17.49%, rgba(255, 245, 0, 0.34) 85.01%), linear-gradient(115deg, rgba(255, 199, 0, 0.60) 34.42%, rgba(0, 255, 194, 0.60) 100%), linear-gradient(251deg, rgba(255, 0, 0, 0.60) 0%, rgba(191, 7, 255, 0.60) 100%);
+}
+</style>

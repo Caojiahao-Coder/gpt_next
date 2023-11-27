@@ -5,18 +5,21 @@ import { useWindowSize } from '@vueuse/core'
 const props = withDefaults(defineProps<{
   open: boolean
   title: string
+  padding?: boolean
+  defaultFullScreen?: boolean
 }>(), {
+  padding: true,
 })
 
 const emits = defineEmits([
   'onClose',
 ])
 
-const { width, height } = useWindowSize()
+const { width } = useWindowSize()
 
 const dialogRoot = ref<HTMLDivElement>()
 
-const expandDialog = ref<boolean>(false)
+const expandDialog = ref<boolean>(props.defaultFullScreen ?? false)
 
 function toggleExpandDialog() {
   expandDialog.value = !expandDialog.value
@@ -28,7 +31,8 @@ onMounted(() => {
 })
 
 watch(() => props.open, (newValue) => {
-  expandDialog.value = false
+  if ((props.defaultFullScreen ?? false) === false)
+    expandDialog.value = false
   if (newValue === true)
     openModal()
   else
@@ -92,7 +96,7 @@ function closeModal() {
               @click="emits('onClose')"
             />
           </div>
-          <div class="p-4 flex-1 overflow-y-scroll dialog-content-view">
+          <div class=" flex-1 overflow-y-scroll dialog-content-view" :class="padding ? 'p-4' : 'p0'">
             <slot />
           </div>
         </div>

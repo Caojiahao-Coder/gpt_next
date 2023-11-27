@@ -58,12 +58,76 @@ interface NewConverstationInfo {
   type?: 'chat' | 'dataworker' | 'draw_img_mode'
 }
 
+interface TBPromptInfo {
+  id: number
+  title: string
+  create_time: number
+  is_deleted: boolean
+}
+
+interface NewPromptInfo {
+  title: string
+  create_time: number
+  is_deleted: boolean
+}
+
+interface TBPromptDetailInfo {
+  id: number
+  prompt_id: number
+  role: 'user' | 'system' | 'assistant'
+  content: string
+  is_deleted: boolean
+}
+
+interface NewPromptDetailInfo {
+  prompt_id: number
+  role: 'user' | 'system' | 'assistant'
+  content: string
+  is_deleted: boolean
+}
+
+interface TBPromptCategoryInfo {
+  id: number
+  title: string
+  create_time: number
+  is_deleted: boolean
+}
+
+interface NewPromptCategoryInfo {
+  title: string
+  create_time: number
+  is_deleted: boolean
+}
+
+interface TBPromptCategoryListInfo {
+  id: number
+  category_id: number
+  prompt_id: number
+  create_time: number
+  is_deleted: boolean
+}
+
+interface NewPromptCategoryListInfo {
+  category_id: number
+  prompt_id: number
+  create_time: number
+  is_deleted: boolean
+}
+
 export type {
   TBGlobalSettingInfo,
   TBMessageInfo,
   TBConverstationInfo,
+  TBPromptInfo,
+  TBPromptCategoryInfo,
+  TBPromptCategoryListInfo,
+  TBPromptDetailInfo,
 
   NewGlobalSettingInfo,
   NewConverstationInfo,
   NewMessageInfo,
+  NewPromptInfo,
+  NewPromptCategoryInfo,
+  NewPromptCategoryListInfo,
+  NewPromptDetailInfo,
 }

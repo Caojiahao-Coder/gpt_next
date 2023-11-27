@@ -5,10 +5,7 @@ const editorStore = useEditorStore()
 </script>
 
 <template>
-  <div>
-    <div v-if="editorStore.thinking" class="loading-bar" h-1px border-base b="0 b-1 solid" />
-    <div v-else border-base b-t-1 b-0 b-solid />
-  </div>
+  <div v-if="editorStore.thinking" class="loading-bar" h-1px border-base b="0 b-1 solid" />
 </template>
 
 <style scoped>

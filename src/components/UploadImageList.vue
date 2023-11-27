@@ -6,7 +6,11 @@ const openAIVisionStore = useOpenAIVisionStore()
 </script>
 
 <template>
-  <div class="b-0 b-t-1 border-base b-solid color-base">
+  <div
+    class="color-base" :class="[
+      openAIVisionStore.fileList.length > 0 ? 'b-0 b-b-1 b-solid border-base b-rd' : '',
+    ]"
+  >
     <ul class="list-none p-0 m-0 bg-base">
       <UploadImageItem
         v-for="(item, index) in openAIVisionStore.fileList" :key="index" :file-name="item.fileName"

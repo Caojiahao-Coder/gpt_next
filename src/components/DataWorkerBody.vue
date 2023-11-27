@@ -174,6 +174,9 @@ async function loadData() {
       },
     })
 
+    if (!response)
+      return
+
     await parserStreamText(response, (content) => {
       dataSourceData.value = dataSourceData.value + content
     }, (error) => {
@@ -227,6 +230,9 @@ async function loadCreateTableSql() {
         stream: true,
       },
     })
+
+    if (!response)
+      return
 
     await parserStreamText(response, (content) => {
       previewSql.value = previewSql.value + content

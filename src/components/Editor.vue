@@ -13,6 +13,10 @@ import LoadingBar from '@/ui/LoadingBar.vue'
 import { push } from '@/main'
 import useOpenAIVisionStore from '@/store/openai-vision-store'
 import UploadImageList from '@/components/UploadImageList.vue'
+import EditorSmartPanel from '@/components/EditorSmartPanel.vue'
+import usePromptStore from '@/store/prompt-store'
+
+const openSmartPanel = ref<boolean>(false)
 
 const inputRef = ref<HTMLTextAreaElement>()
 
@@ -32,11 +36,13 @@ const errorDialogStore = useErrorDialogStore()
 
 const openAIVisionStore = useOpenAIVisionStore()
 
+const promptStore = usePromptStore()
+
 /**
  * when select new conversations, focus textarea
  */
-watch(() => conversationStore.conversationInfo, () => {
-  if (inputRef.value)
+watch(() => conversationStore.conversationInfo, (oldValue, newValue) => {
+  if (inputRef.value && (!oldValue || oldValue.id !== newValue?.id))
     inputRef.value.focus()
 })
 
@@ -54,16 +60,31 @@ function onCloseEditor() {
   expand.value = false
 }
 
-/**
- * 发送一条新的消息
- * @param event
- */
-function onKeyDownEnter(event: KeyboardEvent) {
-  event.preventDefault()
-  if (event.isComposing)
-    return
-
-  sendNewMessage()
+function onKeyDown(event: KeyboardEvent) {
+  const textarea = event.target as HTMLTextAreaElement
+  // shift + ctrl
+  if (event.shiftKey && event.keyCode === 13) {
+    event.preventDefault()
+    const startPos = textarea.selectionStart
+    const endPos = textarea.selectionEnd
+    const oldValue = textarea.value
+    textarea.value = `${oldValue.substring(0, startPos)}\n${oldValue.substring(endPos)}`
+    textarea.selectionStart = textarea.selectionEnd = startPos + 1
+  }
+  // enter key
+  else if (event.keyCode === 13) {
+    event.preventDefault()
+    if (event.isComposing)
+      return
+    sendNewMessage()
+  }
+  // input / open smart panel
+  else if (!(inputMessage.value?.toString() ?? '').endsWith('/') && event.keyCode === 191 && event.ctrlKey !== true && event.shiftKey !== true) {
+    openSmartPanel.value = true
+    setTimeout(() => {
+      inputRef.value?.blur()
+    }, 100)
+  }
 }
 
 function onClickSendMessage() {
@@ -233,20 +254,53 @@ function handlePasteImage(event: Event) {
 onMounted(() => {
   document.addEventListener('paste', event => handlePasteImage(event))
 })
+
+function clearUserUsePrompt() {
+  promptStore.userUsePrompt = undefined
+}
+
+function onSelectPrompt() {
+  openSmartPanel.value = false
+  inputMessage.value = inputMessage.value.substring(0, inputMessage.value.lastIndexOf('/'))
+  setTimeout(() => {
+    inputRef.value?.focus()
+  }, 100)
+}
 </script>
 
 <template>
   <div>
-    <div v-if="openAIVisionStore.fileList.length >= 1" class="px-4 py-2 flex flex-row gap-2 bg-body select-none">
+    <div
+      v-if="openAIVisionStore.fileList.length >= 1 || promptStore.userUsePrompt"
+      class="px-4 py-2 flex flex-row gap-4 bg-body select-none"
+    >
       <div v-if="openAIVisionStore.fileList.length >= 1" class="flex flex-row line-height-24px gap-2">
-        <div class="color-green m-4px i-carbon-checkmark-filled" />
-        <div class="color-base text-4">
+        <div class="color-green m-y-12px i-carbon-checkmark-filled" />
+        <div class="color-base text-4 line-height-40px">
           {{ t('use_gpt_vision_api') }}
+        </div>
+      </div>
+
+      <div v-if="promptStore.userUsePrompt" class="flex flex-row line-height-24px gap-2">
+        <div class="color-green m-y-12px i-carbon-checkmark-filled" />
+        <div class="color-base text-4 line-height-40px">
+          {{ t('use_custom_prompt') }}
+        </div>
+        <div class="prompt-item-title color-base b-rd-90 px-4 p-r-46px line-height-40px flex flex-row relative">
+          <div class="color-white font-bold">
+            {{ promptStore.userUsePrompt?.title ?? "" }}
+          </div>
+          <div
+            class="bg-white b-rd-90 w-28px h-28px m-y-5px absolute right-5px hover-bg-red transition-all hover-color-white color-red b-1px b-solid border-white"
+            @click="clearUserUsePrompt"
+          >
+            <div class="i-carbon-close w-24px h-24px m-2px" />
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="b-0 b-t-1 border-base border-solid flex flex-row gap-2 p-2">
+    <div class="b-0 b-t-1 b-b-1 border-base border-solid flex flex-row gap-2 p-2">
       <div v-if="width >= 1000" class="w-15%" />
 
       <div
@@ -258,9 +312,13 @@ onMounted(() => {
           {{ t('vision') }}
         </div>
       </div>
-
       <div v-if="width >= 1000" class="w-15%" />
     </div>
+
+    <EditorSmartPanel
+      :open="openSmartPanel" :on-close-callback="() => openSmartPanel = false"
+      @on-close-smart-panel="() => openSmartPanel = false" @on-select-prompt="onSelectPrompt"
+    />
 
     <UploadImageList />
 
@@ -283,7 +341,7 @@ onMounted(() => {
             overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
             class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
             :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
-            @keydown.enter="onKeyDownEnter"
+            @keydown="onKeyDown"
           />
           <div class="flex-1" />
         </div>
@@ -301,5 +359,9 @@ onMounted(() => {
 <style scoped>
 textarea::-webkit-scrollbar {
   display: none;
+}
+
+.prompt-item-title {
+  background: linear-gradient(221deg, rgba(255, 0, 0, 0.50) 17.49%, rgba(255, 245, 0, 0.34) 85.01%), linear-gradient(115deg, rgba(255, 199, 0, 0.60) 34.42%, rgba(0, 255, 194, 0.60) 100%), linear-gradient(251deg, rgba(255, 0, 0, 0.60) 0%, rgba(191, 7, 255, 0.60) 100%);
 }
 </style>
