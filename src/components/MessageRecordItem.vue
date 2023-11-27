@@ -148,7 +148,7 @@ async function getChatAnswer() {
   })
 
   // 包装问答内容
-  const messagesBody = handleChatCompletions(messageData)
+  const messagesBody = await handleChatCompletions(messageData)
 
   const globalStore = useGlobalStore()
   const globalSettingInfo = await globalStore.getGlobalSetting()
@@ -174,6 +174,9 @@ async function getChatAnswer() {
           : undefined,
       },
     })
+
+    if (!response)
+      return
 
     const functionCallingResult = await parserStreamText(response, (content) => {
       gptContent.value = gptContent.value + content
@@ -281,6 +284,9 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
         stream: true,
       },
     })
+
+    if (!response)
+      return
 
     await parserStreamText(response, (content) => {
       gptContent.value = gptContent.value + content
@@ -499,7 +505,8 @@ function onSpeechGPTMessageContent() {
         {{ t('delete') }}
       </button>
       <button
-        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="() => {
           openDeleteConfirmDialog = false
         }"
       >

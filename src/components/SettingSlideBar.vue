@@ -8,6 +8,7 @@ import MessageSpeechSetting from './MessageSpeechSetting.vue'
 import ToolsSetting from './ToolsSetting.vue'
 import FunctionCallingSetting from './FunctionCallingSetting.vue'
 import { expandSettingSideBar } from '@/store/localstorage'
+import TipsButton from '@/components/TipsButton.vue'
 
 const { t } = useI18n()
 
@@ -54,6 +55,8 @@ function toggleExpandSettingSideBar() {
     >
       <div data-cursor="block" class="i-carbon-settings icon-button m-12px" text-6 />
     </div>
+
+    <TipsButton :is-open-setting-bar="expandSettingSideBar" />
   </div>
 </template>
 

@@ -19,6 +19,6 @@ export const expandLeftSideBar: Ref<boolean> = useStorage('expandLeftSideBar', t
 
 export const expandSettingSideBar: Ref<boolean> = useStorage('expandSettingSideBar', true)
 
-export const alwaysCloseDailyTips: Ref<boolean> = useStorage('allowAutoPlay', true)
+export const alwaysCloseDailyTips: Ref<boolean> = useStorage('allowAutoPlay', false)
 
 export const currentDailyTipsIndex: Ref<number> = useStorage('currentDailyTipsIndex', 0)

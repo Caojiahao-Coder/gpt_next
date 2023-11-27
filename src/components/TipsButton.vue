@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import DailyTips from './DailyTips.vue'
 
+defineProps<
+  {
+    isOpenSettingBar: boolean
+  }
+>()
+
 const openDailyTips = ref<boolean>(false)
 
 function onOpenDailyTips() {
@@ -15,8 +21,8 @@ function onCloseDailyTips() {
 
 <template>
   <div
-    class="transition-all inline-block h-48px absolute top-220px bg-base border-base right-0 z-1"
-    b="1 solid rd-tl-3 rd-bl-3" @click="onOpenDailyTips"
+    class="transition-all inline-block h-48px absolute top-220px bg-base border-base z-1"
+    :class="isOpenSettingBar ? 'right-320px' : 'right-0px'" b="1 solid rd-tl-3 rd-bl-3" @click="onOpenDailyTips"
   >
     <div data-cursor="block" class="i-carbon-help m-12px text-6 color-blue" />
   </div>

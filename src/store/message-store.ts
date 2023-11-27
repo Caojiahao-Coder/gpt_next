@@ -67,7 +67,7 @@ const useMessageStore = defineStore('messageStore', () => {
   }
 
   async function createSessionTitle() {
-    const messageData: { role: string; content: string }[] = []
+    const messageData: { role: 'system' | 'user' | 'assistant'; content: string }[] = []
     messageList.value.map((a) => {
       messageData.push({
         role: 'user',
@@ -96,6 +96,9 @@ const useMessageStore = defineStore('messageStore', () => {
         stream: true,
       },
     })
+
+    if (!response)
+      return
 
     let sessionTitle = ''
 
