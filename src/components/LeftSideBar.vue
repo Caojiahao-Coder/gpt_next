@@ -54,13 +54,14 @@ onMounted(() => {
   })
 })
 
-function toggleFilterMenu() {
+function toggleFilterMenu(event: MouseEvent) {
+  event.stopPropagation()
   showFilterMenu.value = !showFilterMenu.value
 }
 
 function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
   filterType.value = type
-  toggleFilterMenu()
+  showFilterMenu.value = false
 }
 </script>
 
@@ -96,7 +97,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
             ]" @click="toggleFilterMenu"
           >
             <div class="i-carbon-filter text-5" />
-            <div id="filter-type-text" class="cursor-pointer select-none">
+            <div id="filter-type-text" class="cursor-pointer select-none" @click="toggleFilterMenu">
               {{ t(`filter_type_${filterType}`) }}
             </div>
           </div>
