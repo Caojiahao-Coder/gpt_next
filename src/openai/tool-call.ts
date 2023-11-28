@@ -64,7 +64,6 @@ async function searchPhotosFromUnsplash(query: string, page: number, per_page: n
       },
     }))
 
-    console.log(result.length)
     const myData = JSON.stringify(result)
     return myData
   }
