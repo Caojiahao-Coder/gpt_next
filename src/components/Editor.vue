@@ -62,8 +62,8 @@ function onCloseEditor() {
 
 function onKeyDown(event: KeyboardEvent) {
   const textarea = event.target as HTMLTextAreaElement
-  // shift + ctrl
-  if (event.shiftKey && event.keyCode === 13) {
+  // shift + enter
+  if (event.shiftKey && event.key === 'Enter') {
     event.preventDefault()
     const startPos = textarea.selectionStart
     const endPos = textarea.selectionEnd
@@ -72,19 +72,25 @@ function onKeyDown(event: KeyboardEvent) {
     textarea.selectionStart = textarea.selectionEnd = startPos + 1
   }
   // enter key
-  else if (event.keyCode === 13) {
+  else if (event.code === 'Enter' && event.ctrlKey !== true && event.shiftKey !== true) {
     event.preventDefault()
     if (event.isComposing)
       return
     sendNewMessage()
   }
-  // input / open smart panel
-  else if (!(inputMessage.value?.toString() ?? '').endsWith('/') && event.keyCode === 191 && event.ctrlKey !== true && event.shiftKey !== true) {
+  // input / and 、 open smart panel
+  else if (!(inputMessage.value?.toString() ?? '').endsWith('/') && event.key === '/' && event.ctrlKey !== true && event.shiftKey !== true) {
     openSmartPanel.value = true
-    setTimeout(() => {
-      inputRef.value?.blur()
-    }, 100)
   }
+}
+
+function onInput(event: Event) {
+  const textarea = event.target as HTMLTextAreaElement
+  const lastTextareaChar = textarea.value[textarea.value.length - 1]
+
+  const otherChars = textarea.value.substring(0, textarea.value.length - 1)
+  if (lastTextareaChar === '、' && (otherChars.length === 0 || !otherChars.endsWith('、')))
+    openSmartPanel.value = true
 }
 
 function onClickSendMessage() {
@@ -341,7 +347,7 @@ function onSelectPrompt() {
             overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
             class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
             :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
-            @keydown="onKeyDown"
+            @keydown="onKeyDown" @input="onInput"
           />
           <div class="flex-1" />
         </div>
