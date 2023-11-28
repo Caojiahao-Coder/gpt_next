@@ -11,7 +11,7 @@ import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
 import useMessageStore from '@/store/message-store'
 import { handleChatCompletions } from '@/openai/handler'
-import { getCurrentWeather, toolsList } from '@/openai/tool-call'
+import { getCurrentWeather, searchPhotosFromUnsplash, toolsList } from '@/openai/tool-call'
 import { fetchChatCompletion } from '@/openai/api'
 import type { ToolCallInfo } from '@/openai/openai-type'
 import useGlobalStore from '@/store/global-store'
@@ -240,16 +240,41 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
     ],
   })
 
-  const lat = JSON.parse(toolCallInfo.function.arguments).lat
-  const lon = JSON.parse(toolCallInfo.function.arguments).lon
-  const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
-  const units = JSON.parse(toolCallInfo.function.arguments).units
-
   let content = ''
 
   switch (toolCallInfo.function.name) {
     case 'get_current_weather':
-      content = await getCurrentWeather(lat, lon, exclude, units)
+      {
+        const lat = JSON.parse(toolCallInfo.function.arguments).lat
+        const lon = JSON.parse(toolCallInfo.function.arguments).lon
+        const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
+        const units = JSON.parse(toolCallInfo.function.arguments).units
+        content = await getCurrentWeather(lat, lon, exclude, units)
+      }
+      break
+    case 'search_photo_from_unsplash':
+      {
+        messages.unshift({
+          role: 'system',
+          content: `
+          You are an image recognition assistant, and you receive several API messages for images that contain information such as image description and image address, please help me organize them, and the result you give me I would like to be able to have a preview image (Regular Size) and other sizes of the image's present address (Image URL).
+          For example:
+          ! [image name](image url)
+          |Size|Download Link|
+          |----|----|
+          |raw|[Download raw Image]:url|
+          |full|[Download full Image]:url||Regular|[Download regular Image]:url
+          |regular|[Download regular Image]:url| |small|[Download small
+          |small|[Download small Image]:url|
+          |thumb|[Download thumb Image]:url|
+          `,
+        })
+
+        const query = JSON.parse(toolCallInfo.function.arguments).query
+        const page = JSON.parse(toolCallInfo.function.arguments).page
+        const per_page = JSON.parse(toolCallInfo.function.arguments).per_page
+        content = await searchPhotosFromUnsplash(query, page, per_page)
+      }
       break
   }
 
@@ -383,7 +408,10 @@ async function onSubmitEditMessage() {
     gpt_content: '',
     create_time: messageInfo.value.create_time,
     status: 'waiting',
-    tool_call: messageInfo.value.tool_call,
+    tool_call: {
+      function_name: messageInfo.value.tool_call?.function_name ?? '',
+      function_description: messageInfo.value.tool_call?.function_description ?? '',
+    },
     vision_file: messageInfo.value.vision_file,
   }
 
@@ -460,7 +488,7 @@ function onSpeechGPTMessageContent() {
 
         <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" :loading="loadingMessageAnswer" />
 
-        <Markdown :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+        <Markdown class="gpt_content" :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
 
         <div class="flex flex-row-reverse gap-2 px-4 select-none">
           <div v-if="messageInfo.vision_file" class="flex flex-row line-height-24px gap-1">
@@ -505,8 +533,7 @@ function onSpeechGPTMessageContent() {
         {{ t('delete') }}
       </button>
       <button
-        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="() => {
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
           openDeleteConfirmDialog = false
         }"
       >

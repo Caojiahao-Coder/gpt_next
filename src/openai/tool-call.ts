@@ -12,6 +12,99 @@ async function getCurrentWeather(lat: string, lon: string, exclude: string, unit
   }
 }
 
+async function searchPhotosFromUnsplash(query: string, page: number, per_page: number) {
+  try {
+    const response = await fetch(`https://gptnext-proxy.vercel.app/image/search/?page=${page}&query=${query}&per_page=10`)
+
+    const data = await response.json() as SearchPhotosFromUnsplashResponse
+    const result: {
+      id: number
+      slug: string
+      created_at: string
+      updated_at: string
+      promoted_at: string
+      width: number
+      height: number
+      color: string
+      blur_hash: string
+      description: string
+      alt_description: string
+      likes: number
+      urls: {
+        raw: string
+        full: string
+        regular: string
+        small: string
+        thumb: string
+      }
+    }[] = []
+
+    // get only per_page items
+    const myImageList = data.results.sort((a, b) => b.likes - a.likes).slice(0, per_page)
+
+    myImageList.map(a => result.push({
+      id: a.id,
+      slug: a.slug,
+      created_at: a.created_at,
+      updated_at: a.updated_at,
+      promoted_at: a.promoted_at,
+      width: a.width,
+      height: a.height,
+      color: a.color,
+      blur_hash: a.blur_hash,
+      description: a.description,
+      alt_description: a.alt_description,
+      likes: a.likes,
+      urls: {
+        raw: a.urls.raw,
+        full: a.urls.full,
+        regular: a.urls.regular,
+        small: a.urls.small,
+        thumb: a.urls.thumb,
+      },
+    }))
+
+    console.log(result.length)
+    const myData = JSON.stringify(result)
+    return myData
+  }
+  catch {
+    return ''
+  }
+}
+
+interface SearchPhotosFromUnsplashResponse {
+  total: number
+  total_pages: number
+  results: {
+    id: number
+    slug: string
+    created_at: string
+    updated_at: string
+    promoted_at: string
+    width: number
+    height: number
+    color: string
+    blur_hash: string
+    description: string
+    alt_description: string
+    urls: {
+      raw: string
+      full: string
+      regular: string
+      small: string
+      thumb: string
+    }
+    links: {
+      self: string
+      html: string
+      download: string
+      download_location: string
+    }
+    likes: number
+  }[]
+}
+
 interface ToolInfo {
   type: 'function'
   function: {
@@ -55,11 +148,36 @@ const toolsList: ToolInfo[] = [{
       required: ['lat', 'lon', 'exclude', 'units'],
     },
   },
+}, {
+  type: 'function',
+  function: {
+    name: 'search_photo_from_unsplash',
+    description: 'Search photos from Unsplash',
+    parameters: {
+      type: 'object',
+      properties: {
+        query: {
+          type: 'string',
+          description: 'Search for the type, category or description of the image (in English)',
+        },
+        page: {
+          type: 'number',
+          description: 'Page number default 1, max 10',
+        },
+        per_page: {
+          type: 'number',
+          description: 'Number of items per page default 1 , max 10',
+        },
+      },
+      required: ['query', 'page', 'per_page'],
+    },
+  },
 }]
 
 export {
   toolsList,
   getCurrentWeather,
+  searchPhotosFromUnsplash,
 }
 
 export type {
