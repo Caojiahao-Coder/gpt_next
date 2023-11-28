@@ -258,8 +258,15 @@ async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: 
           role: 'system',
           content: `
           You are an image recognition assistant, and you receive several API messages for images that contain information such as image description and image address, please help me organize them, and the result you give me I would like to be able to have a preview image (Regular Size) and other sizes of the image's present address (Image URL).
+          It is important that you adhere to the following norms:
+            1. You need to be aware that the introduction of each image and the displayed image need to be on a new line.
+
           For example:
-          ! [image name](image url)
+
+          ![image name](image url)
+
+          ### description
+
           |Size|Download Link|
           |----|----|
           |raw|[Download raw Image]:url|
