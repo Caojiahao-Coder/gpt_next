@@ -42,6 +42,7 @@ function toggleExpandSettingSideBar() {
     <div class="flex-1 overflow-y-scroll setting-bar-menu-list">
       <ChatSetting />
       <OpenAISetting />
+      <!-- <AssistantsSetting /> -->
       <ToolsSetting />
       <FunctionCallingSetting />
       <MessageSpeechSetting />

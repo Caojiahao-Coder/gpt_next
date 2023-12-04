@@ -469,9 +469,7 @@ function onSpeechGPTMessageContent() {
       class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
-      <div class="avatar w-8 h-8 b-rd-1 bg-body shadow-2xl">
-        <div class="w-6 h-6 m-1 b-rd-1" i-carbon-user />
-      </div>
+      <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-2xl" />
       <Markdown :content="messageInfo.user_content" />
 
       <EditMessageRecordTools
@@ -481,9 +479,7 @@ function onSpeechGPTMessageContent() {
       />
     </div>
     <div class="record-item gpt-item bg-base border-base relative flex flex-row gap-4" b="0 b-1 solid">
-      <div class="avatar w-8 h-8 b-rd-1 bg-body shadow-2xl">
-        <div class="w-6 h-6 m-1 b-rd-1" i-carbon-bot />
-      </div>
+      <div class="avatar w-4 h-4 m-2 b-rd-1 bg-body shadow-2xl b-rd-90" />
       <div class="flex-1 overflow-hidden flex flex-col gap-2">
         <CheckingFunctionCalling v-if="checkingFunctionCalling" />
         <MarkFunctionCallingMessage
@@ -584,11 +580,12 @@ function onSpeechGPTMessageContent() {
   padding: 16px;
 }
 
-.gpt-item>.avatar>div {
+.gpt-item>.avatar {
   background: linear-gradient(24deg, #2a2dce 0%, rgba(247, 0, 208, 0.890484) 100%);
 }
 
-.gpt-item {
+.gpt-item,
+.avatar {
   background-image: url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%204096%204096%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22x37ws8lk43i60c%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%221%22%20numOctaves%3D%222.8%22%20stitchTiles%3D%22stitch%22%20%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23x37ws8lk43i60c)%22%20opacity%3D%220.1%22%20%2F%3E%3C%2Fsvg%3E');
 }
 </style>
