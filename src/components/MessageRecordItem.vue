@@ -469,7 +469,7 @@ function onSpeechGPTMessageContent() {
       class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
-      <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-2xl" />
+      <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-xl" />
       <Markdown :content="messageInfo.user_content" />
 
       <EditMessageRecordTools
@@ -479,7 +479,7 @@ function onSpeechGPTMessageContent() {
       />
     </div>
     <div class="record-item gpt-item bg-base border-base relative flex flex-row gap-4" b="0 b-1 solid">
-      <div class="avatar w-4 h-4 m-2 b-rd-1 bg-body shadow-2xl b-rd-90" />
+      <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-90" />
       <div class="flex-1 overflow-hidden flex flex-col gap-2">
         <CheckingFunctionCalling v-if="checkingFunctionCalling" />
         <MarkFunctionCallingMessage
