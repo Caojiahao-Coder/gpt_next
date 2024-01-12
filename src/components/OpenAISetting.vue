@@ -10,16 +10,23 @@ const open = ref<boolean>(false)
 
 const { t } = useI18n()
 
+const globalStore = useGlobalStore()
+
 const apiKey_modal = ref<string>()
-const gptModel_modal = ref<string>('gpt-3.5-turbo-0301')
+const gptModel_modal = ref<string>()
+
+globalStore.getGlobalSetting().then((res) => {
+  if (res) {
+    apiKey_modal.value = res.api_key
+    gptModel_modal.value = res.chat_model ?? 'gpt-3.5-turbo'
+  }
+})
 
 const apiKey = ref<string | undefined>()
 const gptModel = ref<string | undefined>()
 
 const copyApiKeySuccess = ref<boolean>(false)
 const copyApiKeyFailed = ref<boolean>(false)
-
-const globalStore = useGlobalStore()
 
 onMounted(() => {
   loadOpenAISetting()
@@ -87,7 +94,6 @@ function copyOpenAiKey() {
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
       <div class="flex flex-row gap-2">
-        <div class="i-simple-icons-openai h-18px w-18px m-3px" />
         <div class="h-24px flex-1 line-height-24px">
           Open AI
         </div>

@@ -156,7 +156,7 @@ async function getChatAnswer() {
   try {
     loadingMessageAnswer.value = true
 
-    if (!messageInfo.value.vision_file)
+    if (!messageInfo.value.vision_file && globalSettingInfo.chat_model.startsWith('gpt-4'))
       checkingFunctionCalling.value = true
 
     // 第一次执行任务，携带tools进入
@@ -168,8 +168,7 @@ async function getChatAnswer() {
         temperature: 0.7,
         messages: messagesBody,
         stream: true,
-        max_tokens: 4096,
-        tools: !messageInfo.value.vision_file
+        tools: (!messageInfo.value.vision_file && globalSettingInfo.chat_model.startsWith('gpt-4'))
           ? toolsList
           : undefined,
       },

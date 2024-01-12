@@ -137,4 +137,6 @@ export default {
   test_this_prompt: '测试这个对话场景',
   test_result: '测试结果',
   loading_test_result: '正在加载测试结果...',
+  the_feature_only_for_gpt4: '该功能仅适用于GPT-4模型',
+
 }
