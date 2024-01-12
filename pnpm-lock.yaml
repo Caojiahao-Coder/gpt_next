@@ -70,6 +70,9 @@ devDependencies:
   '@iconify-json/devicon-plain':
     specifier: ^1.1.25
     version: 1.1.25
+  '@iconify-json/simple-icons':
+    specifier: ^1.1.82
+    version: 1.1.82
   '@iconify-json/svg-spinners':
     specifier: ^1.1.2
     version: 1.1.2
@@ -586,6 +589,12 @@ packages:
 
   /@iconify-json/devicon-plain@1.1.25:
     resolution: {integrity: sha512-rC+xp6M/8EP/5sEtLvMVQKcp+qda/mnQ6v5Cyq4xUeCvUTp/fttVqnxKcuZE8yessHmPVM5ibUWa1XrGtrFKiA==}
+    dependencies:
+      '@iconify/types': 2.0.0
+    dev: true
+
+  /@iconify-json/simple-icons@1.1.82:
+    resolution: {integrity: sha512-kaBn6XjUn+v5WzoejOKjQFDnqtUSHawMwp4+aOL1C3N//cKjAG4RzNGDahBzgSJBUqCrHvQA1ow/RGQpKe3E2A==}
     dependencies:
       '@iconify/types': 2.0.0
     dev: true

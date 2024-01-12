@@ -137,4 +137,5 @@ export default {
   test_this_prompt: 'Test this prompt',
   test_result: 'Test result',
   loading_test_result: 'Loading test result...',
+  the_feature_only_for_gpt4: 'The feature only for GPT-4',
 }

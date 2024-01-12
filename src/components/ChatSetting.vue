@@ -27,8 +27,14 @@ watch(role, (newValue) => {
 <template>
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
-      {{ t('chat_setting') }}
+      <div class="flex flex-row gap-2">
+        <div class="i-carbon-chat h-18px w-18px m-3px" />
+        <div class="h-24px flex-1 line-height-24px">
+          {{ t('chat_setting') }}
+        </div>
+      </div>
     </div>
+
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
         {{ t('language') }}
@@ -62,7 +68,10 @@ watch(role, (newValue) => {
           {{ t("manage_prompts") }}
         </button>
 
-        <div id="newPanel" class="b-rd color-white text-3 absolute right--3 top--6px rotate-20 font-light px-1 py-1px shadow">
+        <div
+          id="newPanel"
+          class="b-rd color-white text-3 absolute right--3 top--6px rotate-20 font-light px-1 py-1px shadow"
+        >
           New
         </div>
       </div>

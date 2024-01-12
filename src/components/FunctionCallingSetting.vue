@@ -30,6 +30,10 @@ function onCloseView() {
       {{ t('function_calling_setting') }}
     </div>
 
+    <div class="text-14px  h-18px color-gray" p="t-16px l-16px r-16px">
+      {{ t('the_feature_only_for_gpt4') }}
+    </div>
+
     <div class="flex flex-col gap-4 p-4">
       <button
         class="bg-body  color-base outline-none border-base hover-bg-base w-full transition-all px-4 py-2 b-1 b-solid border-base b-rd"
