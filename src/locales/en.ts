@@ -1,4 +1,7 @@
 export default {
+  chatCompletions: {
+    payloadError: 'Please set the api key and chat model first.',
+  },
   save: 'Save',
   cancel: 'Cancel',
   clear: 'Clear',

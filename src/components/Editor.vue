@@ -8,13 +8,14 @@ import { useErrorDialogStore } from '@/store/error-dialog'
 import useMessageStore from '@/store/message-store'
 import useConversationStore from '@/store/conversation-store'
 import useGlobalStore from '@/store/global-store'
-import type { NewMessageInfo } from '@/database/table-type'
+import type { NewMessageInfo, TBPromptInfo } from '@/database/table-type'
 import LoadingBar from '@/ui/LoadingBar.vue'
 import { push } from '@/main'
 import useOpenAIVisionStore from '@/store/openai-vision-store'
 import UploadImageList from '@/components/UploadImageList.vue'
 import EditorSmartPanel from '@/components/EditorSmartPanel.vue'
-import usePromptStore from '@/store/prompt-store'
+
+const selectedPrompt = ref<TBPromptInfo | null>(null)
 
 const openSmartPanel = ref<boolean>(false)
 
@@ -35,8 +36,6 @@ const inputMessage = ref<string>('')
 const errorDialogStore = useErrorDialogStore()
 
 const openAIVisionStore = useOpenAIVisionStore()
-
-const promptStore = usePromptStore()
 
 /**
  * when select new conversations, focus textarea
@@ -80,6 +79,7 @@ function onKeyDown(event: KeyboardEvent) {
   }
   // input / and 、 open smart panel
   else if (!(inputMessage.value?.toString() ?? '').endsWith('/') && event.key === '/' && event.ctrlKey !== true && event.shiftKey !== true) {
+    inputRef.value?.blur()
     openSmartPanel.value = true
   }
 }
@@ -262,10 +262,11 @@ onMounted(() => {
 })
 
 function clearUserUsePrompt() {
-  promptStore.userUsePrompt = undefined
+  selectedPrompt.value = null
 }
 
-function onSelectPrompt() {
+function onSelectPrompt(item: TBPromptInfo) {
+  selectedPrompt.value = item
   openSmartPanel.value = false
   inputMessage.value = inputMessage.value.substring(0, inputMessage.value.lastIndexOf('/'))
   setTimeout(() => {
@@ -277,7 +278,7 @@ function onSelectPrompt() {
 <template>
   <div>
     <div
-      v-if="openAIVisionStore.fileList.length >= 1 || promptStore.userUsePrompt"
+      v-if="openAIVisionStore.fileList.length >= 1 || selectedPrompt"
       class="px-4 py-2 flex flex-row gap-4 bg-body select-none"
     >
       <div v-if="openAIVisionStore.fileList.length >= 1" class="flex flex-row line-height-24px gap-2">
@@ -287,14 +288,14 @@ function onSelectPrompt() {
         </div>
       </div>
 
-      <div v-if="promptStore.userUsePrompt" class="flex flex-row line-height-24px gap-2">
+      <div v-if="selectedPrompt" class="flex flex-row line-height-24px gap-2">
         <div class="color-green m-y-12px i-carbon-checkmark-filled" />
         <div class="color-base text-4 line-height-40px">
           {{ t('use_custom_prompt') }}
         </div>
         <div class="prompt-item-title color-base b-rd-90 px-4 p-r-46px line-height-40px flex flex-row relative">
           <div class="color-white font-bold">
-            {{ promptStore.userUsePrompt?.title ?? "" }}
+            {{ selectedPrompt?.title ?? "" }}
           </div>
           <div
             class="bg-white b-rd-90 w-28px h-28px m-y-5px absolute right-5px hover-bg-red transition-all hover-color-white color-red b-1px b-solid border-white"
@@ -323,7 +324,7 @@ function onSelectPrompt() {
 
     <EditorSmartPanel
       :open="openSmartPanel" :on-close-callback="() => openSmartPanel = false"
-      @on-close-smart-panel="() => openSmartPanel = false" @on-select-prompt="onSelectPrompt"
+      @on-close-smart-panel="() => openSmartPanel = false" @on-select-prompt="(item) => onSelectPrompt(item)"
     />
 
     <UploadImageList />

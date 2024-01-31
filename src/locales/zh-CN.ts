@@ -1,4 +1,7 @@
 export default {
+  chatCompletions: {
+    payloadError: '请先设置 Api Key 和 Chat Model.',
+  },
   save: '保存',
   cancel: '取消',
   clear: '清除',

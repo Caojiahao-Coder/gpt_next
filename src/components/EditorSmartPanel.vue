@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import usePromptStore from '@/store/prompt-store'
 import type { TBPromptInfo } from '@/database/table-type'
+import promptController from '@/chat.prompt/PromptController'
 
 const props = defineProps<{
   onCloseCallback?: () => void
@@ -14,22 +14,24 @@ const open = ref<boolean>(props.open)
 
 const panelRef = ref<HTMLDivElement>()
 
-const promptStore = usePromptStore()
+const promptList = ref<TBPromptInfo[]>([])
 
 watch(() => props.open, (newValue) => {
   open.value = newValue
 })
 
 onMounted(() => {
-  promptStore.loadPromptList()
+  loadPromptList()
 })
+
+async function loadPromptList() {
+  promptList.value = await promptController.loadPromptListAsync()
+}
 
 function onSelectPrompt(event: MouseEvent, item: TBPromptInfo) {
   event.stopPropagation()
-  promptStore.userUsePrompt = item
   open.value = false
-
-  emits('onSelectPrompt')
+  emits('onSelectPrompt', item)
 }
 </script>
 
@@ -37,7 +39,7 @@ function onSelectPrompt(event: MouseEvent, item: TBPromptInfo) {
   <Transition>
     <div v-if="open" ref="panelRef" class="b-0 w-full b-b-1 border-base b-solid flex flex-row flex-wrap py-4 relative">
       <div
-        v-for="(item, index) in promptStore.promptList" :key="index"
+        v-for="(item, index) in promptList" :key="index"
         class="prompt-item b-rd-90 b-1 shadow-2xl py-2 px-4 hover-px-8 b-solid border-base cursor-pointer transition-all mx-2 color-base bg-body"
         @click="(event) => onSelectPrompt(event, item)"
       >
