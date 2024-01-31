@@ -2,7 +2,7 @@
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import PromptsManagement from '@/components/PromptsManagement.vue'
-import { gptRole, language } from '@/store/localstorage'
+import { gptRole } from '@/store/localstorage'
 import Dialog from '@/ui/Dialog.vue'
 
 const { t } = useI18n()
@@ -37,26 +37,6 @@ watch(role, (newValue) => {
 
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
-        {{ t('language') }}
-      </div>
-      <div class="text-4 m-t-2 w-full">
-        <select
-          v-model="language" class="w-full border-base outline-none bg-body color-base" p="x-4 y-2"
-          b="1 solid rd-1"
-        >
-          <option value="auto">
-            {{ t('auto') }}
-          </option>
-          <option value="chinese">
-            {{ t('chinese') }}
-          </option>
-          <option value="english">
-            {{ t('english') }}
-          </option>
-        </select>
-      </div>
-
-      <div class="text-3 color-gray mt-4" style="font-family: Light;">
         {{ t('prompts') }}
       </div>
 
@@ -67,13 +47,6 @@ watch(role, (newValue) => {
         >
           {{ t("manage_prompts") }}
         </button>
-
-        <div
-          id="newPanel"
-          class="b-rd color-white text-3 absolute right--3 top--6px rotate-20 font-light px-1 py-1px shadow"
-        >
-          New
-        </div>
       </div>
     </div>
   </div>
