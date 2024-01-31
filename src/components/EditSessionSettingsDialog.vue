@@ -5,6 +5,7 @@ import Dialog from '@/ui/Dialog.vue'
 import useConversationStore from '@/store/conversation-store'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
 import { push } from '@/main'
+import conversationController from '@/chat.completion/ConversationController'
 
 const { t } = useI18n()
 
@@ -24,7 +25,7 @@ async function onSaveSessionSettings() {
 
   const info = conversationStore.conversationInfo!
 
-  conversationStore.updateConversationInfoById({
+  const newConversationInfo = {
     id: info.id,
     title: title.value,
     create_time: info.create_time,
@@ -33,8 +34,13 @@ async function onSaveSessionSettings() {
     color: color.value,
     fixed_top: info.fixed_top ?? false,
     type: info.type,
-  })
+  }
 
+  const result = await conversationController.updateConversationInfoAsync(newConversationInfo)
+  if (result) {
+    conversationStore.updateConversationList()
+    conversationStore.updateConversationInfoById(newConversationInfo.id)
+  }
   openDialog.value = false
 }
 
@@ -42,7 +48,6 @@ function onOpenEditDialog() {
   title.value = conversationStore.conversationInfo!.title
   description.value = conversationStore.conversationInfo!.description ?? ''
   color.value = conversationStore.conversationInfo!.color
-
   openDialog.value = true
 }
 

@@ -79,8 +79,9 @@ function exportConversation() {
           <div data-cursor="block" class="icon-button i-carbon-audio-console" :title="t('conversation_edit')" />
         </EditSessionSettingsDialog>
         <div
-          v-if="conversationStore.conversationInfo && (conversationStore.conversationInfo?.type ?? 'chat') === 'chat'" data-cursor="block" class="icon-button i-carbon-save-series"
-          :title="t('export')" @click="exportConversation()"
+          v-if="conversationStore.conversationInfo && (conversationStore.conversationInfo?.type ?? 'chat') === 'chat'"
+          data-cursor="block" class="icon-button i-carbon-save-series" :title="t('export')"
+          @click="exportConversation()"
         />
         <div
           v-if="conversationStore.conversationInfo" data-cursor="block" class="icon-button i-carbon-clean"

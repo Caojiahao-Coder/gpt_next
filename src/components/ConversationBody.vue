@@ -5,6 +5,8 @@ import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import MessageRecordItem from './MessageRecordItem.vue'
 import useMessageStore from '@/store/message-store'
 import useConversationStore from '@/store/conversation-store'
+import conversationController from '@/chat.completion/ConversationController'
+import type { TBConverstationInfo } from '@/database/table-type'
 
 const { t } = useI18n()
 
@@ -21,7 +23,7 @@ function onCreateDrawImageConversation() {
   const conversationStore = useConversationStore()
   const info = conversationStore.conversationInfo!
 
-  conversationStore.updateConversationInfoById({
+  const newInfo = {
     id: info.id,
     title: t('draw_img_mode'),
     create_time: info.create_time,
@@ -30,6 +32,12 @@ function onCreateDrawImageConversation() {
     color: 'bg-yellow-2',
     fixed_top: info.fixed_top ?? false,
     type: 'draw_img_mode',
+  }
+
+  conversationController.updateConversationInfoAsync(newInfo as TBConverstationInfo).then((res) => {
+    conversationStore.updateConversationList()
+    if (res)
+      conversationStore.updateConversationInfoById(newInfo.id)
   })
 }
 
@@ -37,7 +45,7 @@ function onCreateMockDataConversation() {
   const conversationStore = useConversationStore()
   const info = conversationStore.conversationInfo!
 
-  conversationStore.updateConversationInfoById({
+  const newInfo = {
     id: info.id,
     title: t('new_data_worker_title'),
     create_time: info.create_time,
@@ -46,6 +54,12 @@ function onCreateMockDataConversation() {
     color: 'bg-blue',
     fixed_top: info.fixed_top ?? false,
     type: 'dataworker',
+  }
+
+  conversationController.updateConversationInfoAsync(newInfo as TBConverstationInfo).then((res) => {
+    conversationStore.updateConversationList()
+    if (res)
+      conversationStore.updateConversationInfoById(newInfo.id)
   })
 }
 </script>

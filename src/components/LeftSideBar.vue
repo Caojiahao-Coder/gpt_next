@@ -4,25 +4,30 @@ import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
-import useConversationStore from '@/store/conversation-store'
-import useMessageStore from '@/store/message-store'
 import { expandLeftSideBar, filterType } from '@/store/localstorage'
+import conversationController from '@/chat.completion/ConversationController'
+import type { NewConverstationInfo } from '@/database/table-type'
+import useConversationStore from '@/store/conversation-store'
 
 const { t } = useI18n()
 
 const showFilterMenu = ref<boolean>(false)
 
+const conversationStore = useConversationStore()
+
 function onCreateNewConversation() {
-  const messageStore = useMessageStore()
-  messageStore.messageList = []
-  const conversationStore = useConversationStore()
-  conversationStore.createNewConversation({
+  const newConversationInfo = {
     title: t('new_conversation_title'),
     color: 'bg-gray',
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
     type: 'chat',
+  } as NewConverstationInfo
+
+  conversationController.addConversationAsync(newConversationInfo).then((res) => {
+    if (res.result === true)
+      conversationStore.updateConversationList()
   })
 }
 
