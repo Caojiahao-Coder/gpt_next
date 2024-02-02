@@ -22,7 +22,7 @@ async function handleChatCompletionPrecondition(promptInfo: TBPromptInfo | null)
               4. if the questions are specialized, you should answer them more professionally.
               5. don't provide any answers that are illegal or against humanitarianism.
     `,
-    })
+    } as ChatCompletionMessage)
   }
   else {
     const promptDetailList = await getPromptDetailList(promptInfo.id)
@@ -39,12 +39,16 @@ async function handleChatCompletionPrecondition(promptInfo: TBPromptInfo | null)
 async function getPromptDetailList(promptId: number): Promise<ChatCompletionMessage[]> {
   const promptDetail = await promptController.getPromptDetailByIdAsync(promptId)
 
-  return promptDetail.map((item) => {
-    return {
-      role: item.role,
-      content: item.content,
-    }
-  })
+  const myData = []
+
+  for (const item of promptDetail) {
+    myData.push({
+      role: item.role as 'user' | 'assistant' | 'system' | 'tool',
+      content: item.content ?? '',
+    })
+  }
+
+  return myData as ChatCompletionMessage[]
 }
 
 export {
