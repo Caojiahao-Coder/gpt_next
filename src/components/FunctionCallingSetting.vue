@@ -1,17 +1,29 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { toolsList } from '@/openai/tool-call'
 import FunctionCallingDetailView from '@/components/FunctionCallingDetailView.vue'
 import type { ToolInfo } from '@/openai/tool-call'
+import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
 
 const { t } = useI18n()
+
+const toolsList = ref<ToolInfo[]>([])
+
+const currentFunctionCallingInfo = ref<ToolInfo>()
 
 const openFunctionCallingListDialog = ref<boolean>(false)
 const fullScreen = ref<boolean>(false)
 const selectedIndex = ref<number>(-1)
 
-const functionCallingInfo = ref<ToolInfo>()
+onMounted(() => {
+  loadToolsList()
+})
+
+function loadToolsList() {
+  toolsList.value = chatFunctionCallingController.getTools()
+  if (toolsList.value.length > 0)
+    currentFunctionCallingInfo.value = toolsList.value[0]
+}
 
 function toggleOpenFunctionCallingListDialog() {
   openFunctionCallingListDialog.value = !openFunctionCallingListDialog.value
@@ -75,15 +87,15 @@ function onCloseView() {
                     class="px4 py2 b-0 b-b-1 b-solid border-base cursor-pointer"
                     :class="[selectedIndex === index ? 'bg-body' : 'bg-base hover-bg-body']" @click="() => {
                       selectedIndex = index
-                      functionCallingInfo = item
+                      currentFunctionCallingInfo = item
                     }"
                   >
-                    {{ item.function.name }}
+                    {{ t(`functionCallingList.${item.function.name}`) }}
                   </li>
                 </ul>
               </div>
               <div id="function_calling_detail" class="flex-1 h-full flex flex-col overflow-y-scroll">
-                <FunctionCallingDetailView :function-calling-info="functionCallingInfo" />
+                <FunctionCallingDetailView :function-calling-info="currentFunctionCallingInfo" />
               </div>
             </div>
           </div>

@@ -16,6 +16,7 @@ export default {
     exploratoryCodeWriting: '探索性代码编写',
   },
   functionCallingList: {
+    author: '作者',
     function_name: '函数名称',
     function_description: '函数描述',
     get_current_weather: '天气查询',

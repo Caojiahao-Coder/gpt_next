@@ -16,6 +16,7 @@ export default {
     exploratoryCodeWriting: 'Exploratory Code Writing',
   },
   functionCallingList: {
+    author: 'Author',
     function_name: 'Function Name',
     function_description: 'Function Description',
     get_current_weather: 'Get Current Weather',
