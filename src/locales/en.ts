@@ -26,6 +26,7 @@ export default {
   },
   messageRecord: {
     message_cancel: 'Message canceled',
+    message_error: 'Message error',
   },
   editMessage: {
     success: 'Edit message success!',

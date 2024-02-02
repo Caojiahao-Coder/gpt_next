@@ -103,6 +103,7 @@ class ChatCompletionHandler {
 
     if (chatCompletionResponse.code !== 1) {
       this.editorStore.thinking = false
+      await this.markMessageError(messageInfo, chatCompletionResponse.message)
       return false
     }
 
@@ -151,6 +152,28 @@ class ChatCompletionHandler {
       token_id: messageInfo.token_id,
       status: 'finished',
       tool_call: tool_call === null ? messageInfo.tool_call : tool_call,
+      vision_file: messageInfo.vision_file,
+    } as TBMessageInfo
+    const result = await messageController.updateMessageInfoAsync(newInfo)
+    return result
+  }
+
+  /**
+   * 标记某个对话请求出现错误
+   * @param messageInfo
+   * @param errorMessage
+   * @returns
+   */
+  async markMessageError(messageInfo: TBMessageInfo, errorMessage: string): Promise<boolean> {
+    const newInfo = {
+      id: messageInfo.id,
+      conversation_id: messageInfo.conversation_id,
+      user_content: messageInfo.user_content,
+      gpt_content: errorMessage,
+      create_time: messageInfo.create_time,
+      token_id: messageInfo.token_id,
+      status: 'error',
+      tool_call: messageInfo.tool_call,
       vision_file: messageInfo.vision_file,
     } as TBMessageInfo
     const result = await messageController.updateMessageInfoAsync(newInfo)
@@ -245,6 +268,7 @@ class ChatCompletionHandler {
 
     if (chatCompletionResponse.code !== 1) {
       this.editorStore.thinking = false
+      await this.markMessageError(messageInfo, chatCompletionResponse.message)
       return false
     }
 

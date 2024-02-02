@@ -260,12 +260,12 @@ function onSpeechGPTMessageContent() {
           :function-name="useFunctionName" :function-description="useFunctionDescription"
         />
 
-        <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" :loading="loadingMessageAnswer" />
+        <div v-if="messageInfo.status !== 'error'">
+          <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" :loading="loadingMessageAnswer" />
 
-        <div>
           <Markdown
             v-if="editorStore.thinking || (messageInfo.status !== 'stop' && !editorStore.thinking)"
-            class="gpt_content" :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''"
+            class="gpt_content" :content="gptContent"
           />
           <div
             v-if="!editorStore.thinking && messageInfo.status === 'stop'"
@@ -282,22 +282,29 @@ function onSpeechGPTMessageContent() {
               {{ t('basic.reload') }}
             </button>
           </div>
+
+          <div class="flex flex-row-reverse gap-2 px-4 select-none">
+            <div v-if="messageInfo.vision_file" class="flex flex-row line-height-24px gap-1">
+              <div class="color-green m-4px i-carbon-checkmark-filled" />
+              <div class="color-fade text-3">
+                {{ t('use_gpt_vision_api') }}
+              </div>
+            </div>
+
+            <div v-if="messageInfo.tool_call" class="flex flex-row h-24px gap-1">
+              <div class="color-green m-4px i-carbon-checkmark-filled" />
+              <div class="color-fade text-3 line-height-24px">
+                {{ t('use_function_calling_tools') }}
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div class="flex flex-row-reverse gap-2 px-4 select-none">
-          <div v-if="messageInfo.vision_file" class="flex flex-row line-height-24px gap-1">
-            <div class="color-green m-4px i-carbon-checkmark-filled" />
-            <div class="color-fade text-3">
-              {{ t('use_gpt_vision_api') }}
-            </div>
+        <div v-else class="b-1 b-rd p-16px border-solid border-red-4 bg-red-1 color-red-7 select-none">
+          <div class="font-bold text-5 m-b-1">
+            {{ t('messageRecord.message_error') }}
           </div>
-
-          <div v-if="messageInfo.tool_call" class="flex flex-row h-24px gap-1">
-            <div class="color-green m-4px i-carbon-checkmark-filled" />
-            <div class="color-fade text-3 line-height-24px">
-              {{ t('use_function_calling_tools') }}
-            </div>
-          </div>
+          <Markdown :content="messageInfo.gpt_content ?? 'Unknown error'" />
         </div>
       </div>
       <div

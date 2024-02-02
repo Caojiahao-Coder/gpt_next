@@ -11,6 +11,12 @@ export default async function ChatCompletionParser(response: Response, callback:
   if (!reader)
     return false
 
+  if (response.status === 400) {
+    const text = await response.text()
+    console.error(text)
+    return false
+  }
+
   let isDone = false
 
   let tool_call_id = ''

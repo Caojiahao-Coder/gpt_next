@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import Dialog from '@/ui/Dialog.vue'
 import type { TBMessageInfo } from '@/database/table-type'
 
 const props = defineProps<{
@@ -54,7 +53,7 @@ function onOpenImgDialog(item: {
 <template>
   <div id="vision-list-view" class="b-1 border-solid border-base b-rd bg-base">
     <div
-      class="py-2 px-4 border-base border-solid flex flex-row select-none gap-2"
+      class="py-2 px-4 border-base border-solid flex flex-row select-none gap-2 bg-body b-rd-t"
       :class="[expand ? 'b-b-1 b-0' : 'b-0 b-rd']" @click="toggleExpand"
     >
       <div v-if="loading" class="m-3px i-svg-spinners-blocks-shuffle-3" />
@@ -72,20 +71,10 @@ function onOpenImgDialog(item: {
       <div
         v-for="(item, index) in fileList" :key="index"
         class="vision-img-item b-rd b-1 w-200px border-solid border-base h-130px overflow-hidden bg-cover bg-center bg-body relative"
-        :style="{ backgroundImage: `url(${item.b64_data})` }" @click="onOpenImgDialog(item)"
-      >
-        <div
-          class="img-item absolute w-200px h-130px b-rd top-0 left-0 transition-all hover-backdrop-blur-5 hover-bg-#50505050 b-rd b-rd"
-        >
-          <div class="i-carbon-maximize text-6 m-auto my-53px transition-all" />
-        </div>
-      </div>
+        :style="{ backgroundImage: `url(${item.b64_data})` }"
+      />
     </div>
   </div>
-
-  <Dialog :open="showImgDialog" :title="openFileName" @on-close="showImgDialog = false">
-    <div id="view-img-detail" class="min-h-300px bg-center bg-no-repeat bg-contain h-100% b-rd overflow-hidden" />
-  </Dialog>
 </template>
 
 <style scoped>

@@ -1,3 +1,4 @@
+import type { OpenAIErrorInfo } from '../type/openai.error'
 import gpt_models from '@/assets/models-list'
 import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
 import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
@@ -58,7 +59,31 @@ class OpenAIServices {
 
       const usedModel = useVisionAPI ? 'gpt-4-vision-preview' : openAIPayload?.model
 
-      const tools = useVisionAPI ? [] : chatFunctionCallingController.getTools()
+      const tools = useVisionAPI ? null : chatFunctionCallingController.getTools()
+
+      let fetchBody = null
+
+      if (tools && tools.length > 0) {
+        fetchBody = JSON.stringify({
+          top_p: topP.value,
+          max_tokens: useVisionAPI ? gpt_models.find(item => item.value === usedModel)?.tokens : null,
+          temperature: temperature.value,
+          stream: true,
+          model: usedModel,
+          messages: message,
+          tools,
+        })
+      }
+      else {
+        fetchBody = JSON.stringify({
+          top_p: topP.value,
+          max_tokens: useVisionAPI ? gpt_models.find(item => item.value === usedModel)?.tokens : null,
+          temperature: temperature.value,
+          stream: true,
+          model: usedModel,
+          messages: message,
+        })
+      }
 
       const fetchPayload = {
         headers: {
@@ -66,27 +91,40 @@ class OpenAIServices {
           'Authorization': `Bearer ${openAIPayload?.apikey}`,
         },
         method: 'POST',
-        body: JSON.stringify({
-          top_p: topP.value,
-          max_tokens: useVisionAPI ? gpt_models.find(item => item.value === usedModel)?.tokens : null,
-          temperature: temperature.value,
-          stream: true,
-          model: usedModel,
-          messages: message,
-          tools: useTools ? tools : null,
-        }),
+        body: fetchBody,
         signal,
       }
 
       const url = `${this.BASE_URL}chat/completions`
 
-      const response = await fetch(url, fetchPayload)
-
-      return {
-        code: 1,
-        data: response,
-        message: '',
-      }
+      return new Promise<OpenAIRequestResult>((resolve) => {
+        fetch(url, fetchPayload)
+          .then(async (response) => {
+            if (response.status !== 200) {
+              const errorJson = await response.text()
+              const errorData = JSON.parse(errorJson) as OpenAIErrorInfo
+              resolve({
+                code: -1,
+                data: null,
+                message: errorData.error.message || 'Unknown error',
+              })
+            }
+            else {
+              resolve({
+                code: 1,
+                data: response,
+                message: '',
+              })
+            }
+          })
+          .catch((e: any) => {
+            resolve({
+              code: -1,
+              data: null,
+              message: 'Unknown error',
+            })
+          })
+      })
     }
     catch (e: any) {
       return {

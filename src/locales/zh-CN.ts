@@ -26,6 +26,7 @@ export default {
   },
   messageRecord: {
     message_cancel: '消息已取消',
+    message_error: '消息错误',
   },
   editMessage: {
     success: '编辑消息成功!',
