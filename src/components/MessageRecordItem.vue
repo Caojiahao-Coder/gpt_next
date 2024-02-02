@@ -7,30 +7,30 @@ import EditMessageRecordTools from './EditMessageRecordTools.vue'
 import CheckingFunctionCalling from './CheckingFunctionCalling.vue'
 import MarkFunctionCallingMessage from './MarkFunctionCallingMessage.vue'
 import WaitingForFunctionCallingResponse from './WaitingForFunctionCallingResponse.vue'
+
 import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
-import useMessageStore from '@/store/message-store'
-import { handleChatCompletions } from '@/openai/handler'
-import { getCurrentWeather, searchPhotosFromUnsplash, toolsList } from '@/openai/tool-call'
-import { fetchChatCompletion } from '@/openai/api'
-import type { ToolCallInfo } from '@/openai/openai-type'
-import useGlobalStore from '@/store/global-store'
-import { parserStreamText } from '@/openai/parser'
 import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
 import { useErrorDialogStore } from '@/store/error-dialog'
 import { useMessageSpeechStore } from '@/store/message-speech-store'
 import { push } from '@/main'
 import GPTVisionList from '@/components/GPTVisionList.vue'
+import useChatCompletionStore from '@/store/chat-completion-store'
+import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
+import getFunctionResultByFunctionName from '@/openai/handler/FunctionHandler'
+import messageController from '@/chat.completion/MessageController'
 
 const props = defineProps<{
   messageInfo: TBMessageInfo
   scrollBody: () => void
 }>()
 
-const editorStore = useEditorStore()
+const events = defineEmits(['onReloadMessageList'])
 
-const messageStore = useMessageStore()
+const chatCompletionStore = useChatCompletionStore()
+
+const editorStore = useEditorStore()
 
 const showTools = ref<boolean>(false)
 
@@ -58,316 +58,86 @@ const checkingFunctionCalling = ref<boolean>(false)
 
 const useFunctionCalling = ref<boolean>(false)
 
+const useFunctionName = ref<string>('')
+
+const useFunctionDescription = ref<string>('')
+
 const loadingMessageAnswer = ref<boolean>(false)
 
 onMounted(() => {
-  /**
-   * 需要请求结果
-   */
-  if (messageInfo.value.status === 'waiting')
-    getChatAnswer()
-
-  else
-    gptContent.value = messageInfo.value.gpt_content
+  loadMessageRecordResult()
 })
 
-/**
- * 获取对话结果
- */
-async function getChatAnswer() {
-  useFunctionCalling.value = false
-
-  editorStore.thinking = true
-
-  const messageData: {
-    role: 'user' | 'assistant' | 'system' | 'tool'
-    content: string | any[]
-  }[] = []
-
-  const data = await messageStore.getMessageRecordsByConversationId(messageInfo.value.conversation_id)
-
-  data.filter(a => a.conversation_id === messageInfo.value!.conversation_id && a.id <= messageInfo.value!.id).map((a) => {
-    if (!a.vision_file || a.status === 'finished') {
-      messageData.push({
-        role: 'user',
-        content: a.user_content,
-      })
-    }
-    else {
-      messageData.push({
-        role: 'system',
-        content: 'You\'re an image recognition assistant.',
-      })
-
-      const content = []
-
-      content.push({
-        type: 'text',
-        text: a.user_content,
-      })
-
-      try {
-        let fileList: {
-          file_name: string
-          b64_data: string
-        }[] = []
-
-        try {
-          if (a.vision_file)
-            fileList = JSON.parse(a.vision_file)
-        }
-        catch {
-          fileList = []
-        }
-
-        for (const file of fileList) {
-          content.push({
-            type: 'image_url',
-            image_url: {
-              url: file.b64_data,
-            },
-          })
-        }
-      }
-      catch {
-
-      }
-      messageData.push({
-        role: 'user',
-        content,
-      })
-    }
-
-    if (a.gpt_content.trim().length !== 0 && a.id !== messageInfo.value.id) {
-      messageData.push({
-        role: 'assistant',
-        content: a.gpt_content,
-      })
-    }
-    return messageData
-  })
-
-  // 包装问答内容
-  const messagesBody = await handleChatCompletions(messageData)
-
-  const globalStore = useGlobalStore()
-  const globalSettingInfo = await globalStore.getGlobalSetting()
-
-  try {
-    loadingMessageAnswer.value = true
-
-    if (!messageInfo.value.vision_file && globalSettingInfo.chat_model.startsWith('gpt-4'))
-      checkingFunctionCalling.value = true
-
-    // 第一次执行任务，携带tools进入
-    const response = await fetchChatCompletion({
-      apikey: globalSettingInfo.api_key,
-      body: {
-        model: messageInfo.value.vision_file ? 'gpt-4-vision-preview' : globalSettingInfo.chat_model,
-        top_p: 1,
-        temperature: 0.7,
-        messages: messagesBody,
-        stream: true,
-        tools: (!messageInfo.value.vision_file && globalSettingInfo.chat_model.startsWith('gpt-4'))
-          ? toolsList
-          : undefined,
-      },
-    })
-
-    if (!response)
-      return
-
-    const functionCallingResult = await parserStreamText(response, (content) => {
-      gptContent.value = gptContent.value + content
-      props.scrollBody()
-    }, (error) => {
-      gptContent.value = error.error.message
-    })
-
-    checkingFunctionCalling.value = false
-    loadingMessageAnswer.value = false
-    if (!functionCallingResult) {
-      setAnswerToMessageItem(gptContent.value, 'finished')
-      if (messageStore.messageList.length === 1) {
-        setTimeout(() => {
-          messageStore.createSessionTitle()
-        }, 120)
-      }
-    }
-    else {
-      getChatAnswerByToolCall(functionCallingResult, messageData)
-    }
-  }
-  catch (error) {
-    setAnswerToMessageItem(String(error), 'error')
-
-    errorDialogStore.message = `Error occurred: ${error}`
-    errorDialogStore.showErrorDialog = true
-    editorStore.thinking = false
-
-    checkingFunctionCalling.value = false
-    useFunctionCalling.value = false
-    loadingMessageAnswer.value = false
+function loadMessageRecordResult() {
+  switch (messageInfo.value.status) {
+    case 'waiting':
+      getAnswer(messageInfo.value.id)
+      break
+    case 'finished':
+      gptContent.value = messageInfo.value.gpt_content
+      break
+    case 'error':
+      break
   }
 }
 
-async function getChatAnswerByToolCall(toolCallInfo: ToolCallInfo, messageData: {
-  role: 'user' | 'assistant' | 'system' | 'tool'
-  content: string | any[]
-}[]) {
+/**
+ * 获取对话的答案
+ */
+async function getAnswer(messageId: number) {
+  gptContent.value = ''
+  checkingFunctionCalling.value = true
+  let needGetFunctionResult = false
+  await chatCompletionStore.chatCompletionHandler?.getMessageAnswer(messageId, value => gptContent.value += value, (tool_call_id, functionName, args, isDone) => {
+    needGetFunctionResult = true
+    handleFunction(tool_call_id, functionName, args)
+  })
+  if (!needGetFunctionResult) {
+    checkingFunctionCalling.value = false
+    reloadMessageInfoFromDB()
+  }
+}
+
+/**
+ * 处理函数
+ * @param tool_call_id
+ * @param functionName
+ * @param args
+ */
+async function handleFunction(tool_call_id: string, functionName: string, args: string) {
+  checkingFunctionCalling.value = false
   useFunctionCalling.value = true
 
-  const functionInfo = toolsList.filter(a => a.function.name === toolCallInfo.function.name)[0]
+  const functionInfo = chatFunctionCallingController.getTools().find(item => item.function.name === functionName)
 
-  const globalStore = useGlobalStore()
-  const globalSettingInfo = await globalStore.getGlobalSetting()
+  useFunctionName.value = t(`functionCallingList.${functionInfo?.function.name}`)
+  useFunctionDescription.value = t(`functionCallingList.${functionInfo?.function.description}`)
 
-  const messages: any[] = []
+  const functionResult = await getFunctionResultByFunctionName(functionName, args)
 
-  messageData.map(item =>
-    messages.push({
-      role: item.role,
-      content: item.content,
-    }),
+  gptContent.value = ''
+
+  const result = await chatCompletionStore.chatCompletionHandler?.getMessageAnswerFromFunctionResult(
+    messageInfo.value.id,
+    tool_call_id,
+    functionName,
+    functionInfo?.function.description ?? '',
+    args,
+    functionResult,
+    value => gptContent.value += value,
   )
 
-  messages.push({
-    role: 'assistant',
-    content: '',
-    tool_calls: [
-      toolCallInfo,
-    ],
-  })
-
-  let content = ''
-
-  switch (toolCallInfo.function.name) {
-    case 'get_current_weather':
-      {
-        const lat = JSON.parse(toolCallInfo.function.arguments).lat
-        const lon = JSON.parse(toolCallInfo.function.arguments).lon
-        const exclude = JSON.parse(toolCallInfo.function.arguments).exclude
-        const units = JSON.parse(toolCallInfo.function.arguments).units
-        content = await getCurrentWeather(lat, lon, exclude, units)
-      }
-      break
-    case 'search_photo_from_unsplash':
-      {
-        messages.unshift({
-          role: 'system',
-          content: `
-          You are an image recognition assistant, and you receive several API messages for images that contain information such as image description and image address, please help me organize them, and the result you give me I would like to be able to have a preview image (Regular Size) and other sizes of the image's present address (Image URL).
-          It is important that you adhere to the following norms:
-            1. You need to be aware that the introduction of each image and the displayed image need to be on a new line.
-
-          For example:
-
-          ![image name](image url)
-
-          ### description
-
-          |Size|Download Link|
-          |----|----|
-          |raw|[Download raw Image]:url|
-          |full|[Download full Image]:url||Regular|[Download regular Image]:url
-          |regular|[Download regular Image]:url| |small|[Download small
-          |small|[Download small Image]:url|
-          |thumb|[Download thumb Image]:url|
-          `,
-        })
-
-        const query = JSON.parse(toolCallInfo.function.arguments).query
-        const page = JSON.parse(toolCallInfo.function.arguments).page
-        const per_page = JSON.parse(toolCallInfo.function.arguments).per_page
-        content = await searchPhotosFromUnsplash(query, page, per_page)
-      }
-      break
-  }
-
-  if (content.length === 0) {
-    setAnswerToMessageItem('Failed to call the networking interface.', 'error', {
-      function_name: functionInfo.function.name,
-      function_description: functionInfo.function.description,
-    })
-
-    errorDialogStore.message = 'Error occurred: Failed to call the networking interface.'
-    errorDialogStore.showErrorDialog = true
-    editorStore.thinking = false
-
-    return
-  }
-
-  messages.push({
-    role: 'tool',
-    tool_call_id: toolCallInfo.id,
-    name: toolCallInfo.function.name,
-    content,
-  })
-
-  try {
-    const response = await fetchChatCompletion({
-      apikey: globalSettingInfo.api_key,
-      body: {
-        model: globalSettingInfo.chat_model,
-        top_p: 1,
-        temperature: 0.7,
-        messages,
-        stream: true,
-      },
-    })
-
-    if (!response)
-      return
-
-    await parserStreamText(response, (content) => {
-      gptContent.value = gptContent.value + content
-      props.scrollBody()
-    }, (error) => {
-      gptContent.value = error.error.message
-    })
-
-    setAnswerToMessageItem(gptContent.value, 'finished', {
-      function_name: functionInfo.function.name,
-      function_description: functionInfo.function.description,
-    })
-    if (messageStore.messageList.length === 1) {
-      setTimeout(() => {
-        messageStore.createSessionTitle()
-      }, 120)
-    }
-  }
-  catch (error) {
-    setAnswerToMessageItem(String(error), 'error')
-
-    errorDialogStore.message = `Error occurred: ${error}`
-    errorDialogStore.showErrorDialog = true
-    editorStore.thinking = false
-    checkingFunctionCalling.value = false
-    useFunctionCalling.value = false
-  }
+  if (result)
+    reloadMessageInfoFromDB()
 }
 
-async function setAnswerToMessageItem(content: string, status: 'finished' | 'error' | 'waiting', tool_call: {
-  function_name: string
-  function_description: string
-} | undefined = undefined) {
-  const info: TBMessageInfo = {
-    id: messageInfo.value.id,
-    conversation_id: messageInfo.value.conversation_id,
-    token_id: messageInfo.value.token_id,
-    user_content: messageInfo.value.user_content,
-    gpt_content: content,
-    create_time: messageInfo.value.create_time,
-    status,
-    tool_call,
-    vision_file: messageInfo.value.vision_file,
-  }
-
-  await messageStore.updateMessageInfo(info)
-  gptContent.value = content
-  messageInfo.value = info
-  editorStore.thinking = false
-  messageStore.messageList = await messageStore.getMessageRecordsByConversationId(props.messageInfo.conversation_id)
+/**
+ * 重载 Message 的 Function 信息
+ */
+async function reloadMessageInfoFromDB() {
+  messageController.getMessageInfoByIdAsync(messageInfo.value.id).then((res) => {
+    messageInfo.value = res as TBMessageInfo
+  })
 }
 
 function onMouseEnter() {
@@ -379,8 +149,7 @@ function onMouseLeave() {
 }
 
 function onReload() {
-  gptContent.value = ''
-  getChatAnswer()
+  getAnswer(messageInfo.value.id)
 }
 
 function onDeleteConfirm() {
@@ -388,11 +157,9 @@ function onDeleteConfirm() {
 }
 
 async function onDelete() {
-  const messageStore = useMessageStore()
-  openDeleteConfirmDialog.value = false
-  await messageStore.deleteMessageItem(messageInfo.value.id)
-  messageStore.messageList = []
-  messageStore.messageList = await messageStore.getMessageRecordsByConversationId(messageInfo.value.conversation_id)
+  const deleteResult = await messageController.deleteMessageByIdAsync(messageInfo.value.id)
+  if (deleteResult)
+    events('onReloadMessageList')
 }
 
 function openEditDialog() {
@@ -421,14 +188,16 @@ async function onSubmitEditMessage() {
     vision_file: messageInfo.value.vision_file,
   }
 
+  const updateResult = await messageController.updateMessageInfoAsync(newInfo)
+
+  if (updateResult) {
+    push.success(t('editMessage.success'))
+    messageInfo.value.user_content = message
+    onReload()
+  }
+  else { push.success(t('editMessage.failed')) }
+
   openEditMessageDialog.value = false
-
-  const messageStore = useMessageStore()
-  await messageStore.updateMessageInfo(newInfo)
-  messageInfo.value = newInfo
-  gptContent.value = ''
-
-  getChatAnswer()
 }
 
 function onExportConversation() {
@@ -465,7 +234,7 @@ function onSpeechGPTMessageContent() {
 <template>
   <div ref="messageRef">
     <div
-      class="record-item user-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
+      class="record-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
       <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-xl" />
@@ -478,19 +247,42 @@ function onSpeechGPTMessageContent() {
       />
     </div>
     <div class="record-item gpt-item bg-base border-base relative flex flex-row gap-4" b="0 b-1 solid">
-      <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-90" />
+      <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-50%" />
       <div class="flex-1 overflow-hidden flex flex-col gap-2">
         <CheckingFunctionCalling v-if="checkingFunctionCalling" />
         <MarkFunctionCallingMessage
           v-if="messageInfo.tool_call !== undefined && !editorStore.thinking"
-          :function-description="messageInfo.tool_call.function_description"
-          :function-name="messageInfo.tool_call.function_name"
+          :function-description="t(`functionCallingList.${messageInfo.tool_call.function_description}`)"
+          :function-name="t(`functionCallingList.${messageInfo.tool_call.function_name}`)"
         />
-        <WaitingForFunctionCallingResponse v-if="editorStore.thinking && useFunctionCalling" />
+        <WaitingForFunctionCallingResponse
+          v-if="editorStore.thinking && useFunctionCalling"
+          :function-name="useFunctionName" :function-description="useFunctionDescription"
+        />
 
         <GPTVisionList v-if="messageInfo.vision_file" :message-info="messageInfo" :loading="loadingMessageAnswer" />
 
-        <Markdown class="gpt_content" :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''" />
+        <div>
+          <Markdown
+            v-if="editorStore.thinking || (messageInfo.status !== 'stop' && !editorStore.thinking)"
+            class="gpt_content" :content="gptContent" :class="messageInfo.status === 'error' ? 'color-red' : ''"
+          />
+          <div
+            v-if="!editorStore.thinking && messageInfo.status === 'stop'"
+            class="flex flex-row gap-2 line-height-32px h-32px color-fade"
+          >
+            <div class="i-carbon-information h-20px w-20px m-6px" />
+            <div>
+              {{ t('messageRecord.message_cancel') }}
+            </div>
+            <button
+              class="outline-none b-1 border-base border-dashed b-rd px-4 hover-bg-base bg-body transition-all color-base"
+              @click="onReload"
+            >
+              {{ t('basic.reload') }}
+            </button>
+          </div>
+        </div>
 
         <div class="flex flex-row-reverse gap-2 px-4 select-none">
           <div v-if="messageInfo.vision_file" class="flex flex-row line-height-24px gap-1">
@@ -577,6 +369,7 @@ function onSpeechGPTMessageContent() {
 <style scoped>
 .record-item {
   padding: 16px;
+  animation: slide-down .3s forwards;
 }
 
 .gpt-item>.avatar {
@@ -586,5 +379,17 @@ function onSpeechGPTMessageContent() {
 .gpt-item,
 .avatar {
   background-image: url('data:image/svg+xml,%3Csvg%20viewBox%3D%220%200%204096%204096%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cfilter%20id%3D%22x37ws8lk43i60c%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%221%22%20numOctaves%3D%222.8%22%20stitchTiles%3D%22stitch%22%20%2F%3E%3C%2Ffilter%3E%3Crect%20width%3D%22100%25%22%20height%3D%22100%25%22%20filter%3D%22url(%23x37ws8lk43i60c)%22%20opacity%3D%220.1%22%20%2F%3E%3C%2Fsvg%3E');
+}
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

@@ -1,8 +1,10 @@
 import { onMounted, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
 import { filterType } from './localstorage'
+import useChatCompletionStore from './chat-completion-store'
 import type { TBConverstationInfo } from '@/database/table-type'
 import conversationController from '@/chat.completion/ConversationController'
+import ChatCompletionHandler from '@/chat.completion/ChatCompletionHandler'
 
 const useConversationStore = defineStore('conversationStore', () => {
   const conversationInfo = ref<TBConverstationInfo | null>(null)
@@ -54,13 +56,24 @@ const useConversationStore = defineStore('conversationStore', () => {
    * 设置当前的对话信息
    * @param info
    */
-  function setConversationInfo(info: TBConverstationInfo) {
-    if (!conversationInfo.value)
-      conversationInfo.value = null
+  function setConversationInfo(info: TBConverstationInfo | null) {
+    const chatCompletionStore = useChatCompletionStore()
+    conversationInfo.value = null
+    chatCompletionStore.chatCompletionHandler = null
 
-    setTimeout(() => {
-      conversationInfo.value = info
-    }, 10)
+    if (info) {
+      setTimeout(() => {
+        conversationInfo.value = info
+        const chatCompletionHandler = new ChatCompletionHandler(info)
+        chatCompletionStore.chatCompletionHandler = chatCompletionHandler
+      }, 10)
+    }
+    else {
+      setTimeout(() => {
+        conversationInfo.value = null
+        chatCompletionStore.chatCompletionHandler = null
+      }, 10)
+    }
   }
 
   /**

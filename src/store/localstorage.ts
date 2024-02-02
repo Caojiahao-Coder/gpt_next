@@ -22,3 +22,9 @@ export const expandSettingSideBar: Ref<boolean> = useStorage('expandSettingSideB
 export const alwaysCloseDailyTips: Ref<boolean> = useStorage('allowAutoPlay', false)
 
 export const currentDailyTipsIndex: Ref<number> = useStorage('currentDailyTipsIndex', 0)
+
+export const topP: Ref<number> = useStorage('topP', 0.5)
+
+export const temperature: Ref<number> = useStorage('temperature', 0.5)
+
+export const chatParameter: Ref<number> = useStorage('chatParameter', 1)

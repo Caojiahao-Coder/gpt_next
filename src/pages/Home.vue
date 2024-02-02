@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import { uid } from 'uid'
 import { useI18n } from 'vue-i18n'
 import BodyHeader from '@/components/BodyHeader.vue'
@@ -15,10 +15,13 @@ import DataWorkerBody from '@/components/DataWorkerBody.vue'
 import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 import conversationController from '@/chat.completion/ConversationController'
 
-const chatContentStore = useConversationStore()
+const conversationStore = useConversationStore()
+
 const errorDialogStore = useErrorDialogStore()
 
 const { t } = useI18n()
+
+const bodyRef = ref<any>(null)
 
 onMounted(() => {
   createNewConversationHotKey()
@@ -43,12 +46,11 @@ function createNewConversation() {
     conversation_token: uid(32),
   }
 
-  conversationController.addConversationAsync(newInfo).then((res) => {
-    if (res.result) {
-      chatContentStore.updateConversationList()
-      setTimeout(() => chatContentStore.updateConversationInfoById(res.id), 20)
-    }
-  })
+  conversationController.addConversationAsync(newInfo)
+}
+
+function onUpdateMessageList() {
+  bodyRef.value?.loadMessageList()
 }
 </script>
 
@@ -58,13 +60,17 @@ function createNewConversation() {
     <div class="flex flex-col flex-1 h-100% overflow-hidden">
       <BodyHeader />
       <div class="flex-1 bg-body overflow-hidden">
-        <WelcomePage v-if="!chatContentStore.conversationInfo" />
-        <ConversationBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'chat'" />
-        <DataWorkerBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'dataworker'" />
-        <DrawImageModeBody v-else-if="(chatContentStore.conversationInfo.type ?? 'chat') === 'draw_img_mode'" />
+        <WelcomePage v-if="!conversationStore.conversationInfo" />
+        <ConversationBody v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'chat'" ref="bodyRef" />
+        <DataWorkerBody v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'dataworker'" ref="bodyRef" />
+        <DrawImageModeBody
+          v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'draw_img_mode'"
+          ref="bodyRef"
+        />
       </div>
       <Editor
-        v-if="(!errorDialogStore.showErrorDialog) && (chatContentStore.conversationInfo?.type ?? 'chat') === 'chat'"
+        v-if="(!errorDialogStore.showErrorDialog) && (conversationStore.conversationInfo?.type ?? 'chat') === 'chat'"
+        @on-sended="onUpdateMessageList"
       />
       <ErrorDialog />
     </div>

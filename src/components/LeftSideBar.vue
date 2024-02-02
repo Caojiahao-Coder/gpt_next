@@ -25,10 +25,7 @@ function onCreateNewConversation() {
     type: 'chat',
   } as NewConverstationInfo
 
-  conversationController.addConversationAsync(newConversationInfo).then((res) => {
-    if (res.result === true)
-      conversationStore.updateConversationList()
-  })
+  conversationController.addConversationAsync(newConversationInfo)
 }
 
 function toggleOpenLeftSideBar() {
@@ -137,7 +134,7 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 
       <ConversationsList />
 
-      <div class="flex flex-row h-47px text-3 border-base select-none color-fade" p="16px" b="0 t-1 solid">
+      <div class="flex flex-row h-48px text-3 border-base select-none color-fade" p="16px" b="0 t-1 solid">
         <div line-height-47px>
           <span>
             Designed By

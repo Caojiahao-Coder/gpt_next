@@ -13,6 +13,7 @@ import '@/style/site.css'
 import 'uno.css'
 import 'notivue/notifications.css'
 import 'notivue/animations.css'
+import 'vue-slider-component/theme/default.css'
 
 inject()
 

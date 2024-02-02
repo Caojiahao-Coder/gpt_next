@@ -17,7 +17,7 @@ class DB {
 
   constructor() {
     this.db = null
-    this.version = 16
+    this.version = 19
   }
 
   /**

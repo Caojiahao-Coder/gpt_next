@@ -11,7 +11,7 @@ interface TBMessageInfo {
   gpt_content: string
   create_time: number
   token_id: string
-  status: 'finished' | 'waiting' | 'error'
+  status: 'finished' | 'waiting' | 'error' | 'stop'
   tool_call?: {
     function_name: string
     function_description: string

@@ -34,7 +34,7 @@ function loadConversationGroupList(conversationList: TBConverstationInfo[]) {
 </script>
 
 <template>
-  <div class="conversations-list flex-1 overflow-x-hidden overflow-y-scroll color-base flex flex-col gap1 p-t1">
+  <div class="conversations-list flex-1 overflow-x-hidden overflow-y-scroll color-base flex flex-col gap1 p-y-1">
     <ConversationGroupList
       v-for="(item, index) in groupList"
       :key="index" :group-title="item" :default-open="item === t('fixed_top') || item === formatTimestamp(Date.now())"

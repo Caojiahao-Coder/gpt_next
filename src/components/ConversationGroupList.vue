@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 import ConversationItem from './ConversationItem.vue'
 import type { TBConverstationInfo } from '@/database/table-type'
+import useConversationStore from '@/store/conversation-store'
+import { formatTimestamp } from '@/utils/date-formatter'
 
 const props = defineProps<{
   groupTitle: string
@@ -9,7 +11,9 @@ const props = defineProps<{
   defaultOpen: boolean
 }>()
 
-const showGroup = ref<boolean>(props.defaultOpen)
+const showGroup = ref<boolean>(
+  formatTimestamp(useConversationStore().conversationInfo?.create_time ?? 0) === props.groupTitle
+  || props.defaultOpen)
 </script>
 
 <template>

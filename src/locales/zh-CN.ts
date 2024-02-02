@@ -1,6 +1,34 @@
 export default {
+  basic: {
+    reload: '刷新',
+  },
   chatCompletions: {
     payloadError: '请先设置 Api Key 和 Chat Model.',
+  },
+  chatParameterList: {
+    title: '参数预设',
+    custom: '自定义',
+    codeGeneration: '代码生成',
+    creativeWriting: '创意写作',
+    chatbotResponses: '聊天机器人回复',
+    codeCommentGeneration: '代码注释生成',
+    dataAnalysisScripting: '数据分析脚本',
+    exploratoryCodeWriting: '探索性代码编写',
+  },
+  functionCallingList: {
+    function_name: '函数名称',
+    function_description: '函数描述',
+    get_current_weather: '天气查询',
+    current_weather_description: '根据用户输入的地区获取当前或未来的天气.',
+    search_photo_from_unsplash: '搜索图片',
+    search_photos_from_unsplash_desc: '根据用户输入的关键词在Unsplash搜索图片.',
+  },
+  messageRecord: {
+    message_cancel: '消息已取消',
+  },
+  editMessage: {
+    success: '编辑消息成功!',
+    failed: '编辑消息失败!',
   },
   save: '保存',
   cancel: '取消',

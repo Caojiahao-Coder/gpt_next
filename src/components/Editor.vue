@@ -2,18 +2,19 @@
 import { useWindowSize } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { uid } from 'uid'
 import useEditorStore from '@/store/editor-store.js'
-import { useErrorDialogStore } from '@/store/error-dialog'
-import useMessageStore from '@/store/message-store'
 import useConversationStore from '@/store/conversation-store'
-import useGlobalStore from '@/store/global-store'
-import type { NewMessageInfo, TBPromptInfo } from '@/database/table-type'
+import type { TBPromptInfo } from '@/database/table-type'
 import LoadingBar from '@/ui/LoadingBar.vue'
-import { push } from '@/main'
-import useOpenAIVisionStore from '@/store/openai-vision-store'
 import UploadImageList from '@/components/UploadImageList.vue'
 import EditorSmartPanel from '@/components/EditorSmartPanel.vue'
+import useChatCompletionStore from '@/store/chat-completion-store'
+import conversationController from '@/chat.completion/ConversationController'
+import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
+import { push } from '@/main'
+import type ChatCompletionHandler from '@/chat.completion/ChatCompletionHandler'
+
+const emits = defineEmits(['onSended'])
 
 const selectedPrompt = ref<TBPromptInfo | null>(null)
 
@@ -33,9 +34,12 @@ const conversationStore = useConversationStore()
 
 const inputMessage = ref<string>('')
 
-const errorDialogStore = useErrorDialogStore()
+const chatCompletionStore = useChatCompletionStore()
 
-const openAIVisionStore = useOpenAIVisionStore()
+const visionFileList = ref<{
+  fileName: string
+  b64Data: string
+}[]>([])
 
 /**
  * when select new conversations, focus textarea
@@ -98,74 +102,51 @@ function onClickSendMessage() {
 }
 
 async function sendNewMessage() {
-  const messageStore = useMessageStore()
-
-  if (editorStore.thinking === true)
-    return
-
   const message = inputMessage.value.trim()
-
   if (message.length === 0) {
     push.error(t('message_cannot_empty'))
     return
   }
 
-  const globalSettingStore = useGlobalStore()
-  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
-
-  if (!globalSettingInfo) {
-    errorDialogStore.message = t('message_apikey_empty')
-    errorDialogStore.showErrorDialog = true
-    return
-  }
-
-  let conversationId = -1
-
-  if (!conversationStore.conversationInfo) {
-    conversationId = await conversationStore.createNewConversation({
-      title: t('new_conversation_title'),
-      color: 'bg-gray',
-      create_time: Date.now(),
-      description: '',
-      conversation_token: uid(32),
-      type: 'chat',
+  if (!chatCompletionStore.chatCompletionHandler) {
+    initConversation().then((res) => {
+      if (res.result) {
+        setTimeout(() => {
+          if (selectedPrompt.value && !chatCompletionStore.chatCompletionHandler?.getPromptInfo())
+            chatCompletionStore.chatCompletionHandler?.setPromptInfo(selectedPrompt.value)
+          pushMessage(chatCompletionStore.chatCompletionHandler as ChatCompletionHandler, message, visionFileList.value.length <= 0 ? null : visionFileList.value)
+        }, 10)
+      }
     })
   }
   else {
-    conversationId = conversationStore.conversationInfo.id
+    pushMessage(chatCompletionStore.chatCompletionHandler as ChatCompletionHandler, message, visionFileList.value.length <= 0 ? null : visionFileList.value)
   }
+}
 
-  const visionFileList: {
-    file_name: string
-    b64_data: string
-  }[] = []
+async function pushMessage(chatCompletionHandler: ChatCompletionHandler, message: string, visionFileList: { fileName: string; b64Data: string }[] | null = null) {
+  if (editorStore.thinking)
+    chatCompletionHandler?.stopMessageAnswer()
 
-  for (const item of openAIVisionStore.fileList) {
-    visionFileList.push({
-      file_name: item.fileName,
-      b64_data: item.fileData,
-    })
-  }
+  const messageId = await chatCompletionHandler?.sendMessage({
+    content: message,
+    role: 'user',
+  } as ChatCompletionMessage, visionFileList)
 
-  const messageInfo: NewMessageInfo = {
-    conversation_id: conversationId,
-    user_content: message,
-    gpt_content: '',
-    create_time: Date.now(),
-    token_id: uid(32),
-    status: 'waiting',
-    vision_file: openAIVisionStore.fileList.length <= 0
-      ? undefined
-      : JSON.stringify(visionFileList),
-  }
+  if (messageId === -1)
+    push.error(t('send_message_failed'))
+  else
+    inputMessage.value = ''
 
-  openAIVisionStore.clearUploadFileList()
+  emits('onSended')
+}
 
-  messageStore.addNewMessage(messageInfo)
-
-  editorStore.thinking = true
-
-  inputMessage.value = ''
+async function initConversation(): Promise<{
+  result: boolean
+  id: number
+}> {
+  const result = await conversationController.createDefaultConversationAsync()
+  return result
 }
 
 function uploadVisionFiles() {
@@ -221,7 +202,10 @@ async function uploadImageFile(files: FileList) {
         canvas.toBlob((blob) => {
           const reader = new FileReader()
           reader.onloadend = function (result) {
-            openAIVisionStore.uploadImageFile(file.name, (result.target?.result ?? '') as string)
+            visionFileList.value.push({
+              fileName: file.name,
+              b64Data: (result.target?.result ?? '') as string,
+            })
           }
           reader.readAsDataURL(blob! as Blob)
         }, 'image/jpeg', 0.7) // 0.7 is the quality factor
@@ -253,7 +237,10 @@ function handlePasteImage(event: Event) {
   const reader = new FileReader()
   reader.readAsDataURL(blob)
   reader.onloadend = function (result) {
-    openAIVisionStore.uploadImageFile(`clipboard${openAIVisionStore.fileList.length + 1}.png`, (result.target?.result ?? '') as string)
+    visionFileList.value.push({
+      fileName: `clipboard${visionFileList.value.length + 1}.png`,
+      b64Data: (result.target?.result ?? '') as string,
+    })
   }
 }
 
@@ -263,25 +250,40 @@ onMounted(() => {
 
 function clearUserUsePrompt() {
   selectedPrompt.value = null
+  chatCompletionStore.chatCompletionHandler?.setPromptInfo(null)
 }
 
 function onSelectPrompt(item: TBPromptInfo) {
   selectedPrompt.value = item
   openSmartPanel.value = false
+  chatCompletionStore.chatCompletionHandler?.setPromptInfo(item)
   inputMessage.value = inputMessage.value.substring(0, inputMessage.value.lastIndexOf('/'))
   setTimeout(() => {
     inputRef.value?.focus()
   }, 100)
 }
+
+function onStopResponse() {
+  chatCompletionStore.chatCompletionHandler?.stopMessageAnswer()
+}
+
+function removeVisionFileByIndex(index: number) {
+  visionFileList.value.splice(index, 1)
+}
 </script>
 
 <template>
-  <div>
-    <div
-      v-if="openAIVisionStore.fileList.length >= 1 || selectedPrompt"
-      class="px-4 py-2 flex flex-row gap-4 bg-body select-none"
-    >
-      <div v-if="openAIVisionStore.fileList.length >= 1" class="flex flex-row line-height-24px gap-2">
+  <div class="relative">
+    <div v-if="editorStore.thinking" class="absolute top--56px w-full flex flex-row" @click="onStopResponse">
+      <div
+        class="flex flex-row m-auto gap-2 b-1 b-solid color-base border-base b-rd-9 bg-base p-x-4 p-y-2 cursor-pointer hover-bg-red-1 dark:hover-bg-red-9 shadow-xl transition-all"
+      >
+        <div class="w-22px h-22px line-height-22px i-carbon-stop" />
+        <div>Stop</div>
+      </div>
+    </div>
+    <div v-if="visionFileList.length >= 1 || selectedPrompt" class="px-4 py-2 flex flex-row gap-4 bg-body select-none">
+      <div v-if="visionFileList.length >= 1" class="flex flex-row line-height-24px gap-2">
         <div class="color-green m-y-12px i-carbon-checkmark-filled" />
         <div class="color-base text-4 line-height-40px">
           {{ t('use_gpt_vision_api') }}
@@ -327,7 +329,10 @@ function onSelectPrompt(item: TBPromptInfo) {
       @on-close-smart-panel="() => openSmartPanel = false" @on-select-prompt="(item) => onSelectPrompt(item)"
     />
 
-    <UploadImageList />
+    <UploadImageList
+      :vision-file-list="visionFileList"
+      @delete-file-by-index="(index) => removeVisionFileByIndex(index)"
+    />
 
     <div
       class="relative color-base transition-all b-0 b-t-1" :class="[
@@ -344,9 +349,8 @@ function onSelectPrompt(item: TBPromptInfo) {
         <div class="flex-1 flex flex-col">
           <div :class="expand === true ? 'h-0' : 'flex-1'" />
           <textarea
-            ref="inputRef" v-model="inputMessage" data-cursor="text" :disabled="editorStore.thinking"
-            overflow="x-hidden y-scroll" :placeholder="editorStore.thinking === true ? t('thinking') : t('enter')"
-            class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
+            ref="inputRef" v-model="inputMessage" data-cursor="text" overflow="x-hidden y-scroll"
+            :placeholder="t('enter')" class="bg-transparent b-0 outline-none color-base text-4 h-100% p-0 m-0"
             :style="{ lineHeight: `${expand === true ? '24px' : '31px'}` }" @focus="onExpandEditor" @blur="onCloseEditor"
             @keydown="onKeyDown" @input="onInput"
           />

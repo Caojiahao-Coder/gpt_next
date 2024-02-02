@@ -1,6 +1,34 @@
 export default {
+  basic: {
+    reload: 'Reload',
+  },
   chatCompletions: {
     payloadError: 'Please set the api key and chat model first.',
+  },
+  chatParameterList: {
+    title: 'Parameter presetting',
+    custom: 'Custom',
+    codeGeneration: 'Code Generation',
+    creativeWriting: 'Creative Writing',
+    chatbotResponses: 'Chatbot Responses',
+    codeCommentGeneration: 'Code Comment Generation',
+    dataAnalysisScripting: 'Data Analysis Scripting',
+    exploratoryCodeWriting: 'Exploratory Code Writing',
+  },
+  functionCallingList: {
+    function_name: 'Function Name',
+    function_description: 'Function Description',
+    get_current_weather: 'Get Current Weather',
+    current_weather_description: 'Get the current or future weather based on the user\'s input.',
+    search_photo_from_unsplash: 'Search Photo',
+    search_photos_from_unsplash_desc: 'Search for photos on Unsplash based on the user\'s input keywords.',
+  },
+  messageRecord: {
+    message_cancel: 'Message canceled',
+  },
+  editMessage: {
+    success: 'Edit message success!',
+    failed: 'Edit message failed!',
   },
   save: 'Save',
   cancel: 'Cancel',

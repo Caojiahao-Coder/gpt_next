@@ -7,8 +7,9 @@ import DataWorker from '@/components/DataWorker.vue'
 import { push } from '@/main'
 import useConversationStore from '@/store/conversation-store'
 import useGlobalStore from '@/store/global-store'
-import type { NewMessageInfo } from '@/database/table-type'
+import type { NewConverstationInfo, NewMessageInfo } from '@/database/table-type'
 import useMessageStore from '@/store/message-store'
+import conversationController from '@/chat.completion/ConversationController'
 
 const { t } = useI18n()
 
@@ -56,24 +57,20 @@ async function onSubmitMessage(columns: string[]) {
 }
 
 async function createDrawImageModeConversation() {
-  const conversationStore = useConversationStore()
-  const globalSettingStore = useGlobalStore()
-
-  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
-
-  if (!globalSettingInfo) {
-    push.error(t('message_apikey_empty'))
-    return
-  }
-
-  await conversationStore.createNewConversation({
+  const newInfo = {
     title: t('draw_img_mode'),
     color: 'bg-yellow-2',
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
     type: 'draw_img_mode',
-  })
+  } as NewConverstationInfo
+
+  createNewConversation(newInfo)
+}
+
+function createNewConversation(newInfo: NewConverstationInfo) {
+  conversationController.addConversationAsync(newInfo)
 }
 </script>
 

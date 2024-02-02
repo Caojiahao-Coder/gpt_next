@@ -1,5 +1,7 @@
+import { uid } from 'uid'
 import { addNewConversationAsync, getConversationByIdAsync, getConversationList as getConversationListAsync, removeConversationByIdAsync, updateConversationInfoAsync } from './ConversationServices'
 import { removeMessagesByConversationIdAsync } from './MessageServices'
+import useConversationStore from '@/store/conversation-store'
 import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type'
 
 class ConversationController {
@@ -20,7 +22,17 @@ class ConversationController {
     result: boolean
     id: number
   }> {
-    return await addNewConversationAsync(info)
+    const result = await addNewConversationAsync(info)
+
+    const conversationInfo = await getConversationByIdAsync(result.id)
+
+    const conversationStore = useConversationStore()
+
+    conversationStore.setConversationInfo(conversationInfo)
+
+    conversationStore.updateConversationList()
+
+    return result
   }
 
   /**
@@ -44,6 +56,13 @@ class ConversationController {
 
     const result = await removeMessagesByConversationIdAsync(conversationId)
 
+    const conversationStore = useConversationStore()
+
+    if (result) {
+      if (conversationStore.conversationInfo?.id === conversationId)
+        conversationStore.setConversationInfo(null)
+    }
+
     return result
   }
 
@@ -53,7 +72,31 @@ class ConversationController {
    * @returns
    */
   async updateConversationInfoAsync(info: TBConverstationInfo): Promise<boolean> {
-    return await updateConversationInfoAsync(info)
+    const result = await updateConversationInfoAsync(info)
+
+    if (result) {
+      const conversationStore = useConversationStore()
+      conversationStore.updateConversationList()
+      conversationStore.updateConversationInfoById(info.id)
+    }
+
+    return result
+  }
+
+  async createDefaultConversationAsync(): Promise < {
+    result: boolean
+    id: number
+  } > {
+    const newInfo = {
+      title: 'New Message',
+      color: 'bg-gray',
+      create_time: Date.now(),
+      description: '',
+      conversation_token: uid(32),
+      type: 'chat',
+    } as NewConverstationInfo
+
+    return await this.addConversationAsync(newInfo)
   }
 }
 

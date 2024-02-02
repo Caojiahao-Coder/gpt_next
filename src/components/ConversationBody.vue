@@ -1,18 +1,34 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import MessageRecordItem from './MessageRecordItem.vue'
-import useMessageStore from '@/store/message-store'
 import useConversationStore from '@/store/conversation-store'
 import conversationController from '@/chat.completion/ConversationController'
-import type { TBConverstationInfo } from '@/database/table-type'
+import type { TBConverstationInfo, TBMessageInfo } from '@/database/table-type'
+import useChatCompletionStore from '@/store/chat-completion-store'
 
 const { t } = useI18n()
 
-const messageRecordsStore = useMessageStore()
-
 const bodyRef = ref<HTMLDivElement>()
+
+const myMessageList = ref<TBMessageInfo[]>([])
+
+const chatCompletionStore = useChatCompletionStore()
+
+defineExpose({
+  loadMessageList,
+})
+
+onMounted(() => {
+  loadMessageList()
+})
+
+async function loadMessageList() {
+  const messageList = await chatCompletionStore.chatCompletionHandler?.getMessageList()
+  myMessageList.value = messageList ?? []
+  updateScroll()
+}
 
 function updateScroll() {
   if (bodyRef.value)
@@ -34,11 +50,7 @@ function onCreateDrawImageConversation() {
     type: 'draw_img_mode',
   }
 
-  conversationController.updateConversationInfoAsync(newInfo as TBConverstationInfo).then((res) => {
-    conversationStore.updateConversationList()
-    if (res)
-      conversationStore.updateConversationInfoById(newInfo.id)
-  })
+  updateConversationInfo(newInfo as TBConverstationInfo)
 }
 
 function onCreateMockDataConversation() {
@@ -56,11 +68,11 @@ function onCreateMockDataConversation() {
     type: 'dataworker',
   }
 
-  conversationController.updateConversationInfoAsync(newInfo as TBConverstationInfo).then((res) => {
-    conversationStore.updateConversationList()
-    if (res)
-      conversationStore.updateConversationInfoById(newInfo.id)
-  })
+  updateConversationInfo(newInfo as TBConverstationInfo)
+}
+
+function updateConversationInfo(newInfo: TBConverstationInfo) {
+  conversationController.updateConversationInfoAsync(newInfo)
 }
 </script>
 
@@ -68,13 +80,13 @@ function onCreateMockDataConversation() {
   <div ref="bodyRef" class="relative h-100% records-list color-base bg-body" overflow="x-hidden y-scroll">
     <div id="conversation-body">
       <MessageRecordItem
-        v-for="(item, index) in messageRecordsStore.messageList" :key="index" :message-info="item"
-        :scroll-body="updateScroll"
+        v-for="(item, index) in myMessageList" :key="index" :message-info="item"
+        :scroll-body="updateScroll" @on-reload-message-list="() => loadMessageList()"
       />
     </div>
 
     <div
-      v-if="!messageRecordsStore.messageList || messageRecordsStore.messageList.length === 0"
+      v-if="myMessageList.length <= 0"
       class="flex flex-row gap-4 flex-wrap justify-center py-4"
     >
       <EditSessionSettingsDialog>

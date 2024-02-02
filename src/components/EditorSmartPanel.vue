@@ -18,6 +18,8 @@ const promptList = ref<TBPromptInfo[]>([])
 
 watch(() => props.open, (newValue) => {
   open.value = newValue
+  if (newValue)
+    loadPromptList()
 })
 
 onMounted(() => {
