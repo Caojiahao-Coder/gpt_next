@@ -70,7 +70,7 @@ function fixedTop() {
 
 <template>
   <div
-    class="b-1 border-base b-solid flex flex-row gap-2 p-3 cursor-pointer m-2 b-rd " :class="[
+    class="b-1 border-base b-solid flex flex-row gap-2 p-3 cursor-pointer m-1 b-rd " :class="[
       conversationStore.conversationInfo?.conversation_token! === props.conversationInfo.conversation_token! ? 'bg-gray-2 dark:bg-dark-8 selected' : '',
     ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false"
   >
