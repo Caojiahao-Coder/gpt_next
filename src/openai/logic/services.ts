@@ -32,7 +32,6 @@ class OpenAIServices {
       this.controller = new AbortController()
     }
     catch (e: any) {
-      console.warn(e.message)
     }
   }
 
@@ -43,14 +42,14 @@ class OpenAIServices {
    * @param useTools
    * @returns
    */
-  public async createChatCompletionsRequest(message: ChatCompletionMessage[], useVisionAPI: boolean, useTools = true): Promise<OpenAIRequestResult> {
+  public async createChatCompletionsRequest(message: ChatCompletionMessage[], useVisionAPI: boolean): Promise<OpenAIRequestResult> {
     const openAIPayload = await this.getOpenAIPayload()
 
     if (!openAIPayload) {
       return Promise.resolve({
         code: -1,
         data: null,
-        message: 'Can\'t get OpenAI payload',
+        message: 'Can\'t get OpenAI payload; Please check your API key and model settings.',
       })
     }
 
@@ -170,6 +169,78 @@ class OpenAIServices {
     }
     catch (e: any) {
       return null
+    }
+  }
+
+  public async createImagesGenerationsRequest(message: string, imageStyle: string): Promise<OpenAIRequestResult> {
+    const openAIPayload = await this.getOpenAIPayload()
+
+    if (!openAIPayload) {
+      return Promise.resolve({
+        code: -1,
+        data: null,
+        message: 'Can\'t get OpenAI payload; Please check your API key and model settings.',
+      })
+    }
+
+    try {
+      const signal = this.controller.signal
+
+      const fetchPayload = {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${openAIPayload?.apikey}`,
+        },
+        method: 'POST',
+        body: JSON.stringify({
+          model: 'dall-e-3',
+          prompt: message,
+          n: 1,
+          quality: 'hd',
+          style: imageStyle,
+          size: '1024x1024',
+          response_format: 'b64_json',
+        }),
+        signal,
+      }
+
+      const url = `${this.BASE_URL}images/generations`
+
+      return new Promise<OpenAIRequestResult>((resolve) => {
+        fetch(url, fetchPayload)
+          .then(async (response) => {
+            if (response.status !== 200) {
+              const errorJson = await response.text()
+              const errorData = JSON.parse(errorJson) as OpenAIErrorInfo
+              resolve({
+                code: -1,
+                data: null,
+                message: errorData.error.message || 'Unknown error',
+              })
+            }
+            else {
+              resolve({
+                code: 1,
+                data: response,
+                message: '',
+              })
+            }
+          })
+          .catch((e: any) => {
+            resolve({
+              code: -1,
+              data: null,
+              message: 'Unknown error',
+            })
+          })
+      })
+    }
+    catch (e: any) {
+      return {
+        code: -1,
+        data: null,
+        message: e.message,
+      }
     }
   }
 }

@@ -7,12 +7,10 @@ import EditMessageRecordTools from './EditMessageRecordTools.vue'
 import CheckingFunctionCalling from './CheckingFunctionCalling.vue'
 import MarkFunctionCallingMessage from './MarkFunctionCallingMessage.vue'
 import WaitingForFunctionCallingResponse from './WaitingForFunctionCallingResponse.vue'
-
 import type { TBMessageInfo } from '@/database/table-type'
 import Markdown from '@/components/Markdown.vue'
 import useEditorStore from '@/store/editor-store'
 import Dialog from '@/ui/Dialog.vue'
-import { useErrorDialogStore } from '@/store/error-dialog'
 import { useMessageSpeechStore } from '@/store/message-speech-store'
 import { push } from '@/main'
 import GPTVisionList from '@/components/GPTVisionList.vue'
@@ -48,8 +46,6 @@ const messageInfo = ref<TBMessageInfo>(props.messageInfo)
 
 const gptContent = ref<string>('')
 
-const errorDialogStore = useErrorDialogStore()
-
 const speeching = ref<boolean>(false)
 
 const gptMessageSpeechStatus = ref<'pending' | 'processing' | 'finished'>('finished')
@@ -63,6 +59,8 @@ const useFunctionName = ref<string>('')
 const useFunctionDescription = ref<string>('')
 
 const loadingMessageAnswer = ref<boolean>(false)
+
+const waitingFunctionResult = ref<boolean>(false)
 
 onMounted(() => {
   loadMessageRecordResult()
@@ -107,6 +105,7 @@ async function getAnswer(messageId: number) {
 async function handleFunction(tool_call_id: string, functionName: string, args: string) {
   checkingFunctionCalling.value = false
   useFunctionCalling.value = true
+  waitingFunctionResult.value = true
 
   const functionInfo = chatFunctionCallingController.getTools().find(item => item.function.name === functionName)
 
@@ -114,6 +113,7 @@ async function handleFunction(tool_call_id: string, functionName: string, args: 
   useFunctionDescription.value = t(`functionCallingList.${functionInfo?.function.description}`)
 
   const functionResult = await getFunctionResultByFunctionName(functionName, args)
+  waitingFunctionResult.value = false
 
   gptContent.value = ''
 
@@ -249,14 +249,14 @@ function onSpeechGPTMessageContent() {
     <div class="record-item gpt-item bg-base border-base relative flex flex-row gap-4" b="0 b-1 solid">
       <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-50%" />
       <div class="flex-1 overflow-hidden flex flex-col gap-2">
-        <CheckingFunctionCalling v-if="checkingFunctionCalling" />
+        <CheckingFunctionCalling v-if="editorStore.thinking && checkingFunctionCalling" />
         <MarkFunctionCallingMessage
           v-if="messageInfo.tool_call !== undefined && !editorStore.thinking"
           :function-description="t(`functionCallingList.${messageInfo.tool_call.function_description}`)"
           :function-name="t(`functionCallingList.${messageInfo.tool_call.function_name}`)"
         />
         <WaitingForFunctionCallingResponse
-          v-if="editorStore.thinking && useFunctionCalling"
+          v-if="editorStore.thinking && useFunctionCalling && waitingFunctionResult"
           :function-name="useFunctionName" :function-description="useFunctionDescription"
         />
 

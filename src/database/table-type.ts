@@ -41,7 +41,7 @@ interface NewMessageInfo {
   gpt_content: string
   create_time: number
   token_id: string
-  status: 'finished' | 'waiting'
+  status: 'finished' | 'waiting' | 'error'
   tool_call?: {
     function_name: string
     function_description: string

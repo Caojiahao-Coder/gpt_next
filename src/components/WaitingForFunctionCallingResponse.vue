@@ -12,7 +12,7 @@ const { t } = useI18n()
 <template>
   <div id="checking-view" class="b-1 border-base b-solid b-rd line-height-36px bg-base color-fade transition-all">
     <div class="flex flex-row line-height-32px">
-      <div class="w-24px h-24px m-4px mr-8px i-carbon-information-square-filled" />
+      <div class="w-18px h-18px m-7px mr-8px i-svg-spinners-ring-resize" />
       <div class="h-32px">
         {{ t('waiting_for_function_calling_response') }}
       </div>

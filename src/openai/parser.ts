@@ -1,5 +1,4 @@
 import type { MessageResultByStreamType, ToolCallInfo } from './openai-type'
-import { useErrorDialogStore } from '@/store/error-dialog'
 
 /**
  * 将Stream转换成text
@@ -25,9 +24,6 @@ export async function parserStreamText(response: Response, callback: (content: s
         code: string
       }
     } = await response.json()
-    const errorDialog = useErrorDialogStore()
-    errorDialog.showErrorDialog = true
-    errorDialog.message = result.error.message.length === 0 ? result.error.code : result.error.code
     errorCallback(result)
     return
   }

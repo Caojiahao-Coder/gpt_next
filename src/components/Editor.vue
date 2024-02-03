@@ -124,14 +124,14 @@ async function sendNewMessage() {
   }
 }
 
-async function pushMessage(chatCompletionHandler: ChatCompletionHandler, message: string, visionFileList: { fileName: string; b64Data: string }[] | null = null) {
+async function pushMessage(chatCompletionHandler: ChatCompletionHandler, message: string, fileList: { fileName: string; b64Data: string }[] | null = null) {
   if (editorStore.thinking)
     chatCompletionHandler?.stopMessageAnswer()
 
   const messageId = await chatCompletionHandler?.sendMessage({
     content: message,
     role: 'user',
-  } as ChatCompletionMessage, visionFileList)
+  } as ChatCompletionMessage, fileList)
 
   if (messageId === -1)
     push.error(t('send_message_failed'))
@@ -139,6 +139,8 @@ async function pushMessage(chatCompletionHandler: ChatCompletionHandler, message
     inputMessage.value = ''
 
   emits('onSended')
+
+  visionFileList.value = []
 }
 
 async function initConversation(): Promise<{
@@ -282,14 +284,7 @@ function removeVisionFileByIndex(index: number) {
         <div>Stop</div>
       </div>
     </div>
-    <div v-if="visionFileList.length >= 1 || selectedPrompt" class="px-4 py-2 flex flex-row gap-4 bg-body select-none">
-      <div v-if="visionFileList.length >= 1" class="flex flex-row line-height-24px gap-2">
-        <div class="color-green m-y-12px i-carbon-checkmark-filled" />
-        <div class="color-base text-4 line-height-40px">
-          {{ t('use_gpt_vision_api') }}
-        </div>
-      </div>
-
+    <div v-if="selectedPrompt" class="px-4 py-2 flex flex-row gap-4 bg-body select-none">
       <div v-if="selectedPrompt" class="flex flex-row line-height-24px gap-2">
         <div class="color-green m-y-12px i-carbon-checkmark-filled" />
         <div class="color-base text-4 line-height-40px">

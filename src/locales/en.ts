@@ -32,6 +32,14 @@ export default {
     success: 'Edit message success!',
     failed: 'Edit message failed!',
   },
+  dataWork: {
+    create_data_work_error: 'Create data work failed!',
+  },
+  drawImg: {
+    failed: 'Failed to generate image! Please try again later.',
+    loading_hint: 'Generating image...',
+    prompt_empty_hint: 'Please enter your requirements...',
+  },
   save: 'Save',
   cancel: 'Cancel',
   clear: 'Clear',

@@ -264,7 +264,7 @@ class ChatCompletionHandler {
       name: functionName,
     } as ChatCompletionMessage)
 
-    const chatCompletionResponse = await openAIServices.createChatCompletionsRequest(messageList, useVisionAPI, false)
+    const chatCompletionResponse = await openAIServices.createChatCompletionsRequest(messageList, useVisionAPI)
 
     if (chatCompletionResponse.code !== 1) {
       this.editorStore.thinking = false
@@ -293,6 +293,13 @@ class ChatCompletionHandler {
 
     this.editorStore.thinking = false
     return (parserResult && markResult)
+  }
+
+  /**
+   * 通过对话ID清楚聊天记录
+   */
+  async clearMessageByConversationId(): Promise<boolean> {
+    return await messageController.clearMessagesByConversationIdAsync(this.conversationInfo.id)
   }
 
   private async generateMessageListByMessageInfo(messageInfo: TBMessageInfo): Promise<ChatCompletionMessage[]> {

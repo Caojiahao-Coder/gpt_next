@@ -98,6 +98,38 @@ class ConversationController {
 
     return await this.addConversationAsync(newInfo)
   }
+
+  async createDataWorkerConversationAsync(): Promise<{
+    result: boolean
+    id: number
+  }> {
+    const newInfo = {
+      title: 'Data Worker',
+      color: 'bg-blue',
+      create_time: Date.now(),
+      description: '',
+      conversation_token: uid(32),
+      type: 'dataworker',
+    } as NewConverstationInfo
+
+    return await this.addConversationAsync(newInfo)
+  }
+
+  async createDrawImageConversationAsync(): Promise<{
+    result: boolean
+    id: number
+  }> {
+    const newInfo = {
+      title: 'Draw Image',
+      color: 'bg-yellow-2',
+      create_time: Date.now(),
+      description: '',
+      conversation_token: uid(32),
+      type: 'draw_img_mode',
+    } as NewConverstationInfo
+
+    return await this.addConversationAsync(newInfo)
+  }
 }
 
 const conversationController = new ConversationController()

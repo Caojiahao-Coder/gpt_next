@@ -64,7 +64,7 @@ const useConversationStore = defineStore('conversationStore', () => {
     if (info) {
       setTimeout(() => {
         conversationInfo.value = info
-        const chatCompletionHandler = new ChatCompletionHandler(info)
+        const chatCompletionHandler = new ChatCompletionHandler(info, null)
         chatCompletionStore.chatCompletionHandler = chatCompletionHandler
       }, 10)
     }

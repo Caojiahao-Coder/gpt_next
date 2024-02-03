@@ -32,6 +32,14 @@ export default {
     success: '编辑消息成功!',
     failed: '编辑消息失败!',
   },
+  dataWork: {
+    create_data_work_error: '创建数据工作流失败!',
+  },
+  drawImg: {
+    failed: '生成图片失败! 请稍后重新尝试。',
+    loading_hint: '正在生成图片...',
+    prompt_empty_hint: '请输入你的要求...',
+  },
   save: '保存',
   cancel: '取消',
   clear: '清除',

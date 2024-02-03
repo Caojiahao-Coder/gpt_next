@@ -8,16 +8,12 @@ import LeftSideBar from '@/components/LeftSideBar.vue'
 import ConversationBody from '@/components/ConversationBody.vue'
 import SettingSlideBar from '@/components/SettingSlideBar.vue'
 import WelcomePage from '@/components/WelcomePage.vue'
-import ErrorDialog from '@/components/ErrorDialog.vue'
-import { useErrorDialogStore } from '@/store/error-dialog'
 import useConversationStore from '@/store/conversation-store'
 import DataWorkerBody from '@/components/DataWorkerBody.vue'
 import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 import conversationController from '@/chat.completion/ConversationController'
 
 const conversationStore = useConversationStore()
-
-const errorDialogStore = useErrorDialogStore()
 
 const { t } = useI18n()
 
@@ -58,7 +54,7 @@ function onUpdateMessageList() {
   <main class="flex flex-row h-100vh bg-base overflow-hidden">
     <LeftSideBar />
     <div class="flex flex-col flex-1 h-100% overflow-hidden">
-      <BodyHeader />
+      <BodyHeader @on-update-message-list="onUpdateMessageList()" />
       <div class="flex-1 bg-body overflow-hidden">
         <WelcomePage v-if="!conversationStore.conversationInfo" />
         <ConversationBody v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'chat'" ref="bodyRef" />
@@ -68,11 +64,7 @@ function onUpdateMessageList() {
           ref="bodyRef"
         />
       </div>
-      <Editor
-        v-if="(!errorDialogStore.showErrorDialog) && (conversationStore.conversationInfo?.type ?? 'chat') === 'chat'"
-        @on-sended="onUpdateMessageList"
-      />
-      <ErrorDialog />
+      <Editor v-if="(conversationStore.conversationInfo?.type ?? 'chat') === 'chat'" @on-sended="onUpdateMessageList" />
     </div>
     <SettingSlideBar />
   </main>

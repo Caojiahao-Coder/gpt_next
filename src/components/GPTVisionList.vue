@@ -34,26 +34,12 @@ onMounted(() => {
 function toggleExpand() {
   expand.value = !expand.value
 }
-
-function onOpenImgDialog(item: {
-  file_name: string
-  b64_data: string
-}) {
-  showImgDialog.value = true
-  openFileData.value = item.b64_data
-  openFileName.value = item.file_name
-  setTimeout(() => {
-    const element = document.getElementById('view-img-detail')
-    if (element)
-      element.style.backgroundImage = `url(${item.b64_data})`
-  }, 100)
-}
 </script>
 
 <template>
-  <div id="vision-list-view" class="b-1 border-solid border-base b-rd bg-base">
+  <div id="vision-list-view" class="b-1 border-solid border-base b-rd bg-base m-b-2">
     <div
-      class="py-2 px-4 border-base border-solid flex flex-row select-none gap-2 bg-body b-rd-t"
+      class="py-5px px-4 border-base border-solid flex flex-row select-none gap-2 bg-body b-rd-t"
       :class="[expand ? 'b-b-1 b-0' : 'b-0 b-rd']" @click="toggleExpand"
     >
       <div v-if="loading" class="m-3px i-svg-spinners-blocks-shuffle-3" />

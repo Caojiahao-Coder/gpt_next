@@ -5,11 +5,9 @@ import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
 import DataWorker from '@/components/DataWorker.vue'
 import { push } from '@/main'
-import useConversationStore from '@/store/conversation-store'
-import useGlobalStore from '@/store/global-store'
-import type { NewConverstationInfo, NewMessageInfo } from '@/database/table-type'
-import useMessageStore from '@/store/message-store'
+import type { NewMessageInfo } from '@/database/table-type'
 import conversationController from '@/chat.completion/ConversationController'
+import messageController from '@/chat.completion/MessageController'
 
 const { t } = useI18n()
 
@@ -23,54 +21,26 @@ async function onSubmitMessage(columns: string[]) {
     return
   }
 
-  const conversationStore = useConversationStore()
-  const messageStore = useMessageStore()
-  const globalSettingStore = useGlobalStore()
+  const dataWorkerResult = await conversationController.createDataWorkerConversationAsync()
 
-  const globalSettingInfo = await globalSettingStore.getGlobalSetting()
-
-  if (!globalSettingInfo) {
-    push.error(t('message_apikey_empty'))
-    return
+  if (dataWorkerResult.result) {
+    const messageInfo: NewMessageInfo = {
+      conversation_id: dataWorkerResult.id,
+      user_content: columns.join(';'),
+      gpt_content: '',
+      create_time: Date.now(),
+      token_id: uid(32),
+      status: 'waiting',
+    }
+    messageController.addNewMessageAsync(messageInfo)
   }
-
-  let conversationId = -1
-
-  conversationId = await conversationStore.createNewConversation({
-    title: t('new_data_worker_title'),
-    color: 'bg-blue',
-    create_time: Date.now(),
-    description: '',
-    conversation_token: uid(32),
-    type: 'dataworker',
-  })
-
-  const messageInfo: NewMessageInfo = {
-    conversation_id: conversationId,
-    user_content: columns.join(';'),
-    gpt_content: '',
-    create_time: Date.now(),
-    token_id: uid(32),
-    status: 'waiting',
+  else {
+    push.error(t('dataWork.create_data_work_error'))
   }
-  messageStore.addNewMessage(messageInfo)
 }
 
-async function createDrawImageModeConversation() {
-  const newInfo = {
-    title: t('draw_img_mode'),
-    color: 'bg-yellow-2',
-    create_time: Date.now(),
-    description: '',
-    conversation_token: uid(32),
-    type: 'draw_img_mode',
-  } as NewConverstationInfo
-
-  createNewConversation(newInfo)
-}
-
-function createNewConversation(newInfo: NewConverstationInfo) {
-  conversationController.addConversationAsync(newInfo)
+function createDrawImageModeConversation() {
+  conversationController.createDrawImageConversationAsync()
 }
 </script>
 

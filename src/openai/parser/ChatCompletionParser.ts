@@ -38,6 +38,9 @@ export default async function ChatCompletionParser(response: Response, callback:
 
       const myData = parserStreamText(a.trim())
 
+      if (!myData)
+        return
+
       isDone = a.startsWith('data: [DONE]') || myData.choices[0].finish_reason === 'stop'
 
       const value = myData.choices[0].delta?.content ?? ''
@@ -71,13 +74,18 @@ export default async function ChatCompletionParser(response: Response, callback:
   return true
 }
 
-function parserStreamText(text: string): ChatCompletionChunk {
-  if (text.startsWith('data: '))
-    text = text.substring(6)
+function parserStreamText(text: string): ChatCompletionChunk | null {
+  try {
+    if (text.startsWith('data: '))
+      text = text.substring(6)
 
-  if (text.startsWith('{'))
-    text = text.trim()
+    if (text.startsWith('{'))
+      text = text.trim()
 
-  const data = JSON.parse(text) as ChatCompletionChunk
-  return data
+    const data = JSON.parse(text) as ChatCompletionChunk
+    return data
+  }
+  catch {
+    return null
+  }
 }

@@ -5,10 +5,14 @@ import html2canvas from 'html2canvas'
 import { uid } from 'uid'
 import EditSessionSettingsDialog from './EditSessionSettingsDialog.vue'
 import useConversationStore from '@/store/conversation-store'
-import useMessageStore from '@/store/message-store'
 import Dialog from '@/ui/Dialog.vue'
 import MessageSpeech from '@/components/MessageSpeech.vue'
 import { expandLeftSideBar } from '@/store/localstorage'
+import useChatCompletionStore from '@/store/chat-completion-store'
+
+const events = defineEmits([
+  'onUpdateMessageList',
+])
 
 const { t } = useI18n()
 
@@ -28,12 +32,16 @@ function closeDialog() {
   openConfirmDialog.value = false
 }
 
-function clearMessageRecords() {
-  if (!conversationStore.conversationInfo)
+async function clearMessageRecords() {
+  const chatCompletionStore = useChatCompletionStore()
+  if (!chatCompletionStore.chatCompletionHandler)
     return
-  const messageStore = useMessageStore()
-  messageStore.clearRecords()
-  openConfirmDialog.value = false
+
+  const result = await chatCompletionStore.chatCompletionHandler.clearMessageByConversationId()
+  if (result) {
+    events('onUpdateMessageList')
+    openConfirmDialog.value = false
+  }
 }
 
 function exportConversation() {
