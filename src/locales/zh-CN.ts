@@ -34,11 +34,20 @@ export default {
   },
   dataWork: {
     create_data_work_error: '创建数据工作流失败!',
+    no_data_columns: '没有找到相关数据列！',
+    update_message_failed: '更新消息失败!',
+    update_message_success: '更新消息成功!',
+    add_modification_suggestion_failed: '添加修改建议失败!',
+    add_modification_suggestion_success: '添加修改建议成功!',
   },
   drawImg: {
     failed: '生成图片失败! 请稍后重新尝试。',
     loading_hint: '正在生成图片...',
     prompt_empty_hint: '请输入你的要求...',
+  },
+  underfine_conversation: {
+    title: '未定义对话',
+    desc: '很遗憾，MockData 功能在 V2.0.0 中被移除，所以所有 MockData 接口将无法正常显示。'
   },
   save: '保存',
   cancel: '取消',

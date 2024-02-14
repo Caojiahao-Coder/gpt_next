@@ -194,14 +194,11 @@ class DB {
         .delete(key)
 
       request!.onsuccess = () => {
-        if (request?.result)
-          resolve(request.result)
-
-        else
-          resolve(-1)
+        resolve(true)
       }
 
       request!.onerror = (error) => {
+        resolve(false)
         reject(error)
       }
     })

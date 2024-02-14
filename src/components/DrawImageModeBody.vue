@@ -202,12 +202,16 @@ function downloadImg() {
 <template>
   <div class="bg-body h-full flex flex-col">
     <div id="editor-view" class="bg-base p-4 b-0 b-b-1 b-solid border-base flex flex-col gap-2">
-      <input v-model.trim="prompt" class=" outline-none w-full color-base text-4 bg-transparent b-0 min-w-100%"
-        :placeholder="t('draw_img_hint')" @keydown.enter="generateImage">
+      <input
+        v-model.trim="prompt" class=" outline-none w-full color-base text-4 bg-transparent b-0 min-w-100%"
+        :placeholder="t('draw_img_hint')" @keydown.enter="generateImage"
+      >
 
       <div class="flex flex-row-reverse gap-2">
-        <button class="outline-none b-1 b-rd border-base b-solid p-2 bg-body color-base hover-bg-base px-4"
-          @click="generateImage">
+        <button
+          class="outline-none b-1 b-rd border-base b-solid p-2 bg-body color-base hover-bg-base px-4"
+          @click="generateImage"
+        >
           <div class="flex flex-row gap-2">
             <div v-if="loadingImg" class="i-svg-spinners-270-ring h-18px w-18px" />
             <div>{{ loadingImg ? t('generate_image_ing') : t('generate_image') }}</div>
@@ -220,12 +224,16 @@ function downloadImg() {
     <div class="flex-1 flex flex-row overflow-hidden bg-base relative">
       <div id="canvas-root-view" class="flex flex-col flex-1 overflow-hidden">
         <div class="b-0 b-b-1 b-solid border-base p-2 px-4 flex flex-row gap-2">
-          <button class="bg-body hover-bg-base outline-none b-1 b-solid border-base color-base p-2 b-rd px-4"
-            @click="previousImg">
+          <button
+            class="bg-body hover-bg-base outline-none b-1 b-solid border-base color-base p-2 b-rd px-4"
+            @click="previousImg"
+          >
             {{ t('previous_img') }}
           </button>
-          <button class="bg-body hover-bg-base outline-none b-1 b-solid border-base color-base p-2 b-rd px-4"
-            @click="nextImg">
+          <button
+            class="bg-body hover-bg-base outline-none b-1 b-solid border-base color-base p-2 b-rd px-4"
+            @click="nextImg"
+          >
             {{ t('next_img') }}
           </button>
           <div class="line-height-38px color-base">
@@ -239,12 +247,16 @@ function downloadImg() {
           </div>
 
           <div class="b-1 b-rd border-base b-solid p-1 flex flex-row color-base text-3 cursor-pointer gap-1 select-none">
-            <div class="b-1 b-rd border-base b-solid p-1 flex flex-row px-2"
-              :class="imgStyle === 'vivid' ? 'bg-blue-5 color-white' : 'bg-body'" @click="() => imgStyle = 'vivid'">
+            <div
+              class="b-1 b-rd border-base b-solid p-1 flex flex-row px-2"
+              :class="imgStyle === 'vivid' ? 'bg-blue-5 color-white' : 'bg-body'" @click="() => imgStyle = 'vivid'"
+            >
               {{ t('vivid_mode') }}
             </div>
-            <div class="b-1 b-rd border-base b-solid p-1 flex flex-row px-2"
-              :class="imgStyle === 'natural' ? 'bg-blue-5 color-white' : 'bg-body'" @click="() => imgStyle = 'natural'">
+            <div
+              class="b-1 b-rd border-base b-solid p-1 flex flex-row px-2"
+              :class="imgStyle === 'natural' ? 'bg-blue-5 color-white' : 'bg-body'" @click="() => imgStyle = 'natural'"
+            >
               {{ t('natural_mode') }}
             </div>
           </div>
@@ -252,36 +264,47 @@ function downloadImg() {
           <div>
             <button
               class="b-1 b-rd border-base b-solid h-38px line-height-38px flex flex-row py-0 px-4 bg-green hover-bg-green-5 color-white"
-              @click="uploadImg">
+              @click="uploadImg"
+            >
               {{ t('upload_img') }}
             </button>
           </div>
         </div>
 
-        <div id="canvas" class="flex flex-col gap-2 m-auto"
-          :style="{ width: `${canvasSize}px`, height: `${canvasSize}px` }">
+        <div
+          id="canvas" class="flex flex-col gap-2 m-auto"
+          :style="{ width: `${canvasSize}px`, height: `${canvasSize}px` }"
+        >
           <div v-if="isErrorItem" class="color-red">
             Error message: {{ errorMessage }}
           </div>
-          <div ref="canvasRef"
-            class="relative flex-1 bg-base b-rd shadow-xl b-1 b-solid border-base bg-no-repeat bg-cover bg-center">
-            <div v-if="!isErrorItem"
+          <div
+            ref="canvasRef"
+            class="relative flex-1 bg-base b-rd shadow-xl b-1 b-solid border-base bg-no-repeat bg-cover bg-center"
+          >
+            <div
+              v-if="!isErrorItem"
               class="b-rd-b flex flex-row absolute bottom-0 left-0 bg-#50505080 w-full backdrop-blur"
-              :class="showImgPrompt ? `max-h-${canvasSize}px` : 'max-h-48px'">
+              :class="showImgPrompt ? `max-h-${canvasSize}px` : 'max-h-48px'"
+            >
               <div class="color-light m-8px line-height-32px flex-1 ellipsis" :class="showImgPrompt ? '' : 'text-nowrap'">
                 {{ imgPrompt }}
               </div>
-              <div class="w-18px h-18px m-15px color-light"
+              <div
+                class="w-18px h-18px m-15px color-light"
                 :class="showImgPrompt ? 'i-carbon-chevron-down' : 'i-carbon-chevron-up'"
-                @click="() => showImgPrompt = !showImgPrompt" />
+                @click="() => showImgPrompt = !showImgPrompt"
+              />
             </div>
           </div>
         </div>
       </div>
 
-      <div v-if="!openEditTools"
+      <div
+        v-if="!openEditTools"
         class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-80px right-24px hover-bg-base transition-all"
-        @click="toggleOpenEditTools">
+        @click="toggleOpenEditTools"
+      >
         <div class="i-carbon-edit color-base w-24px h-24px m-8px" />
       </div>
 
@@ -289,15 +312,18 @@ function downloadImg() {
         class="image-edit-tool absolute w-40px h-40px b-rd-90 b-solid border-base b-1 bg-body shadow-xl top-140px hover-bg-base transition-all"
         :class="[
           openEditTools ? 'right-380px' : 'right-24px',
-        ]" @click="downloadImg">
+        ]" @click="downloadImg"
+      >
         <div class="i-carbon-download color-base w-24px h-24px m-8px" />
       </div>
     </div>
   </div>
-  <div id="edit-message-list"
+  <div
+    id="edit-message-list"
     class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all" :class="[
       openEditTools ? 'w-360px' : 'w-0px',
-    ]">
+    ]"
+  >
     <div class="p-13px pt-14px b-0 b-b-1 border-base b-solid color-base font-bold text-5 flex flex-row">
       <div class="flex-1">
         {{ t('edit_img') }}
@@ -307,26 +333,34 @@ function downloadImg() {
 
     <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base" />
 
-    <input disabled class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
-      :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }">
+    <input
+      disabled class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
+      :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
+    >
   </div>
 
-  <Dialog :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
-    openDeleteConfirmDialog = false
-  }">
+  <Dialog
+    :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
+      openDeleteConfirmDialog = false
+    }"
+  >
     <div color-red>
       {{ t('session_clear_warning') }}
     </div>
 
     <div flex flex-row gap-2 m-t-2>
       <div flex-1 />
-      <button class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-        @click="onDelete()">
+      <button
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="onDelete()"
+      >
         {{ t('delete') }}
       </button>
-      <button class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
-        openDeleteConfirmDialog = false
-      }">
+      <button
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
+          openDeleteConfirmDialog = false
+        }"
+      >
         {{ t('cancel') }}
       </button>
     </div>

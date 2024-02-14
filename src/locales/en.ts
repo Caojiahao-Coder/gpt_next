@@ -34,11 +34,20 @@ export default {
   },
   dataWork: {
     create_data_work_error: 'Create data work failed!',
+    no_data_columns: 'No related data columns found!',
+    update_message_failed: 'Update message failed!',
+    update_message_success: 'Update message success!',
+    add_modification_suggestion_failed: 'Add modification suggestion failed!',
+    add_modification_suggestion_success: 'Add modification suggestion success!',
   },
   drawImg: {
     failed: 'Failed to generate image! Please try again later.',
     loading_hint: 'Generating image...',
     prompt_empty_hint: 'Please enter your requirements...',
+  },
+  underfine_conversation: {
+    title: 'Undefined Conversation',
+    desc: 'Unfortunately, the MockData feature was removed in V2.0.0, so all MockData interfaces will not display properly.'
   },
   save: 'Save',
   cancel: 'Cancel',

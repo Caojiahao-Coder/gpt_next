@@ -7,13 +7,10 @@ import ConversationsList from './ConversationsList.vue'
 import { expandLeftSideBar, filterType } from '@/store/localstorage'
 import conversationController from '@/chat.completion/ConversationController'
 import type { NewConverstationInfo } from '@/database/table-type'
-import useConversationStore from '@/store/conversation-store'
 
 const { t } = useI18n()
 
 const showFilterMenu = ref<boolean>(false)
-
-const conversationStore = useConversationStore()
 
 function onCreateNewConversation() {
   const newConversationInfo = {

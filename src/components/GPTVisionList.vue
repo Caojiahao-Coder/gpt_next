@@ -7,11 +7,6 @@ const props = defineProps<{
   loading: boolean
 }>()
 
-const showImgDialog = ref<boolean>(false)
-
-const openFileName = ref<string>('')
-const openFileData = ref<string>('')
-
 const fileList = ref<{
   file_name: string
   b64_data: string

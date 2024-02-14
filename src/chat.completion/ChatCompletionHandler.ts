@@ -133,6 +133,47 @@ class ChatCompletionHandler {
     return (parserResult && markResult)
   }
 
+  async getDataWorkAnswer(messageId: number, messageList: ChatCompletionMessage[], resultCallback: (value: string) => void) {
+    this.editorStore.thinking = true
+
+    this.lastMessageId = messageId
+
+    // 得到请求包
+    const chatCompletionResponse = await openAIServices.createDataWorkRequest(messageList)
+
+    const messageInfo = await messageController.getMessageInfoByIdAsync(messageId)
+
+    if (chatCompletionResponse.code !== 1) {
+      this.editorStore.thinking = false
+      await this.markMessageError(messageInfo, chatCompletionResponse.message)
+      return false
+    }
+
+    let parserResult = false
+
+    let markResult = false
+
+    let needFunctionResult = false
+
+    if (chatCompletionResponse.data !== null) {
+      let gptContent = ''
+
+      parserResult = await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
+        gptContent += text
+        resultCallback(text)
+      }, () => {
+        needFunctionResult = true
+      })
+
+      if (parserResult)
+        markResult = await this.markMessageCompleted(messageInfo, gptContent)
+    }
+
+    if (!needFunctionResult)
+      this.editorStore.thinking = false
+    return (parserResult && markResult)
+  }
+
   /**
    * 标记某个对话请求已经完成
    * @param messageInfo
@@ -281,7 +322,7 @@ class ChatCompletionHandler {
       parserResult = await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
         gptContent += text
         resultCallback(text)
-      }, () => {})
+      }, () => { })
 
       if (parserResult) {
         markResult = await this.markMessageCompleted(messageInfo, gptContent, {

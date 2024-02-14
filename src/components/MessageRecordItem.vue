@@ -86,7 +86,7 @@ async function getAnswer(messageId: number) {
   gptContent.value = ''
   checkingFunctionCalling.value = true
   let needGetFunctionResult = false
-  await chatCompletionStore.chatCompletionHandler?.getMessageAnswer(messageId, value => gptContent.value += value, (tool_call_id, functionName, args, isDone) => {
+  await chatCompletionStore.chatCompletionHandler?.getMessageAnswer(messageId, value => gptContent.value += value, (tool_call_id, functionName, args, _) => {
     needGetFunctionResult = true
     handleFunction(tool_call_id, functionName, args)
   })
@@ -237,7 +237,7 @@ function onSpeechGPTMessageContent() {
       class="record-item bg-base border-base flex flex-row gap-16px relative" b="0 b-1 solid"
       @mouseenter="onMouseEnter" @mouseleave="onMouseLeave"
     >
-      <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-xl" />
+      <div class="avatar w-4 h-4 m-2 b-rd-90 b-rd-1 bg-gray shadow-xl flex-shrink-0" />
       <Markdown :content="messageInfo.user_content" />
 
       <EditMessageRecordTools
@@ -247,7 +247,7 @@ function onSpeechGPTMessageContent() {
       />
     </div>
     <div class="record-item gpt-item bg-base border-base relative flex flex-row gap-4" b="0 b-1 solid">
-      <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-50%" />
+      <div class="avatar w-4 h-4 m-2 bg-body shadow-xl b-rd-50% flex-shrink-0" />
       <div class="flex-1 overflow-hidden flex flex-col gap-2">
         <CheckingFunctionCalling v-if="editorStore.thinking && checkingFunctionCalling" />
         <MarkFunctionCallingMessage

@@ -25,7 +25,7 @@ async function addNewConversationAsync(info: NewConverstationInfo): Promise<{
           result: true,
           id: res as number,
         })
-      }).catch((e) => {
+      }).catch(() => {
         resolve({
           result: false,
           id: -1,

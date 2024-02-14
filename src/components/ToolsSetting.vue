@@ -1,43 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { uid } from 'uid'
 import { useI18n } from 'vue-i18n'
-import Dialog from '@/ui/Dialog.vue'
-import DataWorker from '@/components/DataWorker.vue'
-import { push } from '@/main'
-import type { NewMessageInfo } from '@/database/table-type'
 import conversationController from '@/chat.completion/ConversationController'
-import messageController from '@/chat.completion/MessageController'
 
 const { t } = useI18n()
-
-const openDialog = ref<boolean>(false)
-
-async function onSubmitMessage(columns: string[]) {
-  openDialog.value = false
-
-  if (columns.length === 0) {
-    push.warning('Sorry you at least add one columns to table!')
-    return
-  }
-
-  const dataWorkerResult = await conversationController.createDataWorkerConversationAsync()
-
-  if (dataWorkerResult.result) {
-    const messageInfo: NewMessageInfo = {
-      conversation_id: dataWorkerResult.id,
-      user_content: columns.join(';'),
-      gpt_content: '',
-      create_time: Date.now(),
-      token_id: uid(32),
-      status: 'waiting',
-    }
-    messageController.addNewMessageAsync(messageInfo)
-  }
-  else {
-    push.error(t('dataWork.create_data_work_error'))
-  }
-}
 
 function createDrawImageModeConversation() {
   conversationController.createDrawImageConversationAsync()
@@ -53,25 +18,10 @@ function createDrawImageModeConversation() {
     <div class="flex flex-row gap-4 p-4">
       <div
         class="bg-body border-solid b-1 border-base p-2 b-rd hover-bg-base color-base transition-all"
-        @click="openDialog = true"
-      >
-        <div class=" text-6 i-carbon-data-volume" />
-      </div>
-
-      <div
-        class="bg-body border-solid b-1 border-base p-2 b-rd hover-bg-base color-base transition-all"
         @click="createDrawImageModeConversation()"
       >
         <div class=" text-6 i-carbon-image" />
       </div>
     </div>
-
-    <Dialog title="Mock Data" :open="openDialog" @on-close="openDialog = false">
-      <div class="font-light mb-4 color-base text-4">
-        {{ t('data_tools_desc') }}
-      </div>
-
-      <DataWorker @on-close="openDialog = false" @on-submit="(columns) => onSubmitMessage(columns)" />
-    </Dialog>
   </div>
 </template>

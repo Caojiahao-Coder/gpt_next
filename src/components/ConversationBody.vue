@@ -53,24 +53,6 @@ function onCreateDrawImageConversation() {
   updateConversationInfo(newInfo as TBConverstationInfo)
 }
 
-function onCreateMockDataConversation() {
-  const conversationStore = useConversationStore()
-  const info = conversationStore.conversationInfo!
-
-  const newInfo = {
-    id: info.id,
-    title: t('new_data_worker_title'),
-    create_time: info.create_time,
-    description: info.description,
-    conversation_token: info.conversation_token,
-    color: 'bg-blue',
-    fixed_top: info.fixed_top ?? false,
-    type: 'dataworker',
-  }
-
-  updateConversationInfo(newInfo as TBConverstationInfo)
-}
-
 function updateConversationInfo(newInfo: TBConverstationInfo) {
   conversationController.updateConversationInfoAsync(newInfo)
 }
@@ -85,10 +67,7 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
       />
     </div>
 
-    <div
-      v-if="myMessageList.length <= 0"
-      class="flex flex-row gap-4 flex-wrap justify-center py-4"
-    >
+    <div v-if="myMessageList.length <= 0" class="flex flex-row gap-4 flex-wrap justify-center py-4">
       <EditSessionSettingsDialog>
         <div class="flex flex-row">
           <div class="flex-1" />
@@ -99,7 +78,7 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
           >
             <div class="flex flex-col">
               <div class="flex-1" />
-              <div class="i-carbon-audio-console" />
+              <div class="w-22px h-22px i-carbon-audio-console " />
               <div class="flex-1" />
             </div>
             <div class="flex-1 flex flex-col">
@@ -123,23 +102,8 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
           <div class="w-22px h-22px i-carbon-image" />
-          <div>
+          <div class="line-height-22px">
             {{ t('draw_img_mode') }}
-          </div>
-        </div>
-        <div class="flex-1" />
-      </div>
-
-      <div
-        data-cursor="block"
-        class="border shadow-2xl bg-base  h-48px flex flex-row color-base gap-2 cursor-pointer p-x-4 flex flex-col hover-bg-body"
-        @click="onCreateMockDataConversation"
-      >
-        <div class="flex-1" />
-        <div class="flex flex-row gap-2">
-          <div class="w-22px h-22px i-carbon-data-volume" />
-          <div>
-            {{ t('mock_data_mode') }}
           </div>
         </div>
         <div class="flex-1" />

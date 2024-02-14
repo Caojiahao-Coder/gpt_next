@@ -9,7 +9,7 @@ import ConversationBody from '@/components/ConversationBody.vue'
 import SettingSlideBar from '@/components/SettingSlideBar.vue'
 import WelcomePage from '@/components/WelcomePage.vue'
 import useConversationStore from '@/store/conversation-store'
-import DataWorkerBody from '@/components/DataWorkerBody.vue'
+import UndefineConversation from '@/components/UndefineConversation.vue'
 import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 import conversationController from '@/chat.completion/ConversationController'
 
@@ -58,7 +58,7 @@ function onUpdateMessageList() {
       <div class="flex-1 bg-body overflow-hidden">
         <WelcomePage v-if="!conversationStore.conversationInfo" />
         <ConversationBody v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'chat'" ref="bodyRef" />
-        <DataWorkerBody v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'dataworker'" ref="bodyRef" />
+        <UndefineConversation v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'dataworker'" ref="bodyRef" />
         <DrawImageModeBody
           v-else-if="(conversationStore.conversationInfo.type ?? 'chat') === 'draw_img_mode'"
           ref="bodyRef"

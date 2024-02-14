@@ -28,7 +28,7 @@ function handleChatVisionPrecondition(message: string, visionFile: {
   messageList.push({
     role: 'user',
     content: visionMessageList,
-  })
+  } as ChatCompletionMessage)
 
   return messageList
 }
