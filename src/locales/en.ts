@@ -56,6 +56,9 @@ export default {
     save_failed: 'Save failed!',
     baseurl_hint: 'Use the official \'https://api.openai.com/v1/\' as much as possible to avoid unexpected situations.',
   },
+  updateLog: {
+    title: ' Update note',
+  },
   save: 'Save',
   cancel: 'Cancel',
   clear: 'Clear',

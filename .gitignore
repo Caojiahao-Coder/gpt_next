@@ -30,3 +30,5 @@ coverage
 src/pages/Test.vue
 
 .env
+
+src/demo

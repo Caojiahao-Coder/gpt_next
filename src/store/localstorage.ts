@@ -34,3 +34,5 @@ export const baseURL: Ref<string> = useStorage('baseURL', 'https://api.openai.co
 export const apiKey: Ref<string> = useStorage('apiKey', '')
 
 export const gptModel: Ref<string> = useStorage('gptModel', 'gpt-4')
+
+export const versionCode: Ref<string> = useStorage('versionCode', '')

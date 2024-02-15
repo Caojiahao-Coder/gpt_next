@@ -56,6 +56,9 @@ export default {
     save_failed: '保存失败!',
     baseurl_hint: '尽可能使用官方的\'https://api.openai.com/v1/\',避免出现一些意外情况。',
   },
+  updateLog: {
+    title: ' 版本更新日志',
+  },
   save: '保存',
   cancel: '取消',
   clear: '清除',

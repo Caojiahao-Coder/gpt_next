@@ -7,10 +7,13 @@ import ConversationsList from './ConversationsList.vue'
 import { expandLeftSideBar, filterType } from '@/store/localstorage'
 import conversationController from '@/chat.completion/ConversationController'
 import type { NewConverstationInfo } from '@/database/table-type'
+import UpdateLog from '@/components/UpdateLog.vue'
 
 const { t } = useI18n()
 
 const showFilterMenu = ref<boolean>(false)
+
+const openUpdateHistory = ref<boolean>(false)
 
 function onCreateNewConversation() {
   const newConversationInfo = {
@@ -61,6 +64,10 @@ function toggleFilterMenu(event: MouseEvent) {
 function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
   filterType.value = type
   showFilterMenu.value = false
+}
+
+function onCloseUpdateHistoryDialog() {
+  openUpdateHistory.value = false
 }
 </script>
 
@@ -145,15 +152,15 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 
         <div flex-1 />
 
-        <a
-          href="https://leocao-me.vercel.app/gpt_next-updatelogs"
+        <div
           class="text-right color-base flex flex-row gap-1 icon-button cursor-pointer"
+          @click="() => openUpdateHistory = true"
         >
           <div i-carbon-campsite class="text-16px h-24px" />
           <div class="text-12px color-base line-height-24px">
             {{ config.version }}
           </div>
-        </a>
+        </div>
       </div>
     </div>
     <div v-show="expandLeftSideBar === true" id="left_menu_move_bar" class="h-100vh border-base" b="r-1 solid 0">
@@ -164,6 +171,8 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
         />
       </div>
     </div>
+
+    <UpdateLog :open-dialog="openUpdateHistory" @on-close="onCloseUpdateHistoryDialog" />
   </div>
 </template>
 
