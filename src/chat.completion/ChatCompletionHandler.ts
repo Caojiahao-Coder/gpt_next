@@ -185,19 +185,13 @@ class ChatCompletionHandler {
 
     const messages: ChatCompletionMessage[] = [{
       role: 'system',
-      content: 'You are a conversation summary assistant, you will generate a short title (10 characters or less) based on the user\'s conversation with you.',
-      tool_call_id: null,
-      tool_calls: null,
-      name: null,
+      content: 'You are a conversation summary assistant and you will generate a short title (10 characters or less) based on the conversation the user has with you. Generate the title in the language that the user is talking to you in.',
     }, {
       role: 'user',
       content: `The question for the dialogue is: ${messageInfo.user_content}`,
-      tool_call_id: null,
-      tool_calls: null,
-      name: null,
-    }]
+    }] as ChatCompletionMessage[]
 
-    const chatCompletionResponse = await openAIServices.createChatCompletionsRequest(messages, false)
+    const chatCompletionResponse = await openAIServices.createChatCompletionsRequest(messages, false, false)
 
     if (chatCompletionResponse.code !== 1 || chatCompletionResponse.data === null)
       return
@@ -207,7 +201,6 @@ class ChatCompletionHandler {
     await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
       title += text
     }, () => { })
-
     this.updateConversationTitleByIdAsync(title, messageInfo.conversation_id)
   }
 

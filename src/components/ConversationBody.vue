@@ -63,6 +63,7 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
     <div id="conversation-body">
       <MessageRecordItem
         v-for="(item, index) in myMessageList" :key="index" :message-info="item"
+        :message-index="index"
         :scroll-body="updateScroll" @on-reload-message-list="() => loadMessageList()"
       />
     </div>
