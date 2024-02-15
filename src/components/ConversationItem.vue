@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import type { TBConverstationInfo } from '@/database/table-type'
 import useConversationStore from '@/store/conversation-store'
 import Dialog from '@/ui/Dialog.vue'
+import conversationController from '@/chat.completion/ConversationController'
+import { push } from '@/main'
 
 const props = defineProps<{
   conversationInfo: TBConverstationInfo
@@ -14,6 +16,7 @@ const { t } = useI18n()
 const enterContainer = ref<boolean>(false)
 
 const conversationStore = useConversationStore()
+
 const showRemoveConfirmDialog = ref<boolean>(false)
 
 async function onRemove() {
@@ -23,16 +26,7 @@ async function onRemove() {
 function onSelect(event: MouseEvent) {
   if ((event.target as HTMLHtmlElement).id === 'item-close')
     return
-
-  if ((conversationStore.conversationInfo?.type ?? 'chat') === 'dataworker' || (conversationStore.conversationInfo?.type ?? 'chat') === 'draw_img_mode') {
-    conversationStore.conversationInfo = null
-    setTimeout(() => {
-      conversationStore.conversationInfo = props.conversationInfo
-    }, 10)
-  }
-  else {
-    conversationStore.conversationInfo = props.conversationInfo
-  }
+  conversationStore.setConversationInfo(props.conversationInfo)
 }
 
 const deleteConfirm = ref<boolean>(false)
@@ -41,9 +35,11 @@ function onCloseDeleteConfirmDialog() {
   showRemoveConfirmDialog.value = false
 }
 
-function removeConversationItem() {
+async function removeConversationItem() {
+  const result = await conversationController.removeConversationByIdAsync(props.conversationInfo.id)
+  if (result)
+    conversationStore.updateConversationList()
   showRemoveConfirmDialog.value = false
-  conversationStore.deleteConversationById(props.conversationInfo.id)
 }
 
 /**
@@ -52,7 +48,7 @@ function removeConversationItem() {
 function fixedTop() {
   const info = props.conversationInfo
 
-  conversationStore.updateConversationInfoById({
+  const newConversationInfo = {
     id: info.id,
     title: info.title,
     create_time: info.create_time,
@@ -61,13 +57,20 @@ function fixedTop() {
     color: info.color,
     fixed_top: !(info.fixed_top ?? false),
     type: info.type,
+  }
+
+  conversationController.updateConversationInfoAsync(newConversationInfo).then((res) => {
+    if (res)
+      conversationStore.updateConversationList()
+    else
+      push.error(t('update_conversation_failed'))
   })
 }
 </script>
 
 <template>
   <div
-    b="0 b-1 solid" class="flex flex-row gap-4 p-4 border-base cursor-pointer" :class="[
+    class="b-1 border-base b-solid flex flex-row gap-2 p-3 cursor-pointer m-1 b-rd " :class="[
       conversationStore.conversationInfo?.conversation_token! === props.conversationInfo.conversation_token! ? 'bg-gray-2 dark:bg-dark-8 selected' : '',
     ]" @click="onSelect" @mouseenter="enterContainer = true" @mouseleave="enterContainer = false"
   >

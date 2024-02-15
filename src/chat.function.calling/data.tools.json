@@ -1,0 +1,55 @@
+[{
+  "type": "function",
+  "function": {
+    "name": "get_current_weather",
+    "description": "current_weather_description",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "lat": {
+          "type": "string",
+          "description": "Latitude, decimal (-90; 90). If you need the geocoder to automatic convert city names and zip-codes to geo coordinates."
+        },
+        "lon": {
+          "type": "string",
+          "description": "Longitude, decimal (-180; 180). If you need the geocoder to automatic convert city names and zip-codes to geo coordinates."
+        },
+        "exclude": {
+          "type": "string",
+          "enum": ["current", "minutely", "hourly", "daily", "alerts"],
+          "description": "By using this parameter you can exclude some parts of the weather data from the API response. It should be a comma-delimited list (without spaces)."
+        },
+        "units": {
+          "type": "string",
+          "enum": ["standard", "metric", "imperial"],
+          "description": "Units of measurement. standard, metric and imperial units are available. If you do not use the units parameter, standard units will be applied by default."
+        }
+      },
+      "required": ["lat", "lon", "exclude", "units"]
+    }
+  }
+}, {
+  "type": "function",
+  "function": {
+    "name": "search_photo_from_unsplash",
+    "description": "search_photos_from_unsplash_desc",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Search for the type, category or description of the image (in English)"
+        },
+        "page": {
+          "type": "number",
+          "description": "Page number default 1, max 10"
+        },
+        "per_page": {
+          "type": "number",
+          "description": "Number of items per page default 1 , max 10"
+        }
+      },
+      "required": ["query", "page", "per_page"]
+    }
+  }
+}]

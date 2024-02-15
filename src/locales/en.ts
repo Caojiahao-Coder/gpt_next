@@ -1,4 +1,64 @@
 export default {
+  basic: {
+    reload: 'Reload',
+  },
+  chatCompletions: {
+    payloadError: 'Please set the api key and chat model first.',
+  },
+  chatParameterList: {
+    title: 'Parameter presetting',
+    custom: 'Custom',
+    codeGeneration: 'Code Generation',
+    creativeWriting: 'Creative Writing',
+    chatbotResponses: 'Chatbot Responses',
+    codeCommentGeneration: 'Code Comment Generation',
+    dataAnalysisScripting: 'Data Analysis Scripting',
+    exploratoryCodeWriting: 'Exploratory Code Writing',
+  },
+  functionCallingList: {
+    author: 'Author',
+    function_name: 'Function Name',
+    function_description: 'Function Description',
+    get_current_weather: 'Get Current Weather',
+    current_weather_description: 'Get the current or future weather based on the user\'s input.',
+    search_photo_from_unsplash: 'Search Photo',
+    search_photos_from_unsplash_desc: 'Search for photos on Unsplash based on the user\'s input keywords.',
+  },
+  messageRecord: {
+    message_cancel: 'Message canceled',
+    message_error: 'Message error',
+  },
+  editMessage: {
+    success: 'Edit message success!',
+    failed: 'Edit message failed!',
+  },
+  dataWork: {
+    create_data_work_error: 'Create data work failed!',
+    no_data_columns: 'No related data columns found!',
+    update_message_failed: 'Update message failed!',
+    update_message_success: 'Update message success!',
+    add_modification_suggestion_failed: 'Add modification suggestion failed!',
+    add_modification_suggestion_success: 'Add modification suggestion success!',
+  },
+  drawImg: {
+    failed: 'Failed to generate image! Please try again later.',
+    loading_hint: 'Generating image...',
+    prompt_empty_hint: 'Please enter your requirements...',
+  },
+  underfine_conversation: {
+    title: 'Undefined Conversation',
+    desc: 'Unfortunately, the MockData feature was removed in V2.0.0, so all MockData interfaces will not display properly.',
+  },
+  openai_setting: {
+    apikey_empty_error: 'Sorry the api key can\'t be empty',
+    baseurl_empty_error: 'Sorry the base url can\'t be empty',
+    save_success: 'Save success!',
+    save_failed: 'Save failed!',
+    baseurl_hint: 'Use the official \'https://api.openai.com/v1/\' as much as possible to avoid unexpected situations.',
+  },
+  updateLog: {
+    title: ' Update note',
+  },
   save: 'Save',
   cancel: 'Cancel',
   clear: 'Clear',
@@ -24,7 +84,6 @@ export default {
   message_session_title_empty: 'Sorry the session title can\'t be empty.',
   new_conversation_title: 'New Message',
   new_data_worker_title: 'New data worker',
-  apikey_empty_error: 'Sorry the api key can\'t be empty',
   reload: 'Reload',
   edit: 'Edit',
   delete: 'Delete',

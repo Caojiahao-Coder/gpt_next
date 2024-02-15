@@ -1,9 +1,3 @@
-interface TBGlobalSettingInfo {
-  id: number
-  api_key: string
-  chat_model: string
-}
-
 interface TBMessageInfo {
   id: number
   conversation_id: number
@@ -11,7 +5,7 @@ interface TBMessageInfo {
   gpt_content: string
   create_time: number
   token_id: string
-  status: 'finished' | 'waiting' | 'error'
+  status: 'finished' | 'waiting' | 'error' | 'stop'
   tool_call?: {
     function_name: string
     function_description: string
@@ -30,18 +24,13 @@ interface TBConverstationInfo {
   type?: 'chat' | 'dataworker' | 'draw_img_mode'
 }
 
-interface NewGlobalSettingInfo {
-  api_key: string
-  chat_model: string
-}
-
 interface NewMessageInfo {
   conversation_id: number
   user_content: string
   gpt_content: string
   create_time: number
   token_id: string
-  status: 'finished' | 'waiting'
+  status: 'finished' | 'waiting' | 'error'
   tool_call?: {
     function_name: string
     function_description: string
@@ -115,7 +104,6 @@ interface NewPromptCategoryListInfo {
 }
 
 export type {
-  TBGlobalSettingInfo,
   TBMessageInfo,
   TBConverstationInfo,
   TBPromptInfo,
@@ -123,7 +111,6 @@ export type {
   TBPromptCategoryListInfo,
   TBPromptDetailInfo,
 
-  NewGlobalSettingInfo,
   NewConverstationInfo,
   NewMessageInfo,
   NewPromptInfo,

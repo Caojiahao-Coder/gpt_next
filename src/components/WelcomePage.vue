@@ -2,21 +2,21 @@
 import { useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
-import useConversationStore from '@/store/conversation-store'
+import conversationController from '@/chat.completion/ConversationController'
 
 const { t } = useI18n()
 
 const { width } = useWindowSize()
 
 function createNewMessage() {
-  const converstionStore = useConversationStore()
-  converstionStore.createNewConversation({
+  const newInfo = {
     title: t('new_conversation_title'),
     color: 'bg-gray',
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
-  })
+  }
+  conversationController.addConversationAsync(newInfo)
 }
 </script>
 

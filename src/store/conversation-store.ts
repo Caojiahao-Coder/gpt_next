@@ -1,105 +1,91 @@
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { defineStore } from 'pinia'
-import useMessageStore from './message-store'
 import { filterType } from './localstorage'
-import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type'
-import db from '@/database/db'
+import useChatCompletionStore from './chat-completion-store'
+import type { TBConverstationInfo } from '@/database/table-type'
+import conversationController from '@/chat.completion/ConversationController'
+import ChatCompletionHandler from '@/chat.completion/ChatCompletionHandler'
 
 const useConversationStore = defineStore('conversationStore', () => {
   const conversationInfo = ref<TBConverstationInfo | null>(null)
   const conversationsList = ref<TBConverstationInfo[]>([])
 
-  watch(conversationInfo, (newValue) => {
-    const messageStore = useMessageStore()
+  onMounted(() => loadConversationList())
 
-    if (!newValue)
-      messageStore.clearMessageRecords()
-
-    messageStore.messageList = []
-    if (newValue) {
-      messageStore.getMessageRecordsByConversationId(newValue!.id).then((res) => {
-        messageStore.messageList = res
-      })
-    }
+  watch(() => filterType.value, () => {
+    loadConversationList()
   })
 
-  watch(filterType, () => {
-    updateConversationsList(() => {
-      conversationInfo.value = null
-    })
-  })
-
-  function createNewConversation(data: NewConverstationInfo): Promise<number> {
-    // eslint-disable-next-line promise/param-names
-    return new Promise<number>((_reslove, _reject) => {
-      db.init().then(() => {
-        db.add('tb_conversation', data).then((res) => {
-          updateConversationsList()
-          getConversationInfoById(res as number)
-          _reslove(res as number)
-        })
-      })
-    })
-  }
-
-  function deleteConversationById(key: number) {
-    db.init().then(() => {
-      db.deleteById('tb_conversation', key).then(() => {
-        updateConversationsList()
-        conversationInfo.value = null
-      })
-    })
-  }
-
-  function updateConversationInfoById(data: TBConverstationInfo) {
-    db.init().then(() => {
-      db.update('tb_conversation', data).then(() => {
-        conversationInfo.value = data
-        updateConversationsList()
-      })
-    })
-  }
-
-  function updateConversationsList(callback?: () => void) {
-    db.init().then(() => {
-      db.selectAll('tb_conversation').then((res) => {
-        let conversationsListData = (res as TBConverstationInfo[])
+  /**
+   * 加载对话列表
+   */
+  function loadConversationList(): Promise<TBConverstationInfo[]> {
+    conversationsList.value = []
+    return new Promise<TBConverstationInfo[]>((resolve) => {
+      conversationController.getConversationListAsync().then((res) => {
+        let myData = res as TBConverstationInfo[]
         switch (filterType.value) {
           case 'chat':
-            conversationsListData = conversationsListData.filter(item => item.type === 'chat' || !item.type)
+            myData = myData.filter(a => a.type === 'chat')
             break
           case 'data':
-            conversationsListData = conversationsListData.filter(item => item.type === 'dataworker')
+            myData = myData.filter(a => a.type === 'dataworker')
             break
           case 'drawing':
-            conversationsListData = conversationsListData.filter(item => item.type === 'draw_img_mode')
+            myData = myData.filter(a => a.type === 'draw_img_mode')
             break
-          default:break
         }
-        conversationsList.value = conversationsListData.sort((a, b) => {
-          if (a.fixed_top && !b.fixed_top)
-            return -1
 
-          else if (!a.fixed_top && b.fixed_top)
-            return 1
+        myData = myData.sort((a, b) => b.create_time - a.create_time)
 
-          else
-            return b.create_time - a.create_time
-        })
-        if (callback)
-          callback()
+        conversationsList.value = myData
+
+        resolve(myData)
       })
     })
   }
 
-  function getConversationInfoById(conversationId: number) {
-    db.init().then(() => {
-      db.selectById('tb_conversation', conversationId).then((res) => {
+  /**
+   * 更新对话列表
+   */
+  function updateConversationList() {
+    loadConversationList()
+  }
+
+  /**
+   * 设置当前的对话信息
+   * @param info
+   */
+  function setConversationInfo(info: TBConverstationInfo | null) {
+    const chatCompletionStore = useChatCompletionStore()
+    conversationInfo.value = null
+    chatCompletionStore.chatCompletionHandler = null
+
+    if (info) {
+      setTimeout(() => {
+        conversationInfo.value = info
+        const chatCompletionHandler = new ChatCompletionHandler(info, null)
+        chatCompletionStore.chatCompletionHandler = chatCompletionHandler
+      }, 10)
+    }
+    else {
+      setTimeout(() => {
         conversationInfo.value = null
-        setTimeout(() => {
-          conversationInfo.value = res as TBConverstationInfo
-        }, 10)
-      })
+        chatCompletionStore.chatCompletionHandler = null
+      }, 10)
+    }
+  }
+
+  /**
+   * 更新绑定的Conversation Info
+   * @param conversationId
+   */
+  function updateConversationInfoById(conversationId: number) {
+    conversationController.getConversationInfoByIdAsync(conversationId).then((res) => {
+      if (res) {
+        const data = res as TBConverstationInfo
+        setConversationInfo(data)
+      }
     })
   }
 
@@ -107,10 +93,10 @@ const useConversationStore = defineStore('conversationStore', () => {
     conversationInfo,
     conversationsList,
 
-    updateConversationsList,
+    loadConversationList,
+    updateConversationList,
+    setConversationInfo,
 
-    createNewConversation,
-    deleteConversationById,
     updateConversationInfoById,
   }
 })

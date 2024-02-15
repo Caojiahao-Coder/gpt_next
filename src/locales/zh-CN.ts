@@ -1,4 +1,64 @@
 export default {
+  basic: {
+    reload: '刷新',
+  },
+  chatCompletions: {
+    payloadError: '请先设置 Api Key 和 Chat Model.',
+  },
+  chatParameterList: {
+    title: '参数预设',
+    custom: '自定义',
+    codeGeneration: '代码生成',
+    creativeWriting: '创意写作',
+    chatbotResponses: '聊天机器人回复',
+    codeCommentGeneration: '代码注释生成',
+    dataAnalysisScripting: '数据分析脚本',
+    exploratoryCodeWriting: '探索性代码编写',
+  },
+  functionCallingList: {
+    author: '作者',
+    function_name: '函数名称',
+    function_description: '函数描述',
+    get_current_weather: '天气查询',
+    current_weather_description: '根据用户输入的地区获取当前或未来的天气.',
+    search_photo_from_unsplash: '搜索图片',
+    search_photos_from_unsplash_desc: '根据用户输入的关键词在Unsplash搜索图片.',
+  },
+  messageRecord: {
+    message_cancel: '消息已取消',
+    message_error: '消息错误',
+  },
+  editMessage: {
+    success: '编辑消息成功!',
+    failed: '编辑消息失败!',
+  },
+  dataWork: {
+    create_data_work_error: '创建数据工作流失败!',
+    no_data_columns: '没有找到相关数据列！',
+    update_message_failed: '更新消息失败!',
+    update_message_success: '更新消息成功!',
+    add_modification_suggestion_failed: '添加修改建议失败!',
+    add_modification_suggestion_success: '添加修改建议成功!',
+  },
+  drawImg: {
+    failed: '生成图片失败! 请稍后重新尝试。',
+    loading_hint: '正在生成图片...',
+    prompt_empty_hint: '请输入你的要求...',
+  },
+  underfine_conversation: {
+    title: '未定义对话',
+    desc: '很遗憾，MockData 功能在 V2.0.0 中被移除，所以所有 MockData 接口将无法正常显示。',
+  },
+  openai_setting: {
+    apikey_empty_error: '抱歉Api Key不可以为空',
+    baseurl_empty_error: '抱歉Base Url不可以为空',
+    save_success: '保存成功!',
+    save_failed: '保存失败!',
+    baseurl_hint: '尽可能使用官方的\'https://api.openai.com/v1/\',避免出现一些意外情况。',
+  },
+  updateLog: {
+    title: ' 版本更新日志',
+  },
   save: '保存',
   cancel: '取消',
   clear: '清除',

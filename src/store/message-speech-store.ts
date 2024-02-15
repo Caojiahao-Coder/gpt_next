@@ -1,10 +1,9 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import useGlobalStore from './global-store'
 import { speechVoice, ttsModels } from './localstorage'
 import { push } from '@/main'
-import { fetchText2Speech } from '@/openai/tts'
+import openAIServices from '@/openai/logic/services'
 
 /**
  * 音频播放组件
@@ -12,8 +11,6 @@ import { fetchText2Speech } from '@/openai/tts'
 export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
   const { t } = useI18n()
   const isPlaying = ref<boolean>(false)
-
-  const globalStore = useGlobalStore()
 
   // 是否显示播放组件
   const show = ref<boolean>(false)
@@ -31,17 +28,8 @@ export const useMessageSpeechStore = defineStore('messageSpeechStore', () => {
     if (callback)
       callback('pending')
 
-    const globalSettingInfo = await globalStore.getGlobalSetting()
-
-    fetchText2Speech({
-      apikey: globalSettingInfo.api_key,
-      body: {
-        model: ttsModels.value,
-        input: content,
-        voice: speechVoice.value,
-      },
-    }).then(async (res) => {
-      const reader = res.body?.getReader()
+    openAIServices.createAudioSpeechRequest(content, speechVoice.value, ttsModels.value).then(async (res) => {
+      const reader = res?.body?.getReader()
 
       const data: number[] = []
 

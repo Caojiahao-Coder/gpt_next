@@ -7,8 +7,10 @@ const props = withDefaults(defineProps<{
   title: string
   padding?: boolean
   defaultFullScreen?: boolean
+  canClose?: boolean
 }>(), {
   padding: true,
+  canClose: true,
 })
 
 const emits = defineEmits([
@@ -92,6 +94,7 @@ function closeModal() {
               ]" @click="toggleExpandDialog"
             />
             <div
+              v-if="canClose"
               data-cursor="block" icon-button class="i-carbon-close text-7 h-24px line-height-24px"
               @click="emits('onClose')"
             />

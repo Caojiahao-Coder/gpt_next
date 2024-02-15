@@ -22,3 +22,17 @@ export const expandSettingSideBar: Ref<boolean> = useStorage('expandSettingSideB
 export const alwaysCloseDailyTips: Ref<boolean> = useStorage('allowAutoPlay', false)
 
 export const currentDailyTipsIndex: Ref<number> = useStorage('currentDailyTipsIndex', 0)
+
+export const topP: Ref<number> = useStorage('topP', 0.5)
+
+export const temperature: Ref<number> = useStorage('temperature', 0.5)
+
+export const chatParameter: Ref<number> = useStorage('chatParameter', 1)
+
+export const baseURL: Ref<string> = useStorage('baseURL', 'https://api.openai.com/v1/')
+
+export const apiKey: Ref<string> = useStorage('apiKey', '')
+
+export const gptModel: Ref<string> = useStorage('gptModel', 'gpt-4')
+
+export const versionCode: Ref<string> = useStorage('versionCode', '')

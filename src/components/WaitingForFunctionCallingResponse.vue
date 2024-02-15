@@ -1,14 +1,25 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
 
+const props = defineProps<{
+  functionName: string
+  functionDescription: string
+}>()
+
 const { t } = useI18n()
 </script>
 
 <template>
-  <div id="checking-view" class="b-1 border-base b-solid b-rd line-height-36px bg-base color-base transition-all">
-    <div class="flex flex-row">
-      <div class="w-16px h-16px m-10px mr-8px i-svg-spinners-blocks-scale" />
-      <div>{{ t('waiting_for_function_calling_response') }}</div>
+  <div id="checking-view" class="b-1 border-base b-solid b-rd line-height-36px bg-base color-fade transition-all">
+    <div class="flex flex-row line-height-32px">
+      <div class="w-18px h-18px m-7px mr-8px i-svg-spinners-ring-resize" />
+      <div class="h-32px">
+        {{ t('waiting_for_function_calling_response') }}
+      </div>
+    </div>
+    <div class="p-x-16px p-y-8px line-height-32px b-0 b-t-1 border-base b-solid ">
+      <div>{{ t('functionCallingList.function_name') }}: {{ props.functionName }}</div>
+      <div>{{ props.functionDescription }}</div>
     </div>
   </div>
 </template>

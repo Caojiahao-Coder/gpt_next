@@ -1,69 +1,48 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
-import useGlobalStore from '@/store/global-store'
 import gpt_models from '@/assets/models-list'
 import { push } from '@/main'
+import { apiKey, baseURL, gptModel } from '@/store/localstorage'
 
 const open = ref<boolean>(false)
 
 const { t } = useI18n()
 
-const globalStore = useGlobalStore()
-
-const apiKey_modal = ref<string>()
-const gptModel_modal = ref<string>()
-
-globalStore.getGlobalSetting().then((res) => {
-  if (res) {
-    apiKey_modal.value = res.api_key
-    gptModel_modal.value = res.chat_model ?? 'gpt-3.5-turbo'
-  }
-})
-
-const apiKey = ref<string | undefined>()
-const gptModel = ref<string | undefined>()
+const baseURL_modal = ref<string>(baseURL.value)
+const apiKey_modal = ref<string>(apiKey.value)
+const gptModel_modal = ref<string>(gptModel.value)
 
 const copyApiKeySuccess = ref<boolean>(false)
 const copyApiKeyFailed = ref<boolean>(false)
-
-onMounted(() => {
-  loadOpenAISetting()
-})
-
-async function loadOpenAISetting() {
-  const data = await globalStore.getGlobalSetting()
-
-  if (data) {
-    apiKey.value = data.api_key
-    gptModel.value = data.chat_model
-    apiKey_modal.value = data.api_key
-    gptModel.value = data.chat_model
-  }
-  else {
-    apiKey.value = undefined
-    gptModel.value = undefined
-    apiKey_modal.value = ''
-    gptModel_modal.value = 'gpt-3.5-turbo'
-  }
-}
 
 function openEditModal() {
   open.value = true
 }
 
 async function onSaveOpenAIConfig() {
-  if (!apiKey_modal.value || (apiKey_modal.value?.trim() ?? '').length === 0) {
-    push.error(t('apikey_empty_error'))
-    return
+  try {
+    if (!apiKey_modal.value || (apiKey_modal.value?.trim() ?? '').length === 0) {
+      push.error(t('openai_setting.apikey_empty_error'))
+      return
+    }
+
+    if (!baseURL_modal.value || (baseURL_modal.value?.trim() ?? '').length === 0) {
+      push.error(t('openai_setting.baseurl_empty_error'))
+      return
+    }
+
+    baseURL.value = baseURL_modal.value
+    apiKey.value = apiKey_modal.value
+    gptModel.value = gptModel_modal.value
+    open.value = false
+    push.success(t('openai_setting.save_success'))
   }
-  globalStore.addApiKey({
-    api_key: apiKey_modal.value!,
-    chat_model: gptModel_modal.value!,
-  })
-  open.value = false
-  loadOpenAISetting()
+  catch {
+    push.error(t('openai_setting.save_failed'))
+    open.value = false
+  }
 }
 
 /**
@@ -102,6 +81,14 @@ function copyOpenAiKey() {
     </div>
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
+        Base URL
+      </div>
+
+      <div class="text-4 m-t-2" :class="apiKey ? 'color-base' : 'color-fade'">
+        {{ baseURL ? baseURL : 'undefined' }}
+      </div>
+
+      <div class="text-3 color-gray m-t-4" style="font-family: Light;">
         {{ t('api_key') }}
       </div>
       <div class="flex flex-row gap-2  m-t-2">
@@ -131,6 +118,19 @@ function copyOpenAiKey() {
   <Dialog title="Open AI Setting" :open="open" @on-close="() => open = false">
     <div>
       <div>
+        Base URL:
+      </div>
+      <div class="m-t-2 text-3 color-fade">
+        {{ t('openai_setting.baseurl_hint') }}
+      </div>
+      <div class="flex flex-row m-t-2">
+        <input
+          v-model="baseURL_modal" data-cursor="text" class="flex-1 border-base outline-none bg-body color-base" type="text"
+          placeholder="Please input your Base URL" p="x-4 y-2" b="1 solid rd-1"
+        >
+      </div>
+
+      <div class="m-t-4">
         Api Key:
       </div>
       <div class="flex flex-row m-t-2">

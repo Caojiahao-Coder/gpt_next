@@ -2,15 +2,17 @@
 import { useI18n } from 'vue-i18n'
 import { onMounted, ref, watch } from 'vue'
 import { uid } from 'uid'
-import { fetchGenerateImages } from '@/openai/images'
 import { push } from '@/main'
-import useGlobalStore from '@/store/global-store'
 import type { NewMessageInfo, TBMessageInfo } from '@/database/table-type'
 import Dialog from '@/ui/Dialog.vue'
-import useMessageStore from '@/store/message-store'
-import useConversationStore from '@/store/conversation-store'
+import useChatCompletionStore from '@/store/chat-completion-store'
+import messageController from '@/chat.completion/MessageController'
+import openAIServices from '@/openai/logic/services'
+import { ImageGenerationParser, defaultData } from '@/openai/parser/ImageGenerationParser'
 
-const messageStore = useMessageStore()
+const chatCompletionHandler = useChatCompletionStore().chatCompletionHandler
+
+const showImgPrompt = ref<boolean>(false)
 
 const { t } = useI18n()
 
@@ -32,22 +34,26 @@ const openDeleteConfirmDialog = ref<boolean>(false)
 
 const openEditTools = ref<boolean>(false)
 
+const isErrorItem = ref<boolean>(false)
+
+const errorMessage = ref<string>('')
+
+const imgPrompt = ref<string>('')
+
 onMounted(() => {
   loadImgList()
   window.onresize = onCanvasReSize
   onCanvasReSize()
 })
 
-function loadImgList() {
-  const conversationInfo = useConversationStore().conversationInfo
-  messageStore.getMessageRecordsByConversationId(conversationInfo?.id ?? -1).then((res) => {
-    imagesList.value = res
-    curIndex.value = res.length - 1
+async function loadImgList() {
+  const result = await messageController.getMessageByConversationIdAsync(chatCompletionHandler?.getConversationInfo().id ?? -1)
+  imagesList.value = result
+  curIndex.value = result.length - 1
+  if (imagesList.value.length < 1)
+    canvasRef.value!.style.backgroundImage = 'url("")'
+  else
     bindNewImg()
-
-    if (res.length === 0)
-      canvasRef.value!.style.backgroundImage = 'url("")'
-  })
 }
 
 watch(curIndex, () => {
@@ -57,8 +63,23 @@ watch(curIndex, () => {
 })
 
 function bindNewImg() {
-  if (canvasRef.value)
-    canvasRef.value.style.backgroundImage = `url(data:image/png;base64,${imagesList.value[curIndex.value]?.gpt_content})`
+  if (imagesList.value.length < 1)
+    return
+
+  const curItem = imagesList.value[curIndex.value]
+
+  isErrorItem.value = curItem.status === 'error'
+
+  if (canvasRef.value && curItem.status === 'finished') {
+    errorMessage.value = ''
+    showImgPrompt.value = false
+    canvasRef.value.style.backgroundImage = `url(${curItem.gpt_content})`
+    imgPrompt.value = curItem.user_content
+  }
+  else if (canvasRef.value) {
+    errorMessage.value = curItem.gpt_content
+    canvasRef.value.style.backgroundImage = `url(${defaultData})`
+  }
 }
 
 function onCanvasReSize() {
@@ -77,59 +98,44 @@ function onCanvasReSize() {
 
 async function generateImage() {
   if (loadingImg.value === true) {
-    push.warning(t('generate_image_ing_hint'))
+    push.warning(t('drawImg.loading_hint'))
     return
   }
 
   if (!prompt.value || prompt.value.length === 0) {
-    push.error(t('image_requirement_cannot_empty'))
+    push.error(t('drawImg.prompt_empty_hint'))
     return
   }
 
   loadingImg.value = true
 
-  const globalSettingInfo = await useGlobalStore().getGlobalSetting()
-  const body = {
-    apikey: globalSettingInfo.api_key,
-    body: {
-      model: 'dall-e-3',
-      prompt: prompt.value,
-      n: 1,
-      quality: 'hd',
-      style: imgStyle.value,
-      size: '1024x1024',
-      response_format: 'b64_json',
-    },
+  const response = await openAIServices.createImagesGenerationsRequest(prompt.value, imgStyle.value)
+
+  if (response.code === -1 || response.data == null) {
+    push.error(t('drawImg.failed'))
+    updateImageMessage(response.message, prompt.value, t('drawImg.failed'), 'error')
+  }
+  else {
+    const result = await ImageGenerationParser(response.data!)
+    const img_b64 = result.b64_data
+    const revised_prompt = result.revised_prompt
+    updateImageMessage(img_b64, prompt.value, revised_prompt, 'finished')
   }
 
-  fetchGenerateImages(body).then(async (res) => {
-    const result = await res.json()
-    const img_b64 = result.data[0].b64_json
-    if (canvasRef.value)
-      canvasRef.value.style.backgroundImage = `url(data:image/png;base64,${img_b64})`
-
-    await updateImageMessage(img_b64, prompt.value ?? '')
-  }).catch(() => {
-    push.error(t('generate_image_error'))
-  }).finally(() => {
-    loadingImg.value = false
-  })
+  loadingImg.value = false
 }
 
-async function updateImageMessage(img_b64: string, message: string) {
-  const conversationInfo = useConversationStore().conversationInfo
-
+async function updateImageMessage(img_b64: string, message: string, prompt: string, status: 'finished' | 'error') {
   const newMessageInfo: NewMessageInfo = {
-    conversation_id: conversationInfo?.id ?? -1,
-    user_content: message,
+    conversation_id: chatCompletionHandler?.getConversationInfo().id ?? -1,
+    user_content: prompt,
     gpt_content: img_b64,
     create_time: Date.now(),
     token_id: uid(32),
-    status: 'finished',
+    status,
   }
 
-  messageStore.addNewMessage(newMessageInfo)
-
+  await messageController.addNewMessageAsync(newMessageInfo)
   loadImgList()
 }
 
@@ -160,7 +166,7 @@ function uploadImg() {
     const reader = new FileReader()
     reader.onloadend = (result) => {
       const img = (result.target?.result as string).split(',')[1]
-      updateImageMessage(img, '')
+      updateImageMessage(img, '', '', 'finished')
     }
     reader.readAsDataURL(file)
   })
@@ -170,11 +176,9 @@ function onDeleteConfirm() {
   openDeleteConfirmDialog.value = true
 }
 
-async function onDelete() {
-  const messageStore = useMessageStore()
-  openDeleteConfirmDialog.value = false
-  await messageStore.deleteMessageItem(imagesList.value[curIndex.value].id)
-  loadImgList()
+function onDelete() {
+  const messageId = imagesList.value[curIndex.value].id
+  messageController.deleteMessageByIdAsync(messageId).then(() => loadImgList())
 }
 
 function toggleOpenEditTools() {
@@ -187,7 +191,7 @@ function downloadImg() {
     return
   }
 
-  const cur_img_b64_data = `data:image/png;base64,${imagesList.value[curIndex.value].gpt_content}`
+  const cur_img_b64_data = `${imagesList.value[curIndex.value].gpt_content}`
   const link = document.createElement('a')
   link.href = cur_img_b64_data
   link.download = `${uid(32)}.png`
@@ -266,31 +270,34 @@ function downloadImg() {
             </button>
           </div>
         </div>
+
         <div
-          id="canvas" ref="canvasRef"
-          class="flex flex-col bg-base b-rd shadow-xl b-1 b-solid border-base m-auto bg-no-repeat bg-cover bg-center"
+          id="canvas" class="flex flex-col gap-2 m-auto"
           :style="{ width: `${canvasSize}px`, height: `${canvasSize}px` }"
-        />
-      </div>
-      <div
-        id="edit-message-list"
-        class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all" :class="[
-          openEditTools ? 'w-360px' : 'w-0px',
-        ]"
-      >
-        <div class="p-13px pt-14px b-0 b-b-1 border-base b-solid color-base font-bold text-5 flex flex-row">
-          <div class="flex-1">
-            {{ t('edit_img') }}
-          </div>
-          <div class="h-27px w-27px icon-button i-carbon-close" @click="toggleOpenEditTools" />
-        </div>
-
-        <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base" />
-
-        <input
-          disabled class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
-          :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
         >
+          <div v-if="isErrorItem" class="color-red">
+            Error message: {{ errorMessage }}
+          </div>
+          <div
+            ref="canvasRef"
+            class="relative flex-1 bg-base b-rd shadow-xl b-1 b-solid border-base bg-no-repeat bg-cover bg-center"
+          >
+            <div
+              v-if="!isErrorItem"
+              class="b-rd-b flex flex-row absolute bottom-0 left-0 bg-#50505080 w-full backdrop-blur"
+              :class="showImgPrompt ? `max-h-${canvasSize}px` : 'max-h-48px'"
+            >
+              <div class="color-light m-8px line-height-32px flex-1 ellipsis" :class="showImgPrompt ? '' : 'text-nowrap'">
+                {{ imgPrompt }}
+              </div>
+              <div
+                class="w-18px h-18px m-15px color-light"
+                :class="showImgPrompt ? 'i-carbon-chevron-down' : 'i-carbon-chevron-up'"
+                @click="() => showImgPrompt = !showImgPrompt"
+              />
+            </div>
+          </div>
+        </div>
       </div>
 
       <div
@@ -310,34 +317,54 @@ function downloadImg() {
         <div class="i-carbon-download color-base w-24px h-24px m-8px" />
       </div>
     </div>
-
-    <Dialog
-      :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
-        openDeleteConfirmDialog = false
-      }"
-    >
-      <div color-red>
-        {{ t('session_clear_warning') }}
-      </div>
-
-      <div flex flex-row gap-2 m-t-2>
-        <div flex-1 />
-        <button
-          class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
-          @click="onDelete()"
-        >
-          {{ t('delete') }}
-        </button>
-        <button
-          class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
-            openDeleteConfirmDialog = false
-          }"
-        >
-          {{ t('cancel') }}
-        </button>
-      </div>
-    </Dialog>
   </div>
+  <div
+    id="edit-message-list"
+    class="flex flex-col b-0 b-l-1 b-solid border-base bg-base max-h-100% overflow-hidden transition-all" :class="[
+      openEditTools ? 'w-360px' : 'w-0px',
+    ]"
+  >
+    <div class="p-13px pt-14px b-0 b-b-1 border-base b-solid color-base font-bold text-5 flex flex-row">
+      <div class="flex-1">
+        {{ t('edit_img') }}
+      </div>
+      <div class="h-27px w-27px icon-button i-carbon-close" @click="toggleOpenEditTools" />
+    </div>
+
+    <ul class="color-base flex-1 overflow-y-scroll edit-img-list m-0 bg-base" />
+
+    <input
+      disabled class="outline-none b-0 b-t-1 border-base b-solid bg-body p-16px color-base text-4"
+      :placeholder="t('edit_img_hint')" :style="{ minWidth: 'calc(100% - 32px)' }"
+    >
+  </div>
+
+  <Dialog
+    :open="openDeleteConfirmDialog" :title="t('dialog_delete_confirm_title')" @on-close="() => {
+      openDeleteConfirmDialog = false
+    }"
+  >
+    <div color-red>
+      {{ t('session_clear_warning') }}
+    </div>
+
+    <div flex flex-row gap-2 m-t-2>
+      <div flex-1 />
+      <button
+        class="bg-body color-red outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2"
+        @click="onDelete()"
+      >
+        {{ t('delete') }}
+      </button>
+      <button
+        class="bg-body color-base outline-none border-base hover-bg-base" b="1px solid rd-1" p="x-4 y-2" @click="() => {
+          openDeleteConfirmDialog = false
+        }"
+      >
+        {{ t('cancel') }}
+      </button>
+    </div>
+  </Dialog>
 </template>
 
 <style scoped>
@@ -358,5 +385,10 @@ function downloadImg() {
 
 .image-edit-tool:hover {
   box-shadow: 1px 2px 8px #00ffb330, -1px -2px 8px #00a2ff30;
+}
+
+.ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>

@@ -4,26 +4,28 @@ import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
-import useConversationStore from '@/store/conversation-store'
-import useMessageStore from '@/store/message-store'
 import { expandLeftSideBar, filterType } from '@/store/localstorage'
+import conversationController from '@/chat.completion/ConversationController'
+import type { NewConverstationInfo } from '@/database/table-type'
+import UpdateLog from '@/components/UpdateLog.vue'
 
 const { t } = useI18n()
 
 const showFilterMenu = ref<boolean>(false)
 
+const openUpdateHistory = ref<boolean>(false)
+
 function onCreateNewConversation() {
-  const messageStore = useMessageStore()
-  messageStore.messageList = []
-  const conversationStore = useConversationStore()
-  conversationStore.createNewConversation({
+  const newConversationInfo = {
     title: t('new_conversation_title'),
     color: 'bg-gray',
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
     type: 'chat',
-  })
+  } as NewConverstationInfo
+
+  conversationController.addConversationAsync(newConversationInfo)
 }
 
 function toggleOpenLeftSideBar() {
@@ -62,6 +64,10 @@ function toggleFilterMenu(event: MouseEvent) {
 function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
   filterType.value = type
   showFilterMenu.value = false
+}
+
+function onCloseUpdateHistoryDialog() {
+  openUpdateHistory.value = false
 }
 </script>
 
@@ -132,13 +138,13 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 
       <ConversationsList />
 
-      <div class="flex flex-row h-47px text-3 border-base select-none color-fade" p="16px" b="0 t-1 solid">
+      <div class="flex flex-row h-48px border-base select-none color-fade" p="16px" b="0 t-1 solid">
         <div line-height-47px>
-          <span>
+          <span text-12px>
             Designed By
           </span>
           <a
-            class="decoration-dashed color-base hover-color-primary color-fade"
+            class="decoration-dashed color-base hover-color-primary color-fade text-12px"
             href="https://github.com/Caojiahao-Coder"
           >Leo
             Cao</a>.
@@ -146,15 +152,15 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
 
         <div flex-1 />
 
-        <a
-          href="https://leocao-me.vercel.app/gpt_next-updatelogs"
+        <div
           class="text-right color-base flex flex-row gap-1 icon-button cursor-pointer"
+          @click="() => openUpdateHistory = true"
         >
           <div i-carbon-campsite class="text-16px h-24px" />
           <div class="text-12px color-base line-height-24px">
             {{ config.version }}
           </div>
-        </a>
+        </div>
       </div>
     </div>
     <div v-show="expandLeftSideBar === true" id="left_menu_move_bar" class="h-100vh border-base" b="r-1 solid 0">
@@ -165,6 +171,8 @@ function selectFilterType(type: 'all' | 'chat' | 'data' | 'drawing') {
         />
       </div>
     </div>
+
+    <UpdateLog :open-dialog="openUpdateHistory" @on-close="onCloseUpdateHistoryDialog" />
   </div>
 </template>
 
