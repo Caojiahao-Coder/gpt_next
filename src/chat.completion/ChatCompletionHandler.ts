@@ -351,6 +351,23 @@ class ChatCompletionHandler {
 
     const messageList = await handleChatCompletionPrecondition(this.promptInfo)
 
+    const messageHistoryList: TBMessageInfo[] = (await messageController.getMessageByConversationIdAsync(messageInfo.conversation_id)).filter(a => a.status === 'finished')
+    const historyMessage: ChatCompletionMessage[] = []
+    for (let i = 0; i < messageHistoryList.length; i++) {
+      const item = messageHistoryList[i]
+      historyMessage.push({
+        content: item.user_content,
+        role: 'user',
+      } as ChatCompletionMessage)
+
+      historyMessage.push({
+        content: item.gpt_content,
+        role: 'assistant',
+      } as ChatCompletionMessage)
+    }
+
+    messageList.push(...historyMessage)
+
     if (messageInfo.vision_file) {
       const visionMessageList = handleChatVisionPrecondition(messageInfo.user_content, JSON.parse(messageInfo.vision_file!) as {
         file_name: string
