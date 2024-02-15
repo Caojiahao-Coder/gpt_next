@@ -5,7 +5,7 @@ const UpdateHistory: {
   content_cn: string
 }[] = [{
   status: 'active',
-  code: 'a51c70b4-342e-472e-93f6-36439de9d222',
+  code: '3a6b4ec8-8323-4387-a23c-d128afc33436',
   content: `
 # Update date: 2024-02-15
 # Version: V2.0.0
