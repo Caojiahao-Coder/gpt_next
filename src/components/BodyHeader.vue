@@ -37,7 +37,7 @@ async function clearMessageRecords() {
   if (!chatCompletionStore.chatCompletionHandler)
     return
 
-  const result = await chatCompletionStore.chatCompletionHandler.clearMessageByConversationId()
+  const result = await chatCompletionStore.chatCompletionHandler.clearMessageByConversationIdAsync()
   if (result) {
     events('onUpdateMessageList')
     openConfirmDialog.value = false

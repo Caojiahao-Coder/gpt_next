@@ -126,9 +126,9 @@ async function sendNewMessage() {
 
 async function pushMessage(chatCompletionHandler: ChatCompletionHandler, message: string, fileList: { fileName: string; b64Data: string }[] | null = null) {
   if (editorStore.thinking)
-    chatCompletionHandler?.stopMessageAnswer()
+    chatCompletionHandler?.stopMessageAnswerAsync()
 
-  const messageId = await chatCompletionHandler?.sendMessage({
+  const messageId = await chatCompletionHandler?.sendMessageAsync({
     content: message,
     role: 'user',
   } as ChatCompletionMessage, fileList)
@@ -266,7 +266,7 @@ function onSelectPrompt(item: TBPromptInfo) {
 }
 
 function onStopResponse() {
-  chatCompletionStore.chatCompletionHandler?.stopMessageAnswer()
+  chatCompletionStore.chatCompletionHandler?.stopMessageAnswerAsync()
 }
 
 function removeVisionFileByIndex(index: number) {

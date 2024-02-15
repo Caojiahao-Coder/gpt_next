@@ -86,7 +86,10 @@ async function getAnswer(messageId: number) {
   gptContent.value = ''
   checkingFunctionCalling.value = true
   let needGetFunctionResult = false
-  await chatCompletionStore.chatCompletionHandler?.getMessageAnswer(messageId, value => gptContent.value += value, (tool_call_id, functionName, args, _) => {
+  await chatCompletionStore.chatCompletionHandler?.getMessageAnswerAsync(messageId, (value) => {
+    gptContent.value += value
+    scrollBody()
+  }, (tool_call_id, functionName, args, _) => {
     needGetFunctionResult = true
     handleFunction(tool_call_id, functionName, args)
   })
@@ -117,7 +120,7 @@ async function handleFunction(tool_call_id: string, functionName: string, args: 
 
   gptContent.value = ''
 
-  const result = await chatCompletionStore.chatCompletionHandler?.getMessageAnswerFromFunctionResult(
+  const result = await chatCompletionStore.chatCompletionHandler?.getMessageAnswerFromFunctionResultAsync(
     messageInfo.value.id,
     tool_call_id,
     functionName,
@@ -228,6 +231,10 @@ function onSpeechUserMessageContent() {
 
 function onSpeechGPTMessageContent() {
   useMessageSpeechStore().playMessage(gptContent.value ?? '', status => gptMessageSpeechStatus.value = status)
+}
+
+function scrollBody() {
+  props.scrollBody()
 }
 </script>
 
