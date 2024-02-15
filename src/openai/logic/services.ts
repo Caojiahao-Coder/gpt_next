@@ -34,7 +34,7 @@ class OpenAIServices {
    * @param useTools
    * @returns
    */
-  public async createChatCompletionsRequest(message: ChatCompletionMessage[], useVisionAPI: boolean): Promise<OpenAIRequestResult> {
+  public async createChatCompletionsRequest(message: ChatCompletionMessage[], useVisionAPI: boolean, autoUseTools: boolean = true): Promise<OpenAIRequestResult> {
     const openAIPayload = await this.getOpenAIPayload()
 
     if (!openAIPayload) {
@@ -54,7 +54,7 @@ class OpenAIServices {
 
       let fetchBody = null
 
-      if (tools && tools.length > 0) {
+      if (tools && tools.length > 0 && autoUseTools) {
         fetchBody = JSON.stringify({
           top_p: topP.value,
           max_tokens: useVisionAPI ? gpt_models.find(item => item.value === usedModel)?.tokens : null,

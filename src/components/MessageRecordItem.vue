@@ -20,6 +20,7 @@ import getFunctionResultByFunctionName from '@/openai/handler/FunctionHandler'
 import messageController from '@/chat.completion/MessageController'
 
 const props = defineProps<{
+  messageIndex: number
   messageInfo: TBMessageInfo
   scrollBody: () => void
 }>()
@@ -96,6 +97,8 @@ async function getAnswer(messageId: number) {
   if (!needGetFunctionResult) {
     checkingFunctionCalling.value = false
     reloadMessageInfoFromDB()
+    if (props.messageIndex === 0)
+      chatCompletionStore.chatCompletionHandler?.getChatCompletionTitleFromMessageAsync(messageInfo.value.id)
   }
 }
 
@@ -132,6 +135,9 @@ async function handleFunction(tool_call_id: string, functionName: string, args: 
 
   if (result)
     reloadMessageInfoFromDB()
+
+  if (props.messageIndex === 0)
+    chatCompletionStore.chatCompletionHandler?.getChatCompletionTitleFromMessageAsync(messageInfo.value.id)
 }
 
 /**
