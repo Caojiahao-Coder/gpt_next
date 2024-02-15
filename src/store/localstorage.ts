@@ -28,3 +28,9 @@ export const topP: Ref<number> = useStorage('topP', 0.5)
 export const temperature: Ref<number> = useStorage('temperature', 0.5)
 
 export const chatParameter: Ref<number> = useStorage('chatParameter', 1)
+
+export const baseURL: Ref<string> = useStorage('baseURL', 'https://api.openai.com/v1/')
+
+export const apiKey: Ref<string> = useStorage('apiKey', '')
+
+export const gptModel: Ref<string> = useStorage('gptModel', 'gpt-4')

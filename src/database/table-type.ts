@@ -1,9 +1,3 @@
-interface TBGlobalSettingInfo {
-  id: number
-  api_key: string
-  chat_model: string
-}
-
 interface TBMessageInfo {
   id: number
   conversation_id: number
@@ -28,11 +22,6 @@ interface TBConverstationInfo {
   conversation_token: string
   fixed_top?: boolean
   type?: 'chat' | 'dataworker' | 'draw_img_mode'
-}
-
-interface NewGlobalSettingInfo {
-  api_key: string
-  chat_model: string
 }
 
 interface NewMessageInfo {
@@ -115,7 +104,6 @@ interface NewPromptCategoryListInfo {
 }
 
 export type {
-  TBGlobalSettingInfo,
   TBMessageInfo,
   TBConverstationInfo,
   TBPromptInfo,
@@ -123,7 +111,6 @@ export type {
   TBPromptCategoryListInfo,
   TBPromptDetailInfo,
 
-  NewGlobalSettingInfo,
   NewConverstationInfo,
   NewMessageInfo,
   NewPromptInfo,

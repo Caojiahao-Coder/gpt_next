@@ -47,7 +47,14 @@ export default {
   },
   underfine_conversation: {
     title: 'Undefined Conversation',
-    desc: 'Unfortunately, the MockData feature was removed in V2.0.0, so all MockData interfaces will not display properly.'
+    desc: 'Unfortunately, the MockData feature was removed in V2.0.0, so all MockData interfaces will not display properly.',
+  },
+  openai_setting: {
+    apikey_empty_error: 'Sorry the api key can\'t be empty',
+    baseurl_empty_error: 'Sorry the base url can\'t be empty',
+    save_success: 'Save success!',
+    save_failed: 'Save failed!',
+    baseurl_hint: 'Use the official \'https://api.openai.com/v1/\' as much as possible to avoid unexpected situations.',
   },
   save: 'Save',
   cancel: 'Cancel',
@@ -74,7 +81,6 @@ export default {
   message_session_title_empty: 'Sorry the session title can\'t be empty.',
   new_conversation_title: 'New Message',
   new_data_worker_title: 'New data worker',
-  apikey_empty_error: 'Sorry the api key can\'t be empty',
   reload: 'Reload',
   edit: 'Edit',
   delete: 'Delete',

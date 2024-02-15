@@ -47,7 +47,14 @@ export default {
   },
   underfine_conversation: {
     title: '未定义对话',
-    desc: '很遗憾，MockData 功能在 V2.0.0 中被移除，所以所有 MockData 接口将无法正常显示。'
+    desc: '很遗憾，MockData 功能在 V2.0.0 中被移除，所以所有 MockData 接口将无法正常显示。',
+  },
+  openai_setting: {
+    apikey_empty_error: '抱歉Api Key不可以为空',
+    baseurl_empty_error: '抱歉Base Url不可以为空',
+    save_success: '保存成功!',
+    save_failed: '保存失败!',
+    baseurl_hint: '尽可能使用官方的\'https://api.openai.com/v1/\',避免出现一些意外情况。',
   },
   save: '保存',
   cancel: '取消',

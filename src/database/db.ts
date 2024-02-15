@@ -1,4 +1,4 @@
-import type { NewConverstationInfo, NewGlobalSettingInfo, NewMessageInfo, NewPromptCategoryInfo, NewPromptCategoryListInfo, NewPromptDetailInfo, NewPromptInfo, TBConverstationInfo, TBGlobalSettingInfo, TBMessageInfo, TBPromptCategoryInfo, TBPromptCategoryListInfo, TBPromptDetailInfo, TBPromptInfo } from './table-type'
+import type { NewConverstationInfo, NewMessageInfo, NewPromptCategoryInfo, NewPromptCategoryListInfo, NewPromptDetailInfo, NewPromptInfo, TBConverstationInfo, TBMessageInfo, TBPromptCategoryInfo, TBPromptCategoryListInfo, TBPromptDetailInfo, TBPromptInfo } from './table-type'
 
 /**
  * 数据库文件
@@ -7,7 +7,6 @@ class DB {
   db: IDBDatabase | null
   version: number
 
-  tb_global = 'tb_global'
   tb_conversation = 'tb_conversation'
   tb_message = 'tb_message'
   tb_prompt = 'tb_prompt'
@@ -34,9 +33,6 @@ class DB {
 
       request.onupgradeneeded = (event) => {
         this.db = (event.target as IDBOpenDBRequest).result
-
-        if (!this.db.objectStoreNames.contains(this.tb_global))
-          this.initGlobalTable()
 
         if (!this.db.objectStoreNames.contains(this.tb_message))
           this.initMessageTable()
@@ -69,7 +65,7 @@ class DB {
    * @param data
    * @returns
    */
-  add(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', data: NewGlobalSettingInfo | NewConverstationInfo | NewMessageInfo | NewPromptInfo | NewPromptCategoryInfo | NewPromptCategoryListInfo | NewPromptDetailInfo) {
+  add(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', data: NewConverstationInfo | NewMessageInfo | NewPromptInfo | NewPromptCategoryInfo | NewPromptCategoryListInfo | NewPromptDetailInfo) {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb], 'readwrite').objectStore(tb).add(data)
 
@@ -92,7 +88,7 @@ class DB {
    * @param key
    * @returns
    */
-  selectById(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', key: number) {
+  selectById(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', key: number) {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb])
         .objectStore(tb)
@@ -116,7 +112,7 @@ class DB {
    * @param tb
    * @returns
    */
-  selectAll(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail') {
+  selectAll(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail') {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb])
         .objectStore(tb)
@@ -142,7 +138,7 @@ class DB {
    * @param content
    * @returns
    */
-  select(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', index: string, content: any) {
+  select(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', index: string, content: any) {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb])
         .objectStore(tb)
@@ -162,7 +158,7 @@ class DB {
     })
   }
 
-  clear(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail') {
+  clear(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail') {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb])
         .objectStore(tb)
@@ -187,7 +183,7 @@ class DB {
    * @param key
    * @returns
    */
-  deleteById(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', key: number) {
+  deleteById(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', key: number) {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb], 'readwrite')
         .objectStore(tb)
@@ -210,7 +206,7 @@ class DB {
    * @param data
    * @returns
    */
-  update(tb: 'tb_global' | 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', data: TBGlobalSettingInfo | TBConverstationInfo | TBMessageInfo | TBPromptInfo | TBPromptCategoryInfo | TBPromptCategoryListInfo | TBPromptDetailInfo) {
+  update(tb: 'tb_conversation' | 'tb_message' | 'tb_prompt' | 'tb_prompt_category' | 'tb_prompt_category_list' | 'tb_prompt_detail', data: TBConverstationInfo | TBMessageInfo | TBPromptInfo | TBPromptCategoryInfo | TBPromptCategoryListInfo | TBPromptDetailInfo) {
     return new Promise((resolve, reject) => {
       const request = this.db?.transaction([tb], 'readwrite')
         .objectStore(tb)
@@ -224,20 +220,6 @@ class DB {
         reject(error)
       }
     })
-  }
-
-  /**
-   * init global setting table.
-   * @returns
-   */
-  private initGlobalTable() {
-    if (!this.db)
-      return
-
-    const objectStore = this.db.createObjectStore(this.tb_global, { keyPath: 'id', autoIncrement: true })
-    objectStore.createIndex('id', 'id', { unique: true })
-    objectStore.createIndex('api_key', 'api_key')
-    objectStore.createIndex('chat_model', 'chat_model')
   }
 
   /**

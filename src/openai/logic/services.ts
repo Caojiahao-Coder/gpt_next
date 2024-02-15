@@ -4,24 +4,16 @@ import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionC
 import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
 import type { OpenAIPayloadInfo } from '@/openai/type/openai.payload'
 import type { OpenAIRequestResult } from '@/openai/type/openai.response.result'
-import useGlobalStore from '@/store/global-store'
-import { temperature, topP } from '@/store/localstorage'
+import { apiKey, baseURL, gptModel, temperature, topP } from '@/store/localstorage'
 
 class OpenAIServices {
-  private readonly BASE_URL = 'https://api.openai.com/v1/'
-
   private controller = new AbortController()
 
   private async getOpenAIPayload(): Promise<OpenAIPayloadInfo | null> {
-    const globalStore = useGlobalStore()
-    const info = await globalStore.getGlobalSetting()
-    if (info) {
-      return {
-        apikey: info.api_key,
-        model: info.chat_model,
-      } as OpenAIPayloadInfo
-    }
-    return null
+    return {
+      apikey: apiKey.value,
+      model: gptModel.value,
+    } as OpenAIPayloadInfo
   }
 
   public cancelRequest() {
@@ -94,7 +86,7 @@ class OpenAIServices {
         signal,
       }
 
-      const url = `${this.BASE_URL}chat/completions`
+      const url = `${baseURL.value}chat/completions`
 
       return new Promise<OpenAIRequestResult>((resolve) => {
         fetch(url, fetchPayload)
@@ -163,7 +155,7 @@ class OpenAIServices {
         signal,
       }
 
-      const url = `${this.BASE_URL}audio/speech`
+      const url = `${baseURL.value}audio/speech`
 
       return fetch(url, fetchPayload)
     }
@@ -210,7 +202,7 @@ class OpenAIServices {
         signal,
       }
 
-      const url = `${this.BASE_URL}images/generations`
+      const url = `${baseURL.value}images/generations`
 
       return new Promise<OpenAIRequestResult>((resolve) => {
         fetch(url, fetchPayload)
@@ -280,7 +272,7 @@ class OpenAIServices {
         signal,
       }
 
-      const url = `${this.BASE_URL}chat/completions`
+      const url = `${baseURL.value}chat/completions`
 
       return new Promise<OpenAIRequestResult>((resolve) => {
         fetch(url, fetchPayload)
