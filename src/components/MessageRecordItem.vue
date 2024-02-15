@@ -86,7 +86,7 @@ async function getAnswer(messageId: number) {
   gptContent.value = ''
   checkingFunctionCalling.value = true
   let needGetFunctionResult = false
-  await chatCompletionStore.chatCompletionHandler?.getMessageAnswer(messageId, (value) => {
+  await chatCompletionStore.chatCompletionHandler?.getMessageAnswerAsync(messageId, (value) => {
     gptContent.value += value
     scrollBody()
   }, (tool_call_id, functionName, args, _) => {
@@ -120,7 +120,7 @@ async function handleFunction(tool_call_id: string, functionName: string, args: 
 
   gptContent.value = ''
 
-  const result = await chatCompletionStore.chatCompletionHandler?.getMessageAnswerFromFunctionResult(
+  const result = await chatCompletionStore.chatCompletionHandler?.getMessageAnswerFromFunctionResultAsync(
     messageInfo.value.id,
     tool_call_id,
     functionName,
