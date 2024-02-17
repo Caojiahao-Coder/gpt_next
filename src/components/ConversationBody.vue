@@ -27,7 +27,9 @@ onMounted(() => {
 async function loadMessageList() {
   const messageList = await chatCompletionStore.chatCompletionHandler?.getMessageListAsync()
   myMessageList.value = messageList ?? []
-  updateScroll()
+  setTimeout(() => {
+    updateScroll()
+  }, 200)
 }
 
 function updateScroll() {

@@ -2,14 +2,14 @@
 import { onMounted, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import FunctionCallingDetailView from '@/components/FunctionCallingDetailView.vue'
-import type { ToolInfo } from '@/openai/tool-call'
 import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
+import type { FunctionInfo } from '@/openai/type/chat.completion.function.calling'
 
 const { t } = useI18n()
 
-const toolsList = ref<ToolInfo[]>([])
+const toolsList = ref<FunctionInfo[]>([])
 
-const currentFunctionCallingInfo = ref<ToolInfo>()
+const currentFunctionCallingInfo = ref<FunctionInfo>()
 
 const openFunctionCallingListDialog = ref<boolean>(false)
 const fullScreen = ref<boolean>(false)
