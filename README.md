@@ -2,6 +2,7 @@
 
 [![English badge](https://img.shields.io/badge/%E8%8B%B1%E6%96%87-English-blue)](./README.md)
 [![简体中文 badge](https://img.shields.io/badge/%E7%AE%80%E4%BD%93%E4%B8%AD%E6%96%87-Simplified%20Chinese-blue)](./README.zh_CN.md)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCaojiahao-Coder%2Fgpt_next.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FCaojiahao-Coder%2Fgpt_next?ref=badge_shield&issueType=license)
 
 # GPT Next 
 
@@ -66,6 +67,8 @@
 
 [![Star History Chart](https://api.star-history.com/svg?repos=Caojiahao-Coder/gpt_next&type=Date)](https://star-history.com/#Caojiahao-Coder/gpt_next&Date)
 
+## FOSSA Status
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FCaojiahao-Coder%2Fgpt_next.svg?type=large&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FCaojiahao-Coder%2Fgpt_next?ref=badge_large&issueType=license)
 
 ## LICENSE
 MIT © [Leo Cao](https://github.com/Caojiahao-Coder)
