@@ -3,13 +3,15 @@ import messageController from './MessageController'
 import conversationController from './ConversationController'
 import type { NewMessageInfo, TBConverstationInfo, TBMessageInfo, TBPromptInfo } from '@/database/table-type'
 import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
-import openAIServices from '@/openai/logic/services'
 import { handleChatCompletionPrecondition } from '@/openai/handler/ChatHandler'
+import openAIServices from '@/openai/logic/services'
 import ChatCompletionParser from '@/openai/parser/ChatCompletionParser'
+import ChatCompletionParserByGroq from '@/groq/parser/ChatCompletionParser'
 import useEditorStore from '@/store/editor-store'
 import handleChatVisionPrecondition from '@/openai/handler/VisionHandler'
 import type { ToolCallsInfo } from '@/openai/type/chat.completion.tool.calls'
 import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
+import groqServices from '@/groq/logic/service'
 
 /**
  * 当前的对话处理器
@@ -77,6 +79,47 @@ class ChatCompletionHandler {
     }
   }
 
+  async getMessageAnswerByGroqAsync(messageId: number, resultCallback: (value: string) => void) {
+    this.editorStore.thinking = true
+
+    this.lastMessageId = messageId
+
+    const messageInfo = await messageController.getMessageInfoByIdAsync(messageId)
+
+    const messageList = await this.generateMessageListByMessageInfoAsync(messageInfo)
+
+    // 得到请求包
+    const chatCompletionResponse = await groqServices.createChatCompletionsRequest(messageList)
+
+    if (chatCompletionResponse.code !== 1) {
+      this.editorStore.thinking = false
+      await this.markMessageErrorAsync(messageInfo, chatCompletionResponse.message)
+      return false
+    }
+
+    let parserResult = false
+
+    let markResult = false
+
+    const needFunctionResult = false
+
+    if (chatCompletionResponse.data !== null) {
+      let gptContent = ''
+
+      parserResult = await ChatCompletionParserByGroq(chatCompletionResponse.data!, (text) => {
+        gptContent += text
+        resultCallback(text)
+      })
+
+      if (parserResult)
+        markResult = await this.markMessageCompletedAsync(messageInfo, gptContent)
+    }
+
+    if (!needFunctionResult)
+      this.editorStore.thinking = false
+    return (parserResult && markResult)
+  }
+
   /**
    * 获取某个对话的结果
    * @param messageId
@@ -123,47 +166,6 @@ class ChatCompletionHandler {
       }, (tool_call_id, fname, args, isDone) => {
         needFunctionResult = true
         functionCallingResultCallback(tool_call_id, fname, args, isDone)
-      })
-
-      if (parserResult)
-        markResult = await this.markMessageCompletedAsync(messageInfo, gptContent)
-    }
-
-    if (!needFunctionResult)
-      this.editorStore.thinking = false
-    return (parserResult && markResult)
-  }
-
-  async getDataWorkAnswerAsync(messageId: number, messageList: ChatCompletionMessage[], resultCallback: (value: string) => void) {
-    this.editorStore.thinking = true
-
-    this.lastMessageId = messageId
-
-    // 得到请求包
-    const chatCompletionResponse = await openAIServices.createDataWorkRequest(messageList)
-
-    const messageInfo = await messageController.getMessageInfoByIdAsync(messageId)
-
-    if (chatCompletionResponse.code !== 1) {
-      this.editorStore.thinking = false
-      await this.markMessageErrorAsync(messageInfo, chatCompletionResponse.message)
-      return false
-    }
-
-    let parserResult = false
-
-    let markResult = false
-
-    let needFunctionResult = false
-
-    if (chatCompletionResponse.data !== null) {
-      let gptContent = ''
-
-      parserResult = await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
-        gptContent += text
-        resultCallback(text)
-      }, () => {
-        needFunctionResult = true
       })
 
       if (parserResult)
@@ -225,6 +227,7 @@ class ChatCompletionHandler {
       conversation_token: conversationInfo.conversation_token,
       fixed_top: conversationInfo.fixed_top,
       type: conversationInfo.type,
+      use_groq: conversationInfo.use_groq,
     } as TBConverstationInfo
 
     conversationController.updateConversationInfoAsync(newInfo)

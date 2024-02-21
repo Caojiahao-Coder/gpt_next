@@ -56,8 +56,20 @@ export default {
     save_failed: 'Save failed!',
     baseurl_hint: 'Use the official \'https://api.openai.com/v1/\' as much as possible to avoid unexpected situations.',
   },
+  groq_setting: {
+    apikey_empty_error: 'Sorry the api key can\'t be empty',
+    baseurl_empty_error: 'Sorry the base url can\'t be empty',
+    save_success: 'Save success!',
+    save_failed: 'Save failed!',
+    baseurl_hint: 'Use the official \'https://api.groq.com/openai/v1/\' as much as possible to avoid unexpected situations.',
+  },
   updateLog: {
     title: ' Update note',
+  },
+  use_groq_api: {
+    cannot_empty: 'Sorry, the Groq parameters are not set, so the Groq API cannot be used.',
+    title: 'Use Groq API (Preview)',
+    cors: 'The native API may have CORS issues.',
   },
   save: 'Save',
   cancel: 'Cancel',

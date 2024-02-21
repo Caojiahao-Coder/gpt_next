@@ -57,7 +57,8 @@ function fixedTop() {
     color: info.color,
     fixed_top: !(info.fixed_top ?? false),
     type: info.type,
-  }
+    use_groq: info.use_groq,
+  } as TBConverstationInfo
 
   conversationController.updateConversationInfoAsync(newConversationInfo).then((res) => {
     if (res)

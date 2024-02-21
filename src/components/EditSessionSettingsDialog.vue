@@ -6,6 +6,7 @@ import useConversationStore from '@/store/conversation-store'
 import SelectColorDialog from '@/ui/SelectColorDialog.vue'
 import { push } from '@/main'
 import conversationController from '@/chat.completion/ConversationController'
+import type { TBConverstationInfo } from '@/database/table-type'
 
 const { t } = useI18n()
 
@@ -34,7 +35,8 @@ async function onSaveSessionSettings() {
     color: color.value,
     fixed_top: info.fixed_top ?? false,
     type: info.type,
-  }
+    use_groq: info.use_groq,
+  } as TBConverstationInfo
 
   const result = await conversationController.updateConversationInfoAsync(newConversationInfo)
   if (result) {

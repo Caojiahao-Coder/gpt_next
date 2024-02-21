@@ -36,3 +36,9 @@ export const apiKey: Ref<string> = useStorage('apiKey', '')
 export const gptModel: Ref<string> = useStorage('gptModel', 'gpt-4')
 
 export const versionCode: Ref<string> = useStorage('versionCode', '')
+
+export const groqBaseURL: Ref<string> = useStorage('groqBaseURL', 'https://api.groq.com/openai/v1/')
+
+export const groqApiKey: Ref<string> = useStorage('groqApiKey', '')
+
+export const groqModel: Ref<string> = useStorage('groqModel', 'mixtral-8x7b-32768')
