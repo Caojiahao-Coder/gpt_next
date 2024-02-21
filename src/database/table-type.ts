@@ -22,6 +22,7 @@ interface TBConverstationInfo {
   conversation_token: string
   fixed_top?: boolean
   type?: 'chat' | 'dataworker' | 'draw_img_mode'
+  use_groq?: boolean
 }
 
 interface NewMessageInfo {
@@ -45,6 +46,7 @@ interface NewConverstationInfo {
   create_time: number
   conversation_token: string
   type?: 'chat' | 'dataworker' | 'draw_img_mode'
+  use_groq?: boolean
 }
 
 interface TBPromptInfo {

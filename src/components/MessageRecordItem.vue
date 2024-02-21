@@ -87,19 +87,31 @@ async function getAnswer(messageId: number) {
   gptContent.value = ''
   checkingFunctionCalling.value = true
   let needGetFunctionResult = false
-  await chatCompletionStore.chatCompletionHandler?.getMessageAnswerAsync(messageId, (value) => {
+  if (chatCompletionStore.chatCompletionHandler?.getConversationInfo().use_groq ?? false) {
+    getAnswerByGroq(messageId)
+  }
+  else {
+    await chatCompletionStore.chatCompletionHandler?.getMessageAnswerAsync(messageId, (value) => {
+      gptContent.value += value
+      scrollBody()
+    }, (tool_call_id, functionName, args, _) => {
+      needGetFunctionResult = true
+      handleFunction(tool_call_id, functionName, args)
+    })
+    if (!needGetFunctionResult) {
+      checkingFunctionCalling.value = false
+      reloadMessageInfoFromDB()
+      if (props.messageIndex === 0)
+        chatCompletionStore.chatCompletionHandler?.getChatCompletionTitleFromMessageAsync(messageInfo.value.id)
+    }
+  }
+}
+
+async function getAnswerByGroq(messageId: number) {
+  await chatCompletionStore.chatCompletionHandler?.getMessageAnswerByGroqAsync(messageId, (value) => {
     gptContent.value += value
     scrollBody()
-  }, (tool_call_id, functionName, args, _) => {
-    needGetFunctionResult = true
-    handleFunction(tool_call_id, functionName, args)
   })
-  if (!needGetFunctionResult) {
-    checkingFunctionCalling.value = false
-    reloadMessageInfoFromDB()
-    if (props.messageIndex === 0)
-      chatCompletionStore.chatCompletionHandler?.getChatCompletionTitleFromMessageAsync(messageInfo.value.id)
-  }
 }
 
 /**

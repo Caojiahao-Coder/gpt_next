@@ -7,6 +7,8 @@ import useConversationStore from '@/store/conversation-store'
 import conversationController from '@/chat.completion/ConversationController'
 import type { TBConverstationInfo, TBMessageInfo } from '@/database/table-type'
 import useChatCompletionStore from '@/store/chat-completion-store'
+import { groqApiKey, groqBaseURL, groqModel } from '@/store/localstorage'
+import { push } from '@/main'
 
 const { t } = useI18n()
 
@@ -50,7 +52,8 @@ function onCreateDrawImageConversation() {
     color: 'bg-yellow-2',
     fixed_top: info.fixed_top ?? false,
     type: 'draw_img_mode',
-  }
+    useGroqAPI: info.use_groq,
+  } as TBConverstationInfo
 
   updateConversationInfo(newInfo as TBConverstationInfo)
 }
@@ -58,14 +61,45 @@ function onCreateDrawImageConversation() {
 function updateConversationInfo(newInfo: TBConverstationInfo) {
   conversationController.updateConversationInfoAsync(newInfo)
 }
+
+function onUseGroqAPI() {
+  const info = chatCompletionStore.chatCompletionHandler?.getConversationInfo()
+
+  if (info?.use_groq === false) {
+    if (groqApiKey.value.length === 0 || groqBaseURL.value.length === 0 || groqModel.value.length === 0) {
+      push.warning(t('use_groq_api.cannot_empty'))
+      return
+    }
+  }
+  updateConversationUseAPI(!info.use_groq)
+}
+
+function updateConversationUseAPI(useGroqAPI: boolean) {
+  const conversationStore = useConversationStore()
+
+  const info = conversationStore.conversationInfo!
+
+  const newInfo = {
+    id: info.id,
+    title: 'Chat Completion (Grop API)',
+    create_time: info.create_time,
+    description: info.description,
+    conversation_token: info.conversation_token,
+    color: 'bg-blue',
+    fixed_top: info.fixed_top ?? false,
+    type: 'chat',
+    use_groq: useGroqAPI,
+  } as TBConverstationInfo
+
+  updateConversationInfo(newInfo as TBConverstationInfo)
+}
 </script>
 
 <template>
   <div ref="bodyRef" class="relative h-100% records-list color-base bg-body" overflow="x-hidden y-scroll">
     <div id="conversation-body">
       <MessageRecordItem
-        v-for="(item, index) in myMessageList" :key="index" :message-info="item"
-        :message-index="index"
+        v-for="(item, index) in myMessageList" :key="index" :message-info="item" :message-index="index"
         :scroll-body="updateScroll" @on-reload-message-list="() => loadMessageList()"
       />
     </div>
@@ -107,6 +141,22 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
           <div class="w-22px h-22px i-carbon-image" />
           <div class="line-height-22px">
             {{ t('draw_img_mode') }}
+          </div>
+        </div>
+        <div class="flex-1" />
+      </div>
+
+      <div
+        data-cursor="block"
+        class="border select-none bg-base shadow-2xl h-48px flex flex-row color-base gap-2 cursor-pointer p-x-4 flex flex-col hover-bg-body"
+        @click="onUseGroqAPI"
+      >
+        <div class="flex-1" />
+        <div class="flex flex-row gap-2">
+          <input type="checkbox" :checked="chatCompletionStore.chatCompletionHandler?.getConversationInfo().use_groq ?? false" class="w-22px h-22px m-0">
+          <div class="w-22px h-22px i-carbon-face-wink-filled" />
+          <div class="line-height-22px">
+            {{ t('use_groq_api.title') }}
           </div>
         </div>
         <div class="flex-1" />

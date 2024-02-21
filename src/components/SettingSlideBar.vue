@@ -3,10 +3,10 @@ import { useI18n } from 'vue-i18n'
 import CommonSlideBar from './CommonSlideBar.vue'
 import OpenAISetting from './OpenAISetting.vue'
 import ChatSetting from './ChatSetting.vue'
-import DBSetting from './DBSetting.vue'
 import MessageSpeechSetting from './MessageSpeechSetting.vue'
 import ToolsSetting from './ToolsSetting.vue'
 import FunctionCallingSetting from './FunctionCallingSetting.vue'
+import GroqSetting from './GroqSetting.vue'
 import { expandSettingSideBar } from '@/store/localstorage'
 import TipsButton from '@/components/TipsButton.vue'
 
@@ -42,11 +42,11 @@ function toggleExpandSettingSideBar() {
     <div class="flex-1 overflow-y-scroll setting-bar-menu-list">
       <ChatSetting />
       <OpenAISetting />
-      <!-- <AssistantsSetting /> -->
+      <GroqSetting />
       <ToolsSetting />
       <FunctionCallingSetting />
       <MessageSpeechSetting />
-      <DBSetting />
+      <!-- <DBSetting /> -->
     </div>
     <CommonSlideBar />
     <div

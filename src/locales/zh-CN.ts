@@ -56,8 +56,20 @@ export default {
     save_failed: '保存失败!',
     baseurl_hint: '尽可能使用官方的\'https://api.openai.com/v1/\',避免出现一些意外情况。',
   },
+  groq_setting: {
+    apikey_empty_error: '抱歉Api Key不可以为空',
+    baseurl_empty_error: '抱歉Base Url不可以为空',
+    save_success: '保存成功!',
+    save_failed: '保存失败!',
+    baseurl_hint: '尽可能使用官方的\'https://api.groq.com/openai/v1/\',避免出现一些意外情况。',
+  },
   updateLog: {
     title: ' 版本更新日志',
+  },
+  use_groq_api: {
+    cannot_empty: '抱歉，为设置Groq参数，无法使用Groq API。',
+    title: '使用GROQ API (预览)',
+    cors: '原生API存在可能存在CORS问题。',
   },
   save: '保存',
   cancel: '取消',

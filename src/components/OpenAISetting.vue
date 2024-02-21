@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from '@/ui/Dialog.vue'
-import gpt_models from '@/assets/models-list'
+import { gpt_models } from '@/assets/models-list'
 import { push } from '@/main'
 import { apiKey, baseURL, gptModel } from '@/store/localstorage'
 
@@ -73,7 +73,7 @@ function copyOpenAiKey() {
   <div class="border-base" b="0 b-1 solid">
     <div class="text-18px font-700 h-18px" p="t-16px l-16px r-16px">
       <div class="flex flex-row gap-2">
-        <div class="h-24px flex-1 line-height-24px">
+        <div class="h-24px flex-1 line-height-24px text-18px">
           Open AI
         </div>
         <div data-cursor="block" class="icon-button i-carbon-edit" @click="openEditModal" />
@@ -84,7 +84,7 @@ function copyOpenAiKey() {
         Base URL
       </div>
 
-      <div class="text-4 m-t-2" :class="apiKey ? 'color-base' : 'color-fade'">
+      <div class="text-4 m-t-2" :class="baseURL ? 'color-base' : 'color-fade'">
         {{ baseURL ? baseURL : 'undefined' }}
       </div>
 
@@ -107,9 +107,9 @@ function copyOpenAiKey() {
       <div class="text-3 color-gray m-t-4" style="font-family: Light;">
         {{ t('chat_model') }}
       </div>
-      <div class="text-4 m-t-2" :class="apiKey ? 'color-base' : 'color-fade'">
+      <div class="text-4 m-t-2" :class="gptModel ? 'color-base' : 'color-fade'">
         {{
-          gptModel ? gptModel : 'undefined'
+          gptModel ? gpt_models.filter(a => a.value === gptModel)[0].name : 'undefined'
         }}
       </div>
     </div>

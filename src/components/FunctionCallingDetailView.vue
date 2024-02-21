@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { ToolInfo } from '@/openai/tool-call'
+import type { FunctionInfo } from '@/openai/type/chat.completion.function.calling'
 import Markdown from '@/components/Markdown.vue'
 
 const props = defineProps<{
-  functionCallingInfo: ToolInfo | undefined
+  functionCallingInfo: FunctionInfo | undefined
 }>()
 
 const { t } = useI18n()

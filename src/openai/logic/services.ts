@@ -1,5 +1,5 @@
 import type { OpenAIErrorInfo } from '../type/openai.error'
-import gpt_models from '@/assets/models-list'
+import { gpt_models } from '@/assets/models-list'
 import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionCallingController'
 import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
 import type { OpenAIPayloadInfo } from '@/openai/type/openai.payload'
@@ -203,76 +203,6 @@ class OpenAIServices {
       }
 
       const url = `${baseURL.value}images/generations`
-
-      return new Promise<OpenAIRequestResult>((resolve) => {
-        fetch(url, fetchPayload)
-          .then(async (response) => {
-            if (response.status !== 200) {
-              const errorJson = await response.text()
-              const errorData = JSON.parse(errorJson) as OpenAIErrorInfo
-              resolve({
-                code: -1,
-                data: null,
-                message: errorData.error.message || 'Unknown error',
-              })
-            }
-            else {
-              resolve({
-                code: 1,
-                data: response,
-                message: '',
-              })
-            }
-          })
-          .catch(() => {
-            resolve({
-              code: -1,
-              data: null,
-              message: 'Unknown error',
-            })
-          })
-      })
-    }
-    catch (e: any) {
-      return {
-        code: -1,
-        data: null,
-        message: e.message,
-      }
-    }
-  }
-
-  public async createDataWorkRequest(messages: ChatCompletionMessage[]): Promise<OpenAIRequestResult> {
-    const openAIPayload = await this.getOpenAIPayload()
-
-    if (!openAIPayload) {
-      return Promise.resolve({
-        code: -1,
-        data: null,
-        message: 'Can\'t get OpenAI payload; Please check your API key and model settings.',
-      })
-    }
-
-    try {
-      const signal = this.controller.signal
-
-      const fetchPayload = {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openAIPayload?.apikey}`,
-        },
-        method: 'POST',
-        body: JSON.stringify({
-          top_p: topP.value,
-          temperature: temperature.value,
-          stream: true,
-          model: openAIPayload.model,
-          messages,
-        }),
-        signal,
-      }
-
-      const url = `${baseURL.value}chat/completions`
 
       return new Promise<OpenAIRequestResult>((resolve) => {
         fetch(url, fetchPayload)

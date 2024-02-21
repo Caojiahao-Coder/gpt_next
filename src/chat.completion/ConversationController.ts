@@ -94,6 +94,7 @@ class ConversationController {
       description: '',
       conversation_token: uid(32),
       type: 'chat',
+      use_groq: false,
     } as NewConverstationInfo
 
     return await this.addConversationAsync(newInfo)
@@ -110,6 +111,7 @@ class ConversationController {
       description: '',
       conversation_token: uid(32),
       type: 'dataworker',
+      use_groq: false,
     } as NewConverstationInfo
 
     return await this.addConversationAsync(newInfo)
@@ -126,6 +128,7 @@ class ConversationController {
       description: '',
       conversation_token: uid(32),
       type: 'draw_img_mode',
+      use_groq: false,
     } as NewConverstationInfo
 
     return await this.addConversationAsync(newInfo)

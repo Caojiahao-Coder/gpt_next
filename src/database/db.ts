@@ -16,7 +16,7 @@ class DB {
 
   constructor() {
     this.db = null
-    this.version = 19
+    this.version = 22
   }
 
   /**
@@ -256,6 +256,7 @@ class DB {
     objectStore.createIndex('conversation_token', 'conversation_token')
     objectStore.createIndex('fixed_top', 'fixed_top')
     objectStore.createIndex('type', 'type')
+    objectStore.createIndex('use_groq', 'use_groq')
   }
 
   private initPromptTable() {
