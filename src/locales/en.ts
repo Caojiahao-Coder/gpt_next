@@ -70,6 +70,7 @@ export default {
     cannot_empty: 'Sorry, the Groq parameters are not set, so the Groq API cannot be used.',
     title: 'Use Groq API (Preview)',
     cors: 'The native API may have CORS issues.',
+    description: 'With GroqAPI you will not be able to use the OpenAI-specific features associated with Function Calling and Tools.',
   },
   save: 'Save',
   cancel: 'Cancel',
