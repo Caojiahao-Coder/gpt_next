@@ -81,11 +81,11 @@ function updateConversationUseAPI(useGroqAPI: boolean) {
 
   const newInfo = {
     id: info.id,
-    title: 'Chat Completion (Grop API)',
+    title: info.title,
     create_time: info.create_time,
     description: info.description,
     conversation_token: info.conversation_token,
-    color: 'bg-blue',
+    color: info.color,
     fixed_top: info.fixed_top ?? false,
     type: 'chat',
     use_groq: useGroqAPI,
@@ -97,6 +97,15 @@ function updateConversationUseAPI(useGroqAPI: boolean) {
 
 <template>
   <div ref="bodyRef" class="relative h-100% records-list color-base bg-body" overflow="x-hidden y-scroll">
+    <div
+      v-if="chatCompletionStore.chatCompletionHandler?.getConversationInfo().use_groq && myMessageList.length <= 0"
+      class="flex flex-row gap-2 b-0 b-b-1 border-base b-solid p-16px color-base bg-base font-bold bg-body"
+    >
+      <div class="i-carbon-information" />
+      <div class="text-3">
+        {{ t('use_groq_api.description') }}
+      </div>
+    </div>
     <div id="conversation-body">
       <MessageRecordItem
         v-for="(item, index) in myMessageList" :key="index" :message-info="item" :message-index="index"

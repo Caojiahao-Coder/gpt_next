@@ -70,6 +70,7 @@ export default {
     cannot_empty: '抱歉，为设置Groq参数，无法使用Groq API。',
     title: '使用GROQ API (预览)',
     cors: '原生API存在可能存在CORS问题。',
+    description: '使用GroqAPI您将无法使用Function Calling和Tools的相关OpenAI专属功能。',
   },
   save: '保存',
   cancel: '取消',

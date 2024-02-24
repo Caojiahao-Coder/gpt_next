@@ -68,9 +68,13 @@ function exportConversation() {
     </div>
     <div class="flex-1 flex flex-col overflow-hidden">
       <div class="flex-1" />
-      <div class="truncate text-5 font-bold">
-        {{ conversationStore.conversationInfo?.title }}
-        <div class="flex-1" />
+      <div class="truncate font-bold flex flex-row gap-4">
+        <div text-5>
+          {{ conversationStore.conversationInfo?.title }}
+        </div>
+        <div v-if="conversationStore.conversationInfo?.use_groq" text-3 line-height-27px b-rd-9 p-x-2 bg-blue-5 color-white shadow>
+          Groq API
+        </div>
       </div>
       <div
         v-if="conversationStore.conversationInfo?.description && conversationStore.conversationInfo?.description!.trim().length > 0"
