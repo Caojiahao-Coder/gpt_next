@@ -35,20 +35,43 @@ function onSaveOpenAIConfig() {
     open.value = false
   }
 }
+
+const copyApiKeySuccess = ref<boolean>(false)
+const copyApiKeyFailed = ref<boolean>(false)
+
+/**
+ * 复制OpenAI Api Key
+ */
+function copyOpenAiKey() {
+  if (copyApiKeySuccess.value === true || copyApiKeyFailed.value === true)
+    return
+
+  if (!groqApiKey.value) {
+    copyApiKeyFailed.value = true
+    setTimeout(() => copyApiKeyFailed.value = false, 1200)
+    return
+  }
+  navigator.clipboard.writeText(groqApiKey.value ?? '').then(() => {
+    copyApiKeySuccess.value = true
+    setTimeout(() => {
+      copyApiKeySuccess.value = false
+    }, 1200)
+  }).catch(() => {
+    copyApiKeyFailed.value = true
+    setTimeout(() => copyApiKeyFailed.value = false, 1200)
+  })
+}
 </script>
 
 <template>
   <div class="border-base" b="0 b-1 solid">
-    <div class="text-18px font-700 h-36px" p="t-16px l-16px r-16px">
+    <div class="text-18px font-700 " p="t-16px l-16px r-16px">
       <div class="flex flex-row gap-2">
         <div class="h-24px flex-1 line-height-24px text-18px">
           Groq
         </div>
 
         <div data-cursor="block" class="icon-button i-carbon-edit" @click="() => open = true" />
-      </div>
-      <div class="color-red-3 text-3 m-t-1">
-        {{ t('use_groq_api.cors') }}
       </div>
     </div>
 
@@ -67,8 +90,17 @@ function onSaveOpenAIConfig() {
         {{ t('api_key') }}
       </div>
 
-      <div class="text-4 m-t-2" :class="groqApiKey.length <= 0 ? 'color-fade' : 'color-base'">
-        {{ groqApiKey ? `${groqApiKey.substring(0, 6)}****${groqApiKey.substring(groqApiKey.length - 6, groqApiKey.length)}` : 'undefined' }}
+      <div class="flex flex-row gap-2  m-t-2">
+        <div class="text-4" :class="groqApiKey ? 'color-base' : 'color-fade'">
+          {{
+            groqApiKey ? `${groqApiKey.substring(0, 6)}****${groqApiKey.substring(groqApiKey.length - 6, groqApiKey.length)}` : 'undefined'
+          }}
+        </div>
+        <div
+          data-cursor="block" class="icon-button text-4 h-20px line-height-20px" :class="[
+            copyApiKeySuccess ? 'i-carbon-checkmark color-green' : copyApiKeyFailed ? 'i-carbon-close color-red' : 'i-carbon-copy',
+          ]" @click="copyOpenAiKey"
+        />
       </div>
     </div>
 
