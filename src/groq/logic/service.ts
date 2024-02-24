@@ -57,6 +57,7 @@ class GroqServices {
         body: JSON.stringify({
           top_p: topP.value,
           temperature: temperature.value,
+          max_tokens: 32768,
           stream: true,
           model: groqModel.value,
           messages: message,
