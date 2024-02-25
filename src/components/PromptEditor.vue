@@ -157,7 +157,7 @@ defineExpose({
 
 <template>
   <div class="flex flex-col flex-1 overflow-hidden">
-    <input v-model.trim="title" type="text" class="m-2 font-bold text-4 b-0 outline-none bg-base" placeholder="Prompt Title">
+    <input v-model.trim="title" type="text" class="m-2 font-bold text-4 b-0 outline-none bg-base color-base" placeholder="Prompt Title">
     <div class=" b-0 b-t-1 border-base b-solid p-2 flex flex-col gap-2 overflow-y-auto">
       <PromptItem
         v-for="(item, index) in promptItems" :key="index" :role="item.role" :content="item.content"
