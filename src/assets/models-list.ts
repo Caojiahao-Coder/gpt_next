@@ -45,12 +45,20 @@ const groq_models: {
   value: string
   name: string
 }[] = [{
-  value: 'llama2-70b-4096',
-  name: 'LLaMA2-70b-chat',
+  value: 'llama3-8b-8192',
+  name: 'LLaMA3 8b',
 },
 {
   value: 'mixtral-8x7b-32768',
-  name: 'Mixtral-8x7b-Instruct-v0.1',
+  name: 'Mixtral 8x7b',
+},
+{
+  value: 'llama3-70b-8192',
+  name: 'LLaMA3 70b',
+},
+{
+  value: 'gemma-7b-it',
+  name: 'Gemma 7b',
 }]
 
 export {
