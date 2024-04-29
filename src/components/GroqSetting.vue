@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { groqApiKey, groqBaseURL, groqModel } from '@/store/localstorage'
 import Dialog from '@/ui/Dialog.vue'
 import { groq_models } from '@/assets/models-list'
@@ -11,6 +11,11 @@ const baseURL_modal = ref<string>(groqBaseURL.value)
 const apiKey_modal = ref<string>(groqApiKey.value)
 const groqModel_modal = ref<string>(groqModel.value)
 const { t } = useI18n()
+
+onMounted(() => {
+  if (groq_models.filter(a => a.value === groqModel.value).length === 0)
+    groqModel.value = groq_models[0].value
+})
 
 function onSaveOpenAIConfig() {
   try {
@@ -110,7 +115,7 @@ function copyOpenAiKey() {
       </div>
 
       <div class="text-4 m-t-2" :class="groqModel.length <= 0 ? 'color-fade' : 'color-base'">
-        {{ groq_models.filter(a => a.value === groqModel)[0].name }}
+        {{ groq_models.filter(a => a.value === groqModel)[0]?.name }}
       </div>
     </div>
   </div>
