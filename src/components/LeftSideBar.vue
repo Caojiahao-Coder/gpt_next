@@ -33,7 +33,7 @@ function toggleOpenLeftSideBar() {
 }
 
 onMounted(() => {
-  document.getElementById('move-item')!.addEventListener('mousedown', (e: MouseEvent) => {
+  document.getElementById('move-item')?.addEventListener('mousedown', (e: MouseEvent) => {
     const startX = e.clientX
     const startWidth = document.getElementById('left-menu')!.offsetWidth
     document.onmousemove = function (e) {
