@@ -4,7 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import config from '../../package.json'
 import ConversationsList from './ConversationsList.vue'
-import { expandLeftSideBar, filterType } from '@/store/localstorage'
+import { alwaysUseGroq, expandLeftSideBar, filterType } from '@/store/localstorage'
 import conversationController from '@/chat.completion/ConversationController'
 import type { NewConverstationInfo } from '@/database/table-type'
 import UpdateLog from '@/components/UpdateLog.vue'
@@ -23,6 +23,7 @@ function onCreateNewConversation() {
     description: '',
     conversation_token: uid(32),
     type: 'chat',
+    use_groq: alwaysUseGroq.value,
   } as NewConverstationInfo
 
   conversationController.addConversationAsync(newConversationInfo)

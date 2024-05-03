@@ -7,7 +7,7 @@ import useConversationStore from '@/store/conversation-store'
 import conversationController from '@/chat.completion/ConversationController'
 import type { TBConverstationInfo, TBMessageInfo } from '@/database/table-type'
 import useChatCompletionStore from '@/store/chat-completion-store'
-import { groqApiKey, groqBaseURL, groqModel } from '@/store/localstorage'
+import { alwaysUseGroq, groqApiKey, groqBaseURL, groqModel } from '@/store/localstorage'
 import { push } from '@/main'
 
 const { t } = useI18n()
@@ -64,6 +64,8 @@ function updateConversationInfo(newInfo: TBConverstationInfo) {
 
 function onUseGroqAPI() {
   const info = chatCompletionStore.chatCompletionHandler?.getConversationInfo()
+
+  alwaysUseGroq.value = !info?.use_groq
 
   if (info?.use_groq === false) {
     if (groqApiKey.value.length === 0 || groqBaseURL.value.length === 0 || groqModel.value.length === 0) {
@@ -162,7 +164,7 @@ function updateConversationUseAPI(useGroqAPI: boolean) {
       >
         <div class="flex-1" />
         <div class="flex flex-row gap-2">
-          <input type="checkbox" :checked="chatCompletionStore.chatCompletionHandler?.getConversationInfo().use_groq ?? false" class="w-22px h-22px m-0">
+          <input type="checkbox" :checked="chatCompletionStore.chatCompletionHandler?.getConversationInfo().use_groq ?? alwaysUseGroq" class="w-22px h-22px m-0">
           <div class="w-22px h-22px i-carbon-face-wink-filled" />
           <div class="line-height-22px">
             {{ t('use_groq_api.title') }}

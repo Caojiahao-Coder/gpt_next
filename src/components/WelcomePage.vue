@@ -3,6 +3,7 @@ import { useWindowSize } from '@vueuse/core'
 import { useI18n } from 'vue-i18n'
 import { uid } from 'uid'
 import conversationController from '@/chat.completion/ConversationController'
+import { alwaysUseGroq } from '@/store/localstorage'
 
 const { t } = useI18n()
 
@@ -15,6 +16,7 @@ function createNewMessage() {
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
+    use_groq: alwaysUseGroq.value,
   }
   conversationController.addConversationAsync(newInfo)
 }

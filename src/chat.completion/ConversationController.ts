@@ -3,6 +3,7 @@ import { addNewConversationAsync, getConversationByIdAsync, getConversationList 
 import { removeMessagesByConversationIdAsync } from './MessageServices'
 import useConversationStore from '@/store/conversation-store'
 import type { NewConverstationInfo, TBConverstationInfo } from '@/database/table-type'
+import { alwaysUseGroq } from '@/store/localstorage'
 
 class ConversationController {
   /**
@@ -94,7 +95,7 @@ class ConversationController {
       description: '',
       conversation_token: uid(32),
       type: 'chat',
-      use_groq: false,
+      use_groq: alwaysUseGroq.value,
     } as NewConverstationInfo
 
     return await this.addConversationAsync(newInfo)

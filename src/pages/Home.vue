@@ -12,6 +12,7 @@ import useConversationStore from '@/store/conversation-store'
 import UndefineConversation from '@/components/UndefineConversation.vue'
 import DrawImageModeBody from '@/components/DrawImageModeBody.vue'
 import conversationController from '@/chat.completion/ConversationController'
+import { alwaysUseGroq } from '@/store/localstorage'
 
 const conversationStore = useConversationStore()
 
@@ -40,6 +41,7 @@ function createNewConversation() {
     create_time: Date.now(),
     description: '',
     conversation_token: uid(32),
+    use_groq: alwaysUseGroq.value,
   }
 
   conversationController.addConversationAsync(newInfo)

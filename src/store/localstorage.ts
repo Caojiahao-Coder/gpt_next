@@ -42,3 +42,5 @@ export const groqBaseURL: Ref<string> = useStorage('groqBaseURL', 'https://api.g
 export const groqApiKey: Ref<string> = useStorage('groqApiKey', '')
 
 export const groqModel: Ref<string> = useStorage('groqModel', 'mixtral-8x7b-32768')
+
+export const alwaysUseGroq: Ref<boolean> = useStorage('alwaysUseGroq', false)
