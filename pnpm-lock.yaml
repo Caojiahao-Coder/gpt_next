@@ -17,6 +17,9 @@ importers:
       '@vercel/analytics':
         specifier: ^1.2.2
         version: 1.2.2
+      '@vercel/speed-insights':
+        specifier: ^1.0.10
+        version: 1.0.10(vue-router@4.3.2(vue@3.4.26(typescript@5.0.4)))(vue@3.4.26(typescript@5.0.4))
       canvas-confetti:
         specifier: ^1.9.3
         version: 1.9.3
@@ -995,6 +998,29 @@ packages:
       next:
         optional: true
       react:
+        optional: true
+
+  '@vercel/speed-insights@1.0.10':
+    resolution: {integrity: sha512-4uzdKB0RW6Ff2FkzshzjZ+RlJfLPxgm/00i0XXgxfMPhwnnsk92YgtqsxT9OcPLdJUyVU1DqFlSWWjIQMPkh0g==}
+    peerDependencies:
+      '@sveltejs/kit': ^1 || ^2
+      next: '>= 13'
+      react: ^18 || ^19
+      svelte: ^4
+      vue: ^3
+      vue-router: ^4
+    peerDependenciesMeta:
+      '@sveltejs/kit':
+        optional: true
+      next:
+        optional: true
+      react:
+        optional: true
+      svelte:
+        optional: true
+      vue:
+        optional: true
+      vue-router:
         optional: true
 
   '@vitejs/plugin-vue@4.6.2':
@@ -4600,6 +4626,11 @@ snapshots:
   '@vercel/analytics@1.2.2':
     dependencies:
       server-only: 0.0.1
+
+  '@vercel/speed-insights@1.0.10(vue-router@4.3.2(vue@3.4.26(typescript@5.0.4)))(vue@3.4.26(typescript@5.0.4))':
+    optionalDependencies:
+      vue: 3.4.26(typescript@5.0.4)
+      vue-router: 4.3.2(vue@3.4.26(typescript@5.0.4))
 
   '@vitejs/plugin-vue@4.6.2(vite@5.2.11(@types/node@18.19.31))(vue@3.4.26(typescript@5.0.4))':
     dependencies:

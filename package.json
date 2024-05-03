@@ -14,6 +14,7 @@
     "@types/canvas-confetti": "^1.6.4",
     "@types/marked": "^5.0.2",
     "@vercel/analytics": "^1.2.2",
+    "@vercel/speed-insights": "^1.0.10",
     "canvas-confetti": "^1.9.3",
     "dayjs": "^1.11.11",
     "dexie": "^3.2.7",

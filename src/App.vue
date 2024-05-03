@@ -2,6 +2,7 @@
 import { computed, onMounted, watch } from 'vue'
 import { RouterView } from 'vue-router'
 import { Notifications, Notivue } from 'notivue'
+import { SpeedInsights } from '@vercel/speed-insights/vue'
 import { alwaysCloseDailyTips, themeColor } from './store/localstorage'
 import { isDark } from './store/dark'
 import DailyTips from './components/DailyTips.vue'
@@ -39,5 +40,7 @@ function changeBodyBgColor() {
     </Notivue>
 
     <DailyTips v-if="!alwaysCloseDailyTips" />
+
+    <SpeedInsights />
   </main>
 </template>
