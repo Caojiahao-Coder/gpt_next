@@ -71,15 +71,6 @@ const azure_models: {
   value: 'gpt-35-turbo',
   name: 'gpt-35-turbo',
 }, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
   value: 'gpt-35-turbo-16k',
   name: 'gpt-35-turbo-16k',
 }, {
