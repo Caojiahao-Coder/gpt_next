@@ -4,7 +4,7 @@ import chatFunctionCallingController from '@/chat.function.calling/ChatFunctionC
 import type { ChatCompletionMessage } from '@/openai/type/chat.completion.message'
 import type { OpenAIPayloadInfo } from '@/openai/type/openai.payload'
 import type { OpenAIRequestResult } from '@/openai/type/openai.response.result'
-import { apiKey, baseURL, gptModel, temperature, topP } from '@/store/localstorage'
+import { apiKey, azureApiKey, azureBaseURL, baseURL, gptModel, temperature, topP } from '@/store/localstorage'
 
 class OpenAIServices {
   private controller = new AbortController()
@@ -79,14 +79,26 @@ class OpenAIServices {
       const fetchPayload = {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${openAIPayload?.apikey}`,
+          'Authorization': '',
+          'api-key': '',
         },
         method: 'POST',
         body: fetchBody,
         signal,
       }
 
-      const url = `${baseURL.value}chat/completions`
+      let url = ''
+
+      const platform = window.localStorage.getItem('platform') ?? 'openai'
+
+      if (platform === 'openai') {
+        url = `${baseURL.value}chat/completions`
+        fetchPayload.headers.Authorization = `Bearer ${openAIPayload?.apikey}`
+      }
+      else {
+        url = `${azureBaseURL.value}openai/deployments/gpt3-turbo/chat/completions?api-version=2024-02-15-preview`
+        fetchPayload.headers['api-key'] = azureApiKey.value
+      }
 
       return new Promise<OpenAIRequestResult>((resolve) => {
         fetch(url, fetchPayload)

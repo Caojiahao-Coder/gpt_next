@@ -43,4 +43,12 @@ export const groqApiKey: Ref<string> = useStorage('groqApiKey', '')
 
 export const groqModel: Ref<string> = useStorage('groqModel', 'mixtral-8x7b-32768')
 
+export const azureBaseURL: Ref<string> = useStorage('azureBaseURL', '')
+
+export const azureApiKey: Ref<string> = useStorage('azureApiKey', '')
+
+export const azureRegion: Ref<string> = useStorage('azureRegion', 'eastasia')
+
+export const azureModel: Ref<string> = useStorage('azureModel', 'gpt-4-32k')
+
 export const alwaysUseGroq: Ref<boolean> = useStorage('alwaysUseGroq', false)

@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@iconify-json/devicon':
+        specifier: ^1.1.40
+        version: 1.1.40
       '@types/canvas-confetti':
         specifier: ^1.6.4
         version: 1.6.4
@@ -523,6 +526,9 @@ packages:
 
   '@iconify-json/devicon-plain@1.1.39':
     resolution: {integrity: sha512-S9mQFhea5cJbAjOdQZ1Du6k4P+BFD4b1NnGU4vBnZApei6V9o74x+Ne+miTpA62dmZ/+B18xhGVRO/gVnCHX1A==}
+
+  '@iconify-json/devicon@1.1.40':
+    resolution: {integrity: sha512-1uR1QlGvLp7t8qaxBY/zM14xoUOgIEVfXK0QhLyPNrpuDrdcootx+EEOhqAQMjJLNlwRiYgcWEAuYfGM0Aixew==}
 
   '@iconify-json/simple-icons@1.1.101':
     resolution: {integrity: sha512-7h7iUvCok031UcYUt2+wPD21tOwu/AzFB2I2PzzoC3R1jsNJjn5YV3v1q0g2CXcMYAzcsCyH00RbpFPFAiqjcw==}
@@ -4060,6 +4066,10 @@ snapshots:
       '@iconify/types': 2.0.0
 
   '@iconify-json/devicon-plain@1.1.39':
+    dependencies:
+      '@iconify/types': 2.0.0
+
+  '@iconify-json/devicon@1.1.40':
     dependencies:
       '@iconify/types': 2.0.0
 

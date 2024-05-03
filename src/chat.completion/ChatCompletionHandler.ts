@@ -6,6 +6,7 @@ import type { ChatCompletionMessage } from '@/openai/type/chat.completion.messag
 import { handleChatCompletionPrecondition } from '@/openai/handler/ChatHandler'
 import openAIServices from '@/openai/logic/services'
 import ChatCompletionParser from '@/openai/parser/ChatCompletionParser'
+import AzureChatCompletionParser from '@/openai/parser/AzureChatCompletionParser'
 import ChatCompletionParserByGroq from '@/groq/parser/ChatCompletionParser'
 import useEditorStore from '@/store/editor-store'
 import handleChatVisionPrecondition from '@/openai/handler/VisionHandler'
@@ -160,13 +161,25 @@ class ChatCompletionHandler {
     if (chatCompletionResponse.data !== null) {
       let gptContent = ''
 
-      parserResult = await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
-        gptContent += text
-        resultCallback(text)
-      }, (tool_call_id, fname, args, isDone) => {
-        needFunctionResult = true
-        functionCallingResultCallback(tool_call_id, fname, args, isDone)
-      })
+      const platform = window.localStorage.getItem('platform') ?? 'openai'
+      if (platform === 'openai') {
+        parserResult = await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
+          gptContent += text
+          resultCallback(text)
+        }, (tool_call_id, fname, args, isDone) => {
+          needFunctionResult = true
+          functionCallingResultCallback(tool_call_id, fname, args, isDone)
+        })
+      }
+      else {
+        parserResult = await AzureChatCompletionParser(chatCompletionResponse.data!, (text) => {
+          gptContent += text
+          resultCallback(text)
+        }, (tool_call_id, fname, args, isDone) => {
+          needFunctionResult = true
+          functionCallingResultCallback(tool_call_id, fname, args, isDone)
+        })
+      }
 
       if (parserResult)
         markResult = await this.markMessageCompletedAsync(messageInfo, gptContent)
@@ -200,9 +213,17 @@ class ChatCompletionHandler {
 
     let title = ''
 
-    await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
-      title += text
-    }, () => { })
+    const platform = window.localStorage.getItem('platform') ?? 'openai'
+    if (platform === 'openai') {
+      await ChatCompletionParser(chatCompletionResponse.data!, (text) => {
+        title += text
+      }, () => { })
+    }
+    else {
+      await AzureChatCompletionParser(chatCompletionResponse.data!, (text) => {
+        title += text
+      }, () => { })
+    }
     this.updateConversationTitleByIdAsync(title, messageInfo.conversation_id)
   }
 

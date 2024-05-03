@@ -7,6 +7,7 @@ import MessageSpeechSetting from './MessageSpeechSetting.vue'
 import ToolsSetting from './ToolsSetting.vue'
 import FunctionCallingSetting from './FunctionCallingSetting.vue'
 import GroqSetting from './GroqSetting.vue'
+import AzureSetting from './AzureSetting.vue'
 import { expandSettingSideBar } from '@/store/localstorage'
 import TipsButton from '@/components/TipsButton.vue'
 
@@ -42,6 +43,7 @@ function toggleExpandSettingSideBar() {
     <div class="flex-1 overflow-y-scroll setting-bar-menu-list">
       <ChatSetting />
       <OpenAISetting />
+      <AzureSetting />
       <GroqSetting />
       <ToolsSetting />
       <FunctionCallingSetting />

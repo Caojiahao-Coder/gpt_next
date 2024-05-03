@@ -61,7 +61,52 @@ const groq_models: {
   name: 'Gemma 7b',
 }]
 
+const azure_models: {
+  value: string
+  name: string
+}[] = [{
+  value: 'dall-e-3',
+  name: 'dall-e-3',
+}, {
+  value: 'gpt-35-turbo',
+  name: 'gpt-35-turbo',
+}, {
+  value: 'gpt-35-turbo',
+  name: 'gpt-35-turbo',
+}, {
+  value: 'gpt-35-turbo',
+  name: 'gpt-35-turbo',
+}, {
+  value: 'gpt-35-turbo',
+  name: 'gpt-35-turbo',
+}, {
+  value: 'gpt-35-turbo-16k',
+  name: 'gpt-35-turbo-16k',
+}, {
+  value: 'gpt-35-turbo-instruct',
+  name: 'gpt-35-turbo-instruct',
+}, {
+  value: 'gpt-4',
+  name: 'gpt-4',
+}, {
+  value: 'gpt-4-32k',
+  name: 'gpt-4-32k',
+}, {
+  value: 'text-embedding-3-large',
+  name: 'text-embedding-3-large',
+}, {
+  value: 'text-embedding-3-small',
+  name: 'text-embedding-3-small',
+}, {
+  value: 'text-embedding-ada-002',
+  name: 'text-embedding-ada-002',
+}, {
+  value: 'text-embedding-ada-002',
+  name: 'text-embedding-ada-002',
+}]
+
 export {
   groq_models,
   gpt_models,
+  azure_models,
 }

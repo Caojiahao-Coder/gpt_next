@@ -14,6 +14,7 @@ const role = ref<string>(window.localStorage.getItem('role') ?? 'auto')
 
 const openManagePromptsDialog = ref<boolean>(false)
 
+const v_platform = ref<string>(window.localStorage.getItem('platform') ?? 'openai')
 const v_topP = ref<number>(Number.parseFloat(window.localStorage.getItem('topP') ?? '0.5'))
 const v_temperature = ref<number>(Number.parseFloat(window.localStorage.getItem('temperature') ?? '0.5'))
 const v_chatParameter = ref<number>(Number.parseInt(window.localStorage.getItem('chatParameter') ?? '1'))
@@ -28,6 +29,10 @@ function onCloseDialog() {
 
 watch(role, (newValue) => {
   gptRole.value = newValue
+})
+
+watch(v_platform, (newValue) => {
+  window.localStorage.setItem('platform', newValue)
 })
 
 watch(v_topP, (newValue) => {
@@ -74,6 +79,24 @@ const temperatureMark: MarksProp = {
       </div>
     </div>
 
+    <div class="p-x-16px m-t-16px">
+      <div class="text-3 color-gray" style="font-family: Light;">
+        Chat Model Platform
+      </div>
+
+      <select
+        v-model="v_platform" class="w-full flex-1 border-base outline-none bg-body color-base mt-2"
+        p="x-4 y-2" b="1 solid rd-1"
+      >
+        <option value="openai" :selected="role === 'openai'">
+          OpenAI
+        </option>
+        <option value="azure" :selected="role === 'azure'">
+          Azure (Alpha-Chat only)
+        </option>
+      </select>
+    </div>
+
     <div class="p-16px">
       <div class="text-3 color-gray" style="font-family: Light;">
         {{ t('prompts') }}
@@ -95,8 +118,8 @@ const temperatureMark: MarksProp = {
       </div>
 
       <select
-        v-model="v_chatParameter" class="w-full flex-1 border-base outline-none bg-body color-base mt-2" p="x-4 y-2"
-        b="1 solid rd-1"
+        v-model="v_chatParameter" class="w-full flex-1 border-base outline-none bg-body color-base mt-2"
+        p="x-4 y-2" b="1 solid rd-1"
       >
         <option
           v-for="(item, index) in ChatParameterList " :key="index" :value="item.id"
