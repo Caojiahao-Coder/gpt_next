@@ -91,9 +91,6 @@ const azure_models: {
 }, {
   value: 'text-embedding-ada-002',
   name: 'text-embedding-ada-002',
-}, {
-  value: 'text-embedding-ada-002',
-  name: 'text-embedding-ada-002',
 }]
 
 export {

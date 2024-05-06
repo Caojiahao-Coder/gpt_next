@@ -38,10 +38,11 @@ export default async function ChatCompletionParser(response: Response, callback:
 
       const myData = parserStreamText(a.trim())
 
-      if (!myData)
+      if (!myData || !myData.choices || myData.choices.length === 0)
         return
 
-      isDone = a.startsWith('data: [DONE]') || myData.choices[0].finish_reason === 'stop'
+      const finish_reason: string = myData.choices[0]?.finish_reason ?? ''
+      isDone = a.startsWith('data: [DONE]') || (finish_reason === 'stop')
 
       const value = myData.choices[0].delta?.content ?? ''
       if (value && value.length > 0)
