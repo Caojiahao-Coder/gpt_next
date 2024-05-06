@@ -71,15 +71,6 @@ const azure_models: {
   value: 'gpt-35-turbo',
   name: 'gpt-35-turbo',
 }, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
-  value: 'gpt-35-turbo',
-  name: 'gpt-35-turbo',
-}, {
   value: 'gpt-35-turbo-16k',
   name: 'gpt-35-turbo-16k',
 }, {
@@ -97,9 +88,6 @@ const azure_models: {
 }, {
   value: 'text-embedding-3-small',
   name: 'text-embedding-3-small',
-}, {
-  value: 'text-embedding-ada-002',
-  name: 'text-embedding-ada-002',
 }, {
   value: 'text-embedding-ada-002',
   name: 'text-embedding-ada-002',
