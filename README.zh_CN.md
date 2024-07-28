@@ -20,13 +20,12 @@
 
 ## 特色功能截图 📷
 | 绘图模式                               | Function Calling                            |
-| -------------------------------------- | ------------------------------------------- |
-| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/DrawImageMode.gif) | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Function_Calling.gif)   |
+| -------------------------------------- | ----------------------------------------- |
+| ![68747470733a2f2f6c656f63616f6d65636f7665722e626c6f622e636f72652e77696e646f77732e6e65742f70726f6a656374636f7665722f44726177496d6167654d6f64652e676966](https://github.com/user-attachments/assets/2a600582-bf6f-42cd-a8bf-28d9a2c1d2f4)| ![68747470733a2f2f6c656f63616f6d65636f7665722e626c6f622e636f72652e77696e646f77732e6e65742f70726f6a656374636f7665722f46756e6374696f6e5f43616c6c696e672e676966](https://github.com/user-attachments/assets/85cecb71-646e-4c31-8123-d88e7ee335d3)|
 
 | 文本转语音                             | 多媒体输入框                                |
-| -------------------------------------- | ------------------------------------------- |
-| ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/Speech.gif)        | ![GPTNext](https://leocaomecover.blob.core.windows.net/projectcover/MultimediaInputBox.gif) |
-
+| ------------------------------- | ------------------------------------------- |
+| ![68747470733a2f2f6c656f63616f6d65636f7665722e626c6f622e636f72652e77696e646f77732e6e65742f70726f6a656374636f7665722f5370656563682e676966](https://github.com/user-attachments/assets/c5038748-b578-41c0-9687-74360fbc64e8)| ![68747470733a2f2f6c656f63616f6d65636f7665722e626c6f622e636f72652e77696e646f77732e6e65742f70726f6a656374636f7665722f4d756c74696d65646961496e707574426f782e676966](https://github.com/user-attachments/assets/7c204ddb-049e-425e-bdc3-a9813b7f58bc)|
 ## 产品特点 🚀
 
 - ⚔**会话记录保存**：该应用程序使用IndexedDB作为数据库，以保证会话的隐私和安全性。所有会话记录都被保存，以便以后访问。
