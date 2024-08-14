@@ -10,14 +10,6 @@
 
 [🧭Live preview](https://gpt-next-shvd.vercel.app/)
 
-## 大陆地区使用说明
-### 说明
-不建议使用频繁更换地区的🪜去直接访问API，这会增加封号的几率，推荐使用境外服务器代理OpenAI来使用。
-### 免代理API接口：
-> 设置其为GPTNext中的BaseURL就可以实现免代理访问API接口
-- OpenAI API: *https://openai.gptnext.chat/v1/*
-- Groq API: *https://groq.gptnext.chat/openai/v1/*
-
 ## Features Screenshots 📷
 | Draw Image Mode                        | Function Calling                          |
 | -------------------------------------- | ----------------------------------------- |
